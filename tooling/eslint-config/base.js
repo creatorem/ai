@@ -1,5 +1,5 @@
 import eslint from '@eslint/js';
-import turboConfig from 'eslint-config-turbo/flat';
+import turboConfig from '@tooling/eslint-config-turbo/flat';
 import tsEsLint from 'typescript-eslint';
 
 import nextConfig from './nextjs.js';

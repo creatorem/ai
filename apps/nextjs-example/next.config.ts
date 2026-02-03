@@ -6,17 +6,7 @@ const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 
 const INTERNAL_PACKAGES = [
-    '@kit/analytics',
-    '@kit/cms',
-    '@kit/eslint-config',
-    '@kit/i18n',
-    '@kit/monitoring',
-    '@kit/prettier-config',
-    '@kit/utils',
-    '@kit/tailwind-config',
-    '@kit/tsconfig',
-    '@kit/shared',
-    '@kit/ui',
+    '@tooling/tsconfig',
 ];
 
 const svgLoader = {
@@ -43,13 +33,6 @@ const config: NextConfig = {
     /** Enables hot reloading for local packages without a build step */
     transpilePackages: INTERNAL_PACKAGES,
     serverExternalPackages: [
-        'pino',
-        'pino-pretty',
-        'thread-stream',
-        'sonic-boom',
-        'atomic-sleep',
-        'real-require',
-        'quick-format-unescaped',
         'typescript',
     ],
     images: {
@@ -76,7 +59,6 @@ const config: NextConfig = {
             },
         ];
     },
-    redirects: getRedirects,
     turbopack: {
         resolveExtensions: ['.ts', '.tsx', '.js', '.jsx'],
         rules: {
@@ -182,10 +164,6 @@ function getRemotePatterns(): NextConfig['images']['remotePatterns'] {
     // Add previously deprecated domains as remote patterns
     const additionalDomains = [
         'lh3.googleusercontent.com',
-        'media-cdn.tripadvisor.com',
-        'dynamic-media-cdn.tripadvisor.com',
-        'prod-files-secure.s3.us-west-2.amazonaws.com',
-        'randomuser.me',
         'images.unsplash.com',
         'picsum.photos',
         'fastly.picsum.photos',
@@ -211,14 +189,4 @@ function getRemotePatterns(): NextConfig['images']['remotePatterns'] {
               },
               ...remotePatterns,
           ];
-}
-
-async function getRedirects() {
-    return [
-        {
-            source: '/server-sitemap.xml',
-            destination: '/sitemap.xml',
-            permanent: true,
-        },
-    ];
 }

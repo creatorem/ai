@@ -1,0 +1,47 @@
+{
+  "name": "@creatorem/ai",
+  "version": "1.0.0",
+  "private": false,
+  "sideEffects": false,
+  "engines": {
+    "node": ">=v20"
+  },
+  "homepage": "https://creatorem.com",
+  "author": {
+    "url": "https://creatorem.com",
+    "name": "Creatorem"
+  },
+  "scripts": {
+    "build": "turbo build --cache-dir=.turbo",
+    "clean": "git clean -xdf node_modules dist .next",
+    "dev": "cross-env FORCE_COLOR=1 turbo dev --parallel",
+    "format": "turbo format --cache-dir=.turbo --continue -- --cache --cache-location='node_modules/.cache/.prettiercache' --ignore-path='../../.gitignore'",
+    "format:fix": "turbo format --cache-dir=.turbo --continue -- --write --cache --cache-location='node_modules/.cache/.prettiercache' --ignore-path='../../.gitignore'",
+    "lint": "turbo lint --cache-dir=.turbo --affected --continue -- --cache --cache-location 'node_modules/.cache/.eslintcache' && manypkg check",
+    "lint:fix": "turbo lint --cache-dir=.turbo --affected --continue -- --fix --cache --cache-location 'node_modules/.cache/.eslintcache' && manypkg fix",
+    "typecheck": "turbo typecheck --affected --cache-dir=.turbo",
+    "analyze": "turbo analyze --cache-dir=.turbo",
+    "test": "turbo test --cache-dir=.turbo",
+    "syncpack:list": "pnpm dlx syncpack list-mismatches",
+    "syncpack:fix": "pnpm dlx syncpack fix-mismatches"
+  },
+  "prettier": "@tooling/prettier-config",
+  "packageManager": "pnpm@9.12.0",
+  "dependencies": {
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "@tooling/tsconfig": "workspace:*",
+    "@turbo/gen": "^2.5.5",
+    "@types/react": "~19.1.10",
+    "cross-env": "^7.0.3",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "prettier": "3.6.2",
+    "ts-jest": "^29.4.1",
+    "turbo": "^2.5.5",
+    "typescript": "~5.9.2",
+    "zod": "^3.25.76"
+  }
+}
