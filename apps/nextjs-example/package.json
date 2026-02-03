@@ -14,8 +14,7 @@
         "format": "prettier --check \"**/*.{js,cjs,mjs,ts,tsx,mdx,json}\"",
         "start": "pnpm with-env next start",
         "start:test": "NODE_ENV=test pnpm with-env:test next start",
-        "typecheck": "tsc --noEmit",
-        "postinstall": "fumadocs-mdx"
+        "typecheck": "tsc --noEmit"
     },
     "dependencies": {
         "@hookform/resolvers": "^4.1.3",

@@ -18,8 +18,7 @@
         "@tooling/tsconfig": "workspace:*",
         "@next/eslint-plugin-next": "15.3.1",
         "@types/eslint": "9.6.1",
-        "@tooling/eslint-config-next": "15.3.1",
-        "@tooling/eslint-config-turbo": "^2.5.6",
+        "eslint-config-turbo": "^2.5.6",
         "typescript-eslint": "8.24.0",
         "eslint": "^9.33.0",
         "typescript": "~5.9.2"
