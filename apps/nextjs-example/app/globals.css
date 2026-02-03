@@ -1,0 +1,6 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+/* monorepo source */
+@source "../../../kit/**/src/**/*.{ts,tsx}";
+
