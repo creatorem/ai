@@ -8,7 +8,7 @@
         "build": "pnpm with-env next build",
         "build:test": "NODE_ENV=test pnpm with-env:test next build",
         "clean": "git clean -xdf .next .turbo node_modules",
-        "dev": "pnpm with-env next dev --port 3001 --turbo | pino-pretty -c",
+        "dev": "pnpm with-env next dev --port 3000 --turbo | pino-pretty -c",
         "lint": "eslint .",
         "lint:fix": "next lint --fix",
         "format": "prettier --check \"**/*.{js,cjs,mjs,ts,tsx,mdx,json}\"",
