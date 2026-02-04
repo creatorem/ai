@@ -1,4 +1,4 @@
-import { ReadonlyJSONObject } from "assistant-stream/utils";
+import { ReadonlyJSONObject } from "@creatorem/stream/utils";
 import type { ThreadMessage } from "./assistant-types";
 
 export type TextMessagePart = {

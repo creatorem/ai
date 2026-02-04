@@ -1,4 +1,4 @@
-import { getPartialJsonObjectFieldState } from "assistant-stream/utils";
+import { getPartialJsonObjectFieldState } from "@creatorem/stream/utils";
 import { useAuiState } from "@creatorem/ai-store";
 
 const COMPLETE_STATUS = { type: "complete" };

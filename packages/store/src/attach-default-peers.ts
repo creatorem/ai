@@ -5,7 +5,7 @@ import type { DerivedElement } from "./derived";
 /**
  * Symbol used to store default peer clients on a resource.
  */
-const DEFAULT_PEERS = Symbol("assistant-ui.default-peers");
+const DEFAULT_PEERS = Symbol("creatorem-ai.default-peers");
 
 /**
  * Type for resources that have default peers attached.

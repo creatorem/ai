@@ -1,4 +1,4 @@
-import { Tool } from "assistant-stream";
+import { Tool } from "@creatorem/stream";
 
 // TODO re-add the inferrence of the parameters
 

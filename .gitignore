@@ -2,18 +2,23 @@
 
 # dependencies
 node_modules
-/.pnp
+**/**/node_modules
+.pnp
 .pnp.js
 
 # testing
-/coverage
+coverage
 
 # next.js
-/.next/
-/out/
+.next
+**/**/.next
+out/
 
 # production
-/build
+build
+**/**/build
+dist
+**/**/dist
 
 # misc
 .DS_Store
@@ -34,3 +39,32 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# turbo
+.turbo
+**/**/.turbo
+
+.cache
+public
+**/**/.cache
+
+**/**/public
+
+*.lock
+*.log
+*.hbs
+
+.cursorrules
+.DS_Store
+.editorconfig
+.eslintignore
+.gitattributes
+.gitignore
+.npmignore
+.npmrc
+.nvmrc
+.prettierignore
+.syncpackrc
+pnpm-lock.yaml
+
+*.mdx

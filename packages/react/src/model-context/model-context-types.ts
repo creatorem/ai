@@ -1,5 +1,5 @@
 import { Unsubscribe } from "../types/unsubscribe";
-import { Tool } from "assistant-stream";
+import { Tool } from "@creatorem/stream";
 
 export type LanguageModelV1CallSettings = {
   maxTokens?: number;

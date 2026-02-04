@@ -1,4 +1,4 @@
-import { ReadonlyJSONValue } from "assistant-stream/utils";
+import { ReadonlyJSONValue } from "@creatorem/stream/utils";
 import { MessageStatus } from "../../../types";
 
 const symbolAutoStatus = Symbol("autoStatus");

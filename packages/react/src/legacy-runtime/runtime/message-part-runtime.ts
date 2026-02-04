@@ -9,7 +9,7 @@ import type { MessageStateBinding } from "./runtime-bindings";
 import { SubscribableWithState } from "./subscribable/subscribable";
 import { Unsubscribe } from "../../types";
 import { MessagePartRuntimePath } from "./runtime-path-types";
-import { ToolResponse } from "assistant-stream";
+import { ToolResponse } from "@creatorem/stream";
 
 export type MessagePartState = (
   | ThreadUserMessagePart

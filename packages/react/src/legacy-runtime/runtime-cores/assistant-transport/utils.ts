@@ -1,7 +1,7 @@
-import { Tool, toToolsJSONSchema, type ToolJSONSchema } from "assistant-stream";
+import { Tool, toToolsJSONSchema, type ToolJSONSchema } from "@creatorem/stream";
 
 /**
- * @deprecated Use `toToolsJSONSchema` from `assistant-stream` instead.
+ * @deprecated Use `toToolsJSONSchema` from `@creatorem/stream` instead.
  */
 export function toAISDKTools(
   tools: Record<string, Tool>,
@@ -10,7 +10,7 @@ export function toAISDKTools(
 }
 
 /**
- * @deprecated Use `toToolsJSONSchema` from `assistant-stream` instead, which includes filtering by default.
+ * @deprecated Use `toToolsJSONSchema` from `@creatorem/stream` instead, which includes filtering by default.
  */
 export function getEnabledTools(
   tools: Record<string, Tool>,

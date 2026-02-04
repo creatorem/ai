@@ -1,6 +1,6 @@
 "use client";
 
-import type { Tool } from "assistant-stream";
+import type { Tool } from "@creatorem/stream";
 import type { ToolCallMessagePartComponent } from "../types/message-part-component-types";
 
 export type ToolDefinition<

@@ -1,4 +1,4 @@
-import { AssistantStream, AssistantStreamChunk } from "assistant-stream";
+import { AssistantStream, AssistantStreamChunk } from "@creatorem/stream";
 import {
   RemoteThreadInitializeResponse,
   RemoteThreadListAdapter,

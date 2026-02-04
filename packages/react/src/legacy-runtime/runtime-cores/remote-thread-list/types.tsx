@@ -1,6 +1,6 @@
 import { ComponentType, PropsWithChildren } from "react";
 import { AssistantRuntime } from "../../runtime";
-import { AssistantStream } from "assistant-stream";
+import { AssistantStream } from "@creatorem/stream";
 import { ThreadMessage } from "../../../types";
 
 export type RemoteThreadInitializeResponse = {

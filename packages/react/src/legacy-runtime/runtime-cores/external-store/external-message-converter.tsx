@@ -10,7 +10,7 @@ import { fromThreadMessageLike, ThreadMessageLike } from "./thread-message-like"
 import { getAutoStatus, isAutoStatus } from "./auto-status";
 import { ThreadMessage, ToolCallMessagePart } from "../../../types";
 import { ToolExecutionStatus } from "../assistant-transport/use-tool-invocations";
-import { ReadonlyJSONValue } from "assistant-stream/utils";
+import { ReadonlyJSONValue } from "@creatorem/stream/utils";
 import { generateErrorMessageId } from "../../../utils/id-utils";
 import { ThreadAssistantMessage } from "../../../types/assistant-types";
 

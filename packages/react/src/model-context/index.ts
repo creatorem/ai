@@ -13,7 +13,7 @@ export { useInlineRender } from "./use-inline-render";
 
 export type { ModelContext, ModelContextProvider } from "./model-context-types";
 
-export type { Tool } from "assistant-stream";
+export type { Tool } from "@creatorem/stream";
 
 export { tool } from "./tool";
 

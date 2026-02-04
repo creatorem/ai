@@ -1,4 +1,4 @@
-import { Tool } from "assistant-stream";
+import { Tool } from "@creatorem/stream";
 import {
   ModelContext,
   ModelContextProvider,

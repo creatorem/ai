@@ -3,7 +3,7 @@ import { MessageStatus } from "../../types/assistant-types";
 import { fromThreadMessageLike } from "../runtime-cores/external-store/thread-message-like";
 import { CloudMessage } from "assistant-cloud";
 import { isJSONValue } from "../../utils/json/is-json";
-import { ReadonlyJSONObject, ReadonlyJSONValue } from "assistant-stream/utils";
+import { ReadonlyJSONObject, ReadonlyJSONValue } from "@creatorem/stream/utils";
 import { ExportedMessageRepositoryItem } from "../runtime-cores/utils/message-repository";
 
 type AuiV0MessageMessagePart =

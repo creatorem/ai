@@ -13,7 +13,7 @@ import type {
 } from "../adapters/speech/speech-adapter-types";
 import type { ThreadMessageLike } from "./thread-message-like";
 import type { ExportedMessageRepository } from "../utils/message-repository";
-import type { ReadonlyJSONValue } from "assistant-stream/utils";
+import type { ReadonlyJSONValue } from "@creatorem/stream/utils";
 
 export type ExternalStoreThreadData<TState extends "regular" | "archived"> = {
   status: TState;

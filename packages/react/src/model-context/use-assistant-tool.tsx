@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useAui } from "@creatorem/ai-store";
 import type { ToolCallMessagePartComponent } from "../types/message-part-component-types";
-import type { Tool } from "assistant-stream";
+import type { Tool } from "@creatorem/stream";
 
 export type AssistantToolProps<
   TArgs extends Record<string, unknown>,

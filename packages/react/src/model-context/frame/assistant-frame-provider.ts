@@ -3,7 +3,7 @@ import {
   ModelContext,
 } from "../model-context-types";
 import { Unsubscribe } from "../../types/unsubscribe";
-import { Tool } from "assistant-stream";
+import { Tool } from "@creatorem/stream";
 import { z } from "zod";
 import {
   FrameMessage,

@@ -11,7 +11,7 @@ import type {
   ToolCallMessagePart,
 } from "../../../types/assistant-types";
 import type { ModelContext } from "../../../model-context/model-context-types";
-import { ReadonlyJSONValue } from "assistant-stream/utils";
+import { ReadonlyJSONValue } from "@creatorem/stream/utils";
 
 export type ChatModelRunUpdate = {
   readonly content: readonly ThreadAssistantMessagePart[];

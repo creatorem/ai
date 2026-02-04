@@ -10,7 +10,7 @@ import type {
   Unstable_AudioMessagePart,
 } from "./assistant-types";
 import { MessagePartState } from "../legacy-runtime/runtime/message-part-runtime";
-import { ToolResponse } from "assistant-stream";
+import { ToolResponse } from "@creatorem/stream";
 
 export type EmptyMessagePartProps = {
   status: MessagePartStatus;

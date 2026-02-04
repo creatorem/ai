@@ -34,7 +34,7 @@ import { EventSubscriptionSubject } from "./subscribable/event-subscription-subj
 import { symbolInnerMessage } from "../runtime-cores/external-store/get-external-store-message";
 import { ModelContext } from "../../model-context";
 import { ChatModelRunOptions, ChatModelRunResult } from "../runtime-cores";
-import { ReadonlyJSONValue } from "assistant-stream/utils";
+import { ReadonlyJSONValue } from "@creatorem/stream/utils";
 
 export type CreateStartRunConfig = {
   parentId: string | null;

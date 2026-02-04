@@ -1,4 +1,4 @@
-import type { ReadonlyJSONValue } from "assistant-stream/utils";
+import type { ReadonlyJSONValue } from "@creatorem/stream/utils";
 import type {
   RuntimeCapabilities,
   SpeechState,

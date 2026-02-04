@@ -12,7 +12,7 @@ import { EMPTY_THREAD_CORE } from "./empty-thread-core";
 import { OptimisticState } from "./optimistic-state";
 import { FC, Fragment, useEffect, useId } from "react";
 import { create } from "zustand";
-import { AssistantMessageStream } from "assistant-stream";
+import { AssistantMessageStream } from "@creatorem/stream";
 import { ModelContextProvider } from "../../../model-context";
 import { RuntimeAdapterProvider } from "../adapters/runtime-adapter-provider";
 

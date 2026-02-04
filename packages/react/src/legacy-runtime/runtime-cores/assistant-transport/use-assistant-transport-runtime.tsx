@@ -4,7 +4,7 @@ import {
   type ReadonlyJSONObject,
   type ReadonlyJSONValue,
   asAsyncIterableStream,
-} from "assistant-stream/utils";
+} from "@creatorem/stream/utils";
 import { AppendMessage } from "../../../types";
 import { useExternalStoreRuntime } from "../external-store/use-external-store-runtime";
 import { AssistantRuntime } from "../../runtime/assistant-runtime";
@@ -16,7 +16,7 @@ import {
   AssistantTransportDecoder,
   unstable_createInitialMessage as createInitialMessage,
   toToolsJSONSchema,
-} from "assistant-stream";
+} from "@creatorem/stream";
 import {
   AssistantTransportOptions,
   AddMessageCommand,

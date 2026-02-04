@@ -1,4 +1,4 @@
-import type { ToolResponse } from "assistant-stream";
+import type { ToolResponse } from "@creatorem/stream";
 import type { MessagePartRuntime } from "../../legacy-runtime/runtime";
 import type {
   ThreadUserMessagePart,

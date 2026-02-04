@@ -4,7 +4,7 @@ import type { AssistantClient, AssistantState } from "../types/client";
 import { BaseProxyHandler, handleIntrospectionProp } from "./base-proxy-handler";
 
 export const PROXIED_ASSISTANT_STATE_SYMBOL = Symbol(
-  "assistant-ui.store.proxiedAssistantState",
+  "creatorem-ai.store.proxiedAssistantState",
 );
 
 const isIgnoredKey = (key: string | symbol): key is "on" | "subscribe" => {

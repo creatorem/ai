@@ -22,7 +22,7 @@ import { wrapperResource } from "./wrapper-resource";
  * Symbol used internally to get state from ClientProxy.
  * This allows getState() to be optional in the user-facing client.
  */
-const SYMBOL_GET_OUTPUT = Symbol("assistant-ui.store.getValue");
+const SYMBOL_GET_OUTPUT = Symbol("creatorem-ai.store.getValue");
 
 type ClientInternal = {
   [SYMBOL_GET_OUTPUT]: ClientOutputOf<unknown, ClientMethods>;

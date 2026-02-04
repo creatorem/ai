@@ -1,4 +1,4 @@
-import { parsePartialJsonObject } from "assistant-stream/utils";
+import { parsePartialJsonObject } from "@creatorem/stream/utils";
 import { generateId } from "../../../utils/id-utils";
 import {
   MessageStatus,
@@ -20,7 +20,7 @@ import {
   SourceMessagePart,
   ThreadStep,
 } from "../../../types/assistant-types";
-import { ReadonlyJSONObject, ReadonlyJSONValue } from "assistant-stream/utils";
+import { ReadonlyJSONObject, ReadonlyJSONValue } from "@creatorem/stream/utils";
 
 export type ThreadMessageLike = {
   readonly role: "assistant" | "user" | "system";

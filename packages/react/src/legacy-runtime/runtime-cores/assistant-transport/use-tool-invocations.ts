@@ -5,7 +5,7 @@ import {
   ToolResponse,
   unstable_toolResultStream,
   type Tool,
-} from "assistant-stream";
+} from "@creatorem/stream";
 import type {
   AssistantTransportCommand,
   AssistantTransportState,
@@ -13,7 +13,7 @@ import type {
 import {
   AssistantMetaTransformStream,
   type ReadonlyJSONValue,
-} from "assistant-stream/utils";
+} from "@creatorem/stream/utils";
 
 const isArgsTextComplete = (argsText: string) => {
   try {

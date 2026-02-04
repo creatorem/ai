@@ -1,4 +1,4 @@
-import { ReadonlyJSONValue } from "assistant-stream/utils";
+import { ReadonlyJSONValue } from "@creatorem/stream/utils";
 import { ThreadMessage } from "../../../types";
 import { AttachmentAdapter, ThreadHistoryAdapter } from "..";
 import { UserCommands } from "../../../augmentations";

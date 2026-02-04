@@ -5,7 +5,7 @@ import {
   attachDefaultPeers,
 } from "@creatorem/ai-store";
 import { ToolsState } from "../types/scopes";
-import type { Tool } from "assistant-stream";
+import type { Tool } from "@creatorem/stream";
 import { type Toolkit } from "../model-context/toolbox";
 import { ToolCallMessagePartComponent } from "../types";
 import { ModelContext } from "./model-context-client";

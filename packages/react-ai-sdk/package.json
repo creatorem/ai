@@ -1,0 +1,47 @@
+{
+  "name": "@creatorem/ai-sdk",
+  "version": "0.0.1",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "clean": "git clean -xdf .turbo node_modules",
+    "format": "prettier --check \"**/*.{ts,tsx}\"",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@ai-sdk/react": "^3.0.52",
+    "ai": "^6.0.50",
+    "zod": "^4.3.6"
+  },
+  "peerDependencies": {
+    "@creatorem/ai-react": "workspace:*",
+    "@types/react": "*",
+    "react": "^18 || ^19"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@tooling/eslint-config": "workspace:*",
+    "@tooling/prettier-config": "workspace:*",
+    "@tooling/tsconfig": "workspace:*",
+    "@creatorem/stream": "workspace:*",
+    "@creatorem/ai-react": "workspace:*",
+    "@types/json-schema": "^7.0.15",
+    "@types/react": "^19.1.0",
+    "react": "^19.1.0"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "name": "@creatorem/stream",
+  "version": "0.0.1",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./utils": "./src/utils.ts"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "src",
+    "utils"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "clean": "git clean -xdf .turbo node_modules",
+    "format": "prettier --check \"**/*.{ts,tsx}\"",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@standard-schema/spec": "^1.1.0",
+    "nanoid": "^5.1.6",
+    "secure-json-parse": "^4.1.0"
+  },
+  "devDependencies": {
+    "@tooling/eslint-config": "workspace:*",
+    "@tooling/prettier-config": "workspace:*",
+    "@tooling/tsconfig": "workspace:*",
+    "@types/json-schema": "^7.0.15"
+  }
+}

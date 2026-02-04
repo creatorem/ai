@@ -2,7 +2,7 @@ import {
   ReadonlyJSONArray,
   ReadonlyJSONObject,
   ReadonlyJSONValue,
-} from "assistant-stream/utils";
+} from "@creatorem/stream/utils";
 
 export function isJSONValue(
   value: unknown,
