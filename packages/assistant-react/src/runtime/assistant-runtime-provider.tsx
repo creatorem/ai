@@ -6,7 +6,44 @@ import { AssistantRuntime } from "./runtime/assistant-runtime";
 import { AssistantRuntimeCore } from "./runtime-cores/core/assistant-runtime-core";
 import { RuntimeAdapter } from "./runtime-adapter";
 import { ThreadPrimitiveViewportProvider } from "../context/providers/thread-viewport-provider";
+import { useAssistantState } from "..";
 // import { DevToolsProviderApi } from "../devtools";
+
+const Test = () => {
+
+
+  // const attachment = useAssistantState((state) => state.attachment);
+  // console.log( {attachment} )
+  
+  const composer = useAssistantState((state) => state.composer);
+  console.log( {composer} )
+
+  // const message = useAssistantState((state) => state.message);
+  // console.log( {message} )
+
+  // const part = useAssistantState((state) => state.part);
+  // console.log( {part} )
+
+  // const suggestion = useAssistantState((state) => state.suggestion);
+  // console.log( {suggestion} )
+
+  const suggestions = useAssistantState((state) => state.suggestions);
+  console.log( {suggestions} )
+
+  const thread = useAssistantState((state) => state.thread);
+  console.log( {thread} )
+
+  const threadListItem = useAssistantState((state) => state.threadListItem);
+  console.log( {threadListItem} )
+
+  const threads = useAssistantState((state) => state.threads);
+  console.log( {threads} )
+
+  const tools = useAssistantState((state) => state.tools);
+  console.log( {tools} )
+
+  return null
+}
 
 export namespace AssistantRuntimeProvider {
   export type Props = PropsWithChildren<{
@@ -30,6 +67,10 @@ export const AssistantRuntimeProviderImpl: FC<
   AssistantRuntimeProvider.Props
 > = ({ children, aui: parent = null, runtime }) => {
   const aui = useAui({ threads: RuntimeAdapter(runtime) }, { parent: parent });
+  console.log( {aui} )
+
+
+  
 
   // useEffect(() => {
   //   if (process.env["NODE_ENV"] === "production") return;
@@ -40,6 +81,7 @@ export const AssistantRuntimeProviderImpl: FC<
 
   return (
     <AuiProvider value={aui}>
+      <Test />
       {RenderComponent && <RenderComponent />}
 
       {/* TODO temporarily allow accessing viewport state from outside the viewport */}

@@ -17,6 +17,8 @@
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.19",
+    "@creatorem/ai-react": "workspace:*",
+    "@creatorem/ai-store": "workspace:*",
     "@creatorem/ai-assistant-react": "workspace:*",
     "@creatorem/ai-assistant-react-markdown": "workspace:*",
     "@creatorem/ai-sdk": "workspace:*",
