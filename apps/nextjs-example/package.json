@@ -3,11 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "biome check .",
-    "lint:fix": "biome check --write ."
+    "analyze": "ANALYZE_BUNDLE=true pnpm run build",
+    "build": "pnpm with-env next build",
+    "build:test": "NODE_ENV=test pnpm with-env:test next build",
+    "clean": "git clean -xdf .next .turbo node_modules",
+    "dev": "pnpm with-env next dev --port 3000 --turbo | pino-pretty -c",
+    "lint": "eslint .",
+    "lint:fix": "next lint --fix",
+    "format": "prettier --check \"**/*.{js,cjs,mjs,ts,tsx,mdx,json}\"",
+    "start": "pnpm with-env next start",
+    "start:test": "NODE_ENV=test pnpm with-env:test next start",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.19",
