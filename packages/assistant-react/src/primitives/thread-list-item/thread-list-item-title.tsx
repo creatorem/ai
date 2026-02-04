@@ -1,7 +1,7 @@
 "use client";
 
 import type { FC, ReactNode } from "react";
-import { useAuiState } from "@creatorem/ai-store";
+import { useAuiState } from "@creatorem/ai-assistant-store";
 
 export namespace ThreadListItemPrimitiveTitle {
   export type Props = {

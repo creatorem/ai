@@ -1,7 +1,7 @@
 "use client";
 
 import { type ComponentType, type FC, memo, useMemo } from "react";
-import { useAuiState } from "@creatorem/ai-store";
+import { useAuiState } from "@creatorem/ai-assistant-store";
 import { MessageByIndexProvider } from "../../context/providers";
 import { ThreadMessage as ThreadMessageType } from "../../types";
 

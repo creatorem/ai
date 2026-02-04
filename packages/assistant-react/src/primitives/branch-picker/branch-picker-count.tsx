@@ -1,7 +1,7 @@
 "use client";
 
 import type { FC } from "react";
-import { useAuiState } from "@creatorem/ai-store";
+import { useAuiState } from "@creatorem/ai-assistant-store";
 
 const useBranchPickerCount = () => {
   const branchCount = useAuiState(({ message }) => message.branchCount);

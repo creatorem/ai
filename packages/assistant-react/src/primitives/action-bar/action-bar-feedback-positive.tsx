@@ -3,7 +3,7 @@
 import { forwardRef, useCallback } from "react";
 import { ActionButtonProps } from "../../utils/create-action-button";
 import { composeEventHandlers } from "@radix-ui/primitive";
-import { useAuiState, useAui } from "@creatorem/ai-store";
+import { useAuiState, useAui } from "@creatorem/ai-assistant-store";
 import { Primitive } from "@radix-ui/react-primitive";
 
 const useActionBarFeedbackPositive = () => {

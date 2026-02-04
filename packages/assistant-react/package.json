@@ -21,7 +21,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@creatorem/ai-store": "workspace:*",
+    "@creatorem/ai-assistant-store": "workspace:*",
     "@creatorem/ai-tap": "workspace:*",
     "@creatorem/stream": "workspace:*",
     "@radix-ui/primitive": "^1.1.3",

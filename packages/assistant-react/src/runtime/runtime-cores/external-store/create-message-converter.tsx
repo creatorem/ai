@@ -1,6 +1,6 @@
 "use client";
 import { ThreadState } from "../../runtime";
-import { useAui, useAuiState } from "@creatorem/ai-store";
+import { useAui, useAuiState } from "@creatorem/ai-assistant-store";
 import { ThreadMessage } from "../../../types";
 import {
   useExternalMessageConverter,

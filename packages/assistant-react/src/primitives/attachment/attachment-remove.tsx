@@ -6,7 +6,7 @@ import {
   createActionButton,
 } from "../../utils/create-action-button";
 import { useCallback } from "react";
-import { useAui } from "@creatorem/ai-store";
+import { useAui } from "@creatorem/ai-assistant-store";
 
 const useAttachmentRemove = () => {
   const aui = useAui();

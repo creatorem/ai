@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuiState } from "@creatorem/ai-store";
+import { useAuiState } from "@creatorem/ai-assistant-store";
 import { DataMessagePart } from "../../types";
 
 export const useMessagePartData = <T = any>(name?: string) => {

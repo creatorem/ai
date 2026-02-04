@@ -1,7 +1,7 @@
 "use client";
 
 import { ComponentType, type FC, memo, useMemo } from "react";
-import { useAuiState } from "@creatorem/ai-store";
+import { useAuiState } from "@creatorem/ai-assistant-store";
 import { MessageAttachmentByIndexProvider } from "../../context/providers";
 import { CompleteAttachment } from "../../types";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { type FC, type PropsWithChildren } from "react";
-import { useAui, AuiProvider } from "@creatorem/ai-store";
+import { useAui, AuiProvider } from "@creatorem/ai-assistant-store";
 import {
   ThreadMessageClientProps,
   ThreadMessageClient,

@@ -5,7 +5,7 @@ import { ThreadRuntime } from "../runtime/thread-runtime";
 import { ModelContext } from "../../model-context";
 import { createStateHookForRuntime } from "../../context/react/utils/create-state-hook-for-runtime";
 import { ThreadComposerRuntime } from "../runtime";
-import { useAui, useAuiEvent, useAuiState } from "@creatorem/ai-store";
+import { useAui, useAuiEvent, useAuiState } from "@creatorem/ai-assistant-store";
 
 /**
  * @deprecated Use `useAui()` with `aui.thread()` instead. See migration guide: https://assistant-ui.com/docs/migrations/v0-12

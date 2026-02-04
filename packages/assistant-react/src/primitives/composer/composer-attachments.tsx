@@ -2,7 +2,7 @@
 
 import { ComponentType, type FC, memo, useMemo } from "react";
 import { Attachment } from "../../types";
-import { useAuiState } from "@creatorem/ai-store";
+import { useAuiState } from "@creatorem/ai-assistant-store";
 import { ComposerAttachmentByIndexProvider } from "../../context/providers";
 
 export namespace ComposerPrimitiveAttachments {

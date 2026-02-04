@@ -15,7 +15,7 @@ import {
   MessagePartStatus,
   ToolCallMessagePartStatus,
 } from "../../types/assistant-types";
-import { useAui } from "@creatorem/ai-store";
+import { useAui } from "@creatorem/ai-assistant-store";
 import { createContextStoreHook } from "../../context/react/utils/create-context-store-hook";
 
 type SmoothContextValue = {

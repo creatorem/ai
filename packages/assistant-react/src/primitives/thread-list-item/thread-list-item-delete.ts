@@ -5,7 +5,7 @@ import {
   ActionButtonProps,
   createActionButton,
 } from "../../utils/create-action-button";
-import { useAui } from "@creatorem/ai-store";
+import { useAui } from "@creatorem/ai-assistant-store";
 import { useCallback } from "react";
 
 const useThreadListItemDelete = () => {

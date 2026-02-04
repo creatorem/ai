@@ -6,7 +6,7 @@ import {
   createActionButton,
 } from "../../utils/create-action-button";
 import { useCallback } from "react";
-import { useAuiState, useAui } from "@creatorem/ai-store";
+import { useAuiState, useAui } from "@creatorem/ai-assistant-store";
 
 /**
  * Hook that provides navigation to the previous branch functionality.

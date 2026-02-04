@@ -8,7 +8,7 @@ import {
   type ClientOutput,
   tapClientLookup,
   tapClientResource,
-} from "@creatorem/ai-store";
+} from "@creatorem/ai-assistant-store";
 import { ThreadListRuntime } from "../runtime/thread-list-runtime";
 import { tapSubscribable } from "../util-hooks/tap-subscribable";
 import { ThreadListItemClient } from "./thread-list-item-runtime-client";

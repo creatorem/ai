@@ -32,7 +32,7 @@ import { ToolExecutionStatus, useToolInvocations } from "./use-tool-invocations"
 import { createRequestHeaders } from "./utils";
 import { useRemoteThreadListRuntime } from "../remote-thread-list/use-remote-thread-list-runtime";
 import { InMemoryThreadListAdapter } from "../remote-thread-list/adapter/in-memory";
-import { useAui, useAuiState } from "@creatorem/ai-store";
+import { useAui, useAuiState } from "@creatorem/ai-assistant-store";
 import { UserExternalState } from "../../../augmentations";
 
 const symbolAssistantTransportExtras = Symbol("assistant-transport-extras");

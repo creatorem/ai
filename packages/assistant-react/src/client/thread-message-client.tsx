@@ -6,7 +6,7 @@ import {
   tapInlineResource,
   withKey,
 } from "@creatorem/ai-tap";
-import { type ClientOutput, tapClientLookup } from "@creatorem/ai-store";
+import { type ClientOutput, tapClientLookup } from "@creatorem/ai-assistant-store";
 import { MessageState, PartState } from "../types/scopes";
 import {
   ThreadAssistantMessagePart,

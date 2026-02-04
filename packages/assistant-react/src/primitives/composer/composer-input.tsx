@@ -16,7 +16,7 @@ import TextareaAutosize, {
 } from "react-textarea-autosize";
 import { useEscapeKeydown } from "@radix-ui/react-use-escape-keydown";
 import { useOnScrollToBottom } from "../../utils/hooks/use-on-scroll-to-bottom";
-import { useAuiState, useAui } from "@creatorem/ai-store";
+import { useAuiState, useAui } from "@creatorem/ai-assistant-store";
 import { flushResourcesSync } from "@creatorem/ai-tap";
 
 export namespace ComposerPrimitiveInput {

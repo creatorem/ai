@@ -7,7 +7,7 @@ import { RemoteThreadListOptions } from "./types";
 import { AssistantRuntimeImpl } from "../../../internal";
 import { AssistantRuntimeCore } from "../core/assistant-runtime-core";
 import { AssistantRuntime } from "../../runtime/assistant-runtime";
-import { useAui } from "@creatorem/ai-store";
+import { useAui } from "@creatorem/ai-assistant-store";
 
 class RemoteThreadListRuntimeCore
   extends BaseAssistantRuntimeCore

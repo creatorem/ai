@@ -1,7 +1,7 @@
 "use client";
 
 import type { FC, PropsWithChildren } from "react";
-import { useAuiState } from "@creatorem/ai-store";
+import { useAuiState } from "@creatorem/ai-assistant-store";
 import type { RequireAtLeastOne } from "../../utils/require-at-least-one";
 
 type MessageIfFilters = {

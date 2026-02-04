@@ -2,7 +2,7 @@
 
 import { MessagePartRuntime } from "../runtime/message-part-runtime";
 import { createStateHookForRuntime } from "../../context/react/utils/create-state-hook-for-runtime";
-import { useAui, useAuiState } from "@creatorem/ai-store";
+import { useAui, useAuiState } from "@creatorem/ai-assistant-store";
 
 /**
  * @deprecated Use `useAui()` with `aui.part()` instead. See migration guide: https://assistant-ui.com/docs/migrations/v0-12

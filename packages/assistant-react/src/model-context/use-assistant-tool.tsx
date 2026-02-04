@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useAui } from "@creatorem/ai-store";
+import { useAui } from "@creatorem/ai-assistant-store";
 import type { ToolCallMessagePartComponent } from "../types/message-part-component-types";
 import type { Tool } from "@creatorem/stream";
 

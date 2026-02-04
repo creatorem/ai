@@ -39,7 +39,7 @@ export type ClientSchema<
  *
  * @example
  * ```typescript
- * declare module "@creatorem/ai-store" {
+ * declare module "@creatorem/ai-assistant-store" {
  *   interface ClientRegistry {
  *     // Simple client (meta and events are optional)
  *     foo: {

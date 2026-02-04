@@ -8,7 +8,7 @@ import { useRuntimeAdapters } from "../adapters/runtime-adapter-provider";
 import { useRemoteThreadListRuntime } from "../remote-thread-list/use-remote-thread-list-runtime";
 import { useCloudThreadListAdapter } from "../remote-thread-list/adapter/cloud";
 import { AssistantRuntimeImpl } from "../../../internal";
-import { useAuiState } from "@creatorem/ai-store";
+import { useAuiState } from "@creatorem/ai-assistant-store";
 
 const useLocalThreadRuntime = (
   adapter: ChatModelAdapter,

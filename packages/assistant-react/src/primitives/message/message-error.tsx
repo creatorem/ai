@@ -1,7 +1,7 @@
 "use client";
 
 import { FC, PropsWithChildren } from "react";
-import { useAuiState } from "@creatorem/ai-store";
+import { useAuiState } from "@creatorem/ai-assistant-store";
 
 export const MessagePrimitiveError: FC<PropsWithChildren> = ({ children }) => {
   const hasError = useAuiState(

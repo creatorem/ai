@@ -2,7 +2,7 @@
 
 import { AttachmentRuntime } from "../runtime/attachment-runtime";
 import { createStateHookForRuntime } from "../../context/react/utils/create-state-hook-for-runtime";
-import { useAui, useAuiState } from "@creatorem/ai-store";
+import { useAui, useAuiState } from "@creatorem/ai-assistant-store";
 
 /**
  * @deprecated Use `useAui()` with `aui.attachment()` instead. See migration guide: https://assistant-ui.com/docs/migrations/v0-12

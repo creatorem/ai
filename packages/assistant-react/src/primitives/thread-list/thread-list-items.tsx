@@ -1,7 +1,7 @@
 "use client";
 
 import { ComponentType, FC, memo, useMemo } from "react";
-import { useAuiState } from "@creatorem/ai-store";
+import { useAuiState } from "@creatorem/ai-assistant-store";
 import { ThreadListItemByIndexProvider } from "../../context/providers";
 
 export namespace ThreadListPrimitiveItems {

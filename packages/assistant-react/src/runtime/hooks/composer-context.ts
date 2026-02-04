@@ -1,6 +1,6 @@
 "use client";
 
-import { useAui, useAuiState } from "@creatorem/ai-store";
+import { useAui, useAuiState } from "@creatorem/ai-assistant-store";
 import { ComposerRuntime } from "../runtime/composer-runtime";
 import { createStateHookForRuntime } from "../../context/react/utils/create-state-hook-for-runtime";
 

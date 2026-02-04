@@ -1,7 +1,7 @@
 "use client";
 
 import { FC, memo, PropsWithChildren, useEffect } from "react";
-import { useAui, AuiProvider, AssistantClient } from "@creatorem/ai-store";
+import { useAui, AuiProvider, AssistantClient } from "@creatorem/ai-assistant-store";
 import { AssistantRuntime } from "./runtime/assistant-runtime";
 import { AssistantRuntimeCore } from "./runtime-cores/core/assistant-runtime-core";
 import { RuntimeAdapter } from "./runtime-adapter";

@@ -1,5 +1,5 @@
 import { resource, tapMemo, tapState } from "@creatorem/ai-tap";
-import { type ClientOutput } from "@creatorem/ai-store";
+import { type ClientOutput } from "@creatorem/ai-assistant-store";
 import { CompositeContextProvider } from "../utils/composite-context-provider";
 import type { ModelContextState } from "../types/scopes";
 

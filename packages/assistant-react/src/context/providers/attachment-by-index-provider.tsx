@@ -1,7 +1,7 @@
 "use client";
 
 import { type FC, type PropsWithChildren } from "react";
-import { useAui, AuiProvider, Derived } from "@creatorem/ai-store";
+import { useAui, AuiProvider, Derived } from "@creatorem/ai-assistant-store";
 
 export const MessageAttachmentByIndexProvider: FC<
   PropsWithChildren<{

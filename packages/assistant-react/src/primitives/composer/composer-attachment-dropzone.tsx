@@ -4,7 +4,7 @@ import { forwardRef, useCallback, useState } from "react";
 
 import { Slot } from "@radix-ui/react-slot";
 import React from "react";
-import { useAui } from "@creatorem/ai-store";
+import { useAui } from "@creatorem/ai-assistant-store";
 
 export namespace ComposerPrimitiveAttachmentDropzone {
   export type Element = HTMLDivElement;

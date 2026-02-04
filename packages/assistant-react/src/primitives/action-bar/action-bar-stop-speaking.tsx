@@ -6,7 +6,7 @@ import { useEscapeKeydown } from "@radix-ui/react-use-escape-keydown";
 import { Primitive } from "@radix-ui/react-primitive";
 import { composeEventHandlers } from "@radix-ui/primitive";
 import { useCallback } from "react";
-import { useAuiState, useAui } from "@creatorem/ai-store";
+import { useAuiState, useAui } from "@creatorem/ai-assistant-store";
 
 const useActionBarStopSpeaking = () => {
   const aui = useAui();

@@ -7,7 +7,7 @@ import {
   ComponentPropsWithoutRef,
   useCallback,
 } from "react";
-import { useAui, useAuiState } from "@creatorem/ai-store";
+import { useAui, useAuiState } from "@creatorem/ai-assistant-store";
 import { useManagedRef } from "../../utils/hooks/use-managed-ref";
 import { useSizeHandle } from "../../utils/hooks/use-size-handle";
 import { useComposedRefs } from "@radix-ui/react-compose-refs";

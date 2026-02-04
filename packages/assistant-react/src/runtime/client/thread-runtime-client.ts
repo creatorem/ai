@@ -13,7 +13,7 @@ import {
   tapAssistantEmit,
   tapClientLookup,
   tapClientResource,
-} from "@creatorem/ai-store";
+} from "@creatorem/ai-assistant-store";
 import { ComposerClient } from "./composer-runtime-client";
 import { MessageClient } from "./message-runtime-client";
 import { tapSubscribable } from "../util-hooks/tap-subscribable";

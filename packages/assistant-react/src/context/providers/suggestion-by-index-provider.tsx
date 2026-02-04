@@ -1,7 +1,7 @@
 "use client";
 
 import { type FC, type PropsWithChildren } from "react";
-import { AuiProvider, Derived, useAui } from "@creatorem/ai-store";
+import { AuiProvider, Derived, useAui } from "@creatorem/ai-assistant-store";
 
 export type SuggestionByIndexProviderProps = PropsWithChildren<{
   index: number;

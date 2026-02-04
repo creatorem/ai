@@ -11,7 +11,7 @@ import {
 } from "../runtime-cores/adapters/thread-history/message-format-adapter";
 import { GenericThreadHistoryAdapter } from "../runtime-cores/adapters/thread-history/thread-history-adapter";
 import { ReadonlyJSONObject } from "@creatorem/stream/utils";
-import { AssistantClient, useAui } from "@creatorem/ai-store";
+import { AssistantClient, useAui } from "@creatorem/ai-assistant-store";
 import { ThreadListItemMethods } from "../../types/scopes";
 
 // Global WeakMap to store message ID mappings across adapter instances

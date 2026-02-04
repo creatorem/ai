@@ -10,7 +10,7 @@ import {
   type ClientOutput,
   tapAssistantEmit,
   tapClientLookup,
-} from "@creatorem/ai-store";
+} from "@creatorem/ai-assistant-store";
 import {
   ComposerRuntime,
   EditComposerRuntime,

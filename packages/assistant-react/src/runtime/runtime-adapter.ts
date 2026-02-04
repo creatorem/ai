@@ -5,7 +5,7 @@ import {
   tapAssistantClientRef,
   Derived,
   attachDefaultPeers,
-} from "@creatorem/ai-store";
+} from "@creatorem/ai-assistant-store";
 import { ModelContext } from "../client/model-context-client";
 import { Tools, Suggestions } from "../model-context";
 

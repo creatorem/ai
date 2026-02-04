@@ -11,7 +11,7 @@ import {
   createContext,
   useContext,
 } from "react";
-import { useAui } from "@creatorem/ai-store";
+import { useAui } from "@creatorem/ai-assistant-store";
 import { useComposedRefs } from "@radix-ui/react-compose-refs";
 import { tool } from "./tool";
 

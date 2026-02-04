@@ -1,5 +1,5 @@
 import { resource, tapEffect } from "@creatorem/ai-tap";
-import { type ClientOutput, tapAssistantEmit } from "@creatorem/ai-store";
+import { type ClientOutput, tapAssistantEmit } from "@creatorem/ai-assistant-store";
 import {
   ThreadListItemEventType,
   ThreadListItemRuntime,

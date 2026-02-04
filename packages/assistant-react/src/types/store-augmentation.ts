@@ -1,4 +1,4 @@
-import "@creatorem/ai-store";
+import "@creatorem/ai-assistant-store";
 
 import type { ThreadsClientSchema } from "./scopes/threads";
 import type { ThreadListItemClientSchema } from "./scopes/thread-list-item";
@@ -12,7 +12,7 @@ import type { ModelContextClientSchema } from "./scopes/model-context";
 import type { SuggestionsClientSchema } from "./scopes/suggestions";
 import type { SuggestionClientSchema } from "./scopes/suggestion";
 
-declare module "@creatorem/ai-store" {
+declare module "@creatorem/ai-assistant-store" {
   interface ClientRegistry {
     threads: ThreadsClientSchema;
     threadListItem: ThreadListItemClientSchema;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { useAui, useAuiState } from "@creatorem/ai-store";
+import { useAui, useAuiState } from "@creatorem/ai-assistant-store";
 import type {
   ActionButtonElement,
   ActionButtonProps,

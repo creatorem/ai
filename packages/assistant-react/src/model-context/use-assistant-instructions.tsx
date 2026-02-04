@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useAui } from "@creatorem/ai-store";
+import { useAui } from "@creatorem/ai-assistant-store";
 
 export type AssistantInstructionsConfig = {
   disabled?: boolean | undefined;

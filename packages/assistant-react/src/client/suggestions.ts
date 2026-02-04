@@ -1,5 +1,5 @@
 import { resource, tapState, withKey } from "@creatorem/ai-tap";
-import { type ClientOutput, tapClientLookup } from "@creatorem/ai-store";
+import { type ClientOutput, tapClientLookup } from "@creatorem/ai-assistant-store";
 import type { SuggestionsState, SuggestionState } from "../types/scopes";
 
 export type SuggestionConfig =

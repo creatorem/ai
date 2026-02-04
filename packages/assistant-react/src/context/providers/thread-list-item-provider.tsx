@@ -1,7 +1,7 @@
 "use client";
 
 import { type FC, type PropsWithChildren } from "react";
-import { useAui, AuiProvider, Derived } from "@creatorem/ai-store";
+import { useAui, AuiProvider, Derived } from "@creatorem/ai-assistant-store";
 import type { ThreadListItemRuntime } from "../../runtime/runtime/thread-list-item-runtime";
 import { ThreadListItemClient } from "../../runtime/client/thread-list-item-runtime-client";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import type { MessagePartState } from "../../runtime/runtime/message-part-runtime";
-import { useAuiState } from "@creatorem/ai-store";
+import { useAuiState } from "@creatorem/ai-assistant-store";
 import { SourceMessagePart } from "../../types";
 
 export const useMessagePartSource = () => {

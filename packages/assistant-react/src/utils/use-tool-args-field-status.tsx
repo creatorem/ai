@@ -1,5 +1,5 @@
 import { getPartialJsonObjectFieldState } from "@creatorem/stream/utils";
-import { useAuiState } from "@creatorem/ai-store";
+import { useAuiState } from "@creatorem/ai-assistant-store";
 
 const COMPLETE_STATUS = { type: "complete" };
 

@@ -9,7 +9,7 @@ import {
   type ClientOutput,
   tapClientLookup,
   tapClientResource,
-} from "@creatorem/ai-store";
+} from "@creatorem/ai-assistant-store";
 import { MessageRuntime } from "../runtime/message-runtime";
 import { tapSubscribable } from "../util-hooks/tap-subscribable";
 import { ComposerClient } from "./composer-runtime-client";

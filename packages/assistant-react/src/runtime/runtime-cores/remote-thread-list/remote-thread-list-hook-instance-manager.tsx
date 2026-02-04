@@ -11,7 +11,7 @@ import {
   useMemo,
 } from "react";
 import { UseBoundStore, StoreApi, create } from "zustand";
-import { useAui } from "@creatorem/ai-store";
+import { useAui } from "@creatorem/ai-assistant-store";
 import { ThreadListItemRuntimeProvider } from "../../../context/providers";
 import {
   ThreadListRuntimeCore,

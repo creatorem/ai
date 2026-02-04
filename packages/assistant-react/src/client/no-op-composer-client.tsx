@@ -1,6 +1,6 @@
 "use client";
 import { resource, tapMemo } from "@creatorem/ai-tap";
-import type { ClientOutput } from "@creatorem/ai-store";
+import type { ClientOutput } from "@creatorem/ai-assistant-store";
 import type { ComposerState } from "../types/scopes";
 
 export const NoOpComposerClient = resource(

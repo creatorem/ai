@@ -1,7 +1,7 @@
 "use client";
 
 import { type FC, type PropsWithChildren } from "react";
-import { useAui, AuiProvider, type ClientOutput } from "@creatorem/ai-store";
+import { useAui, AuiProvider, type ClientOutput } from "@creatorem/ai-assistant-store";
 import { PartState } from "../../types/scopes";
 import { resource, tapMemo } from "@creatorem/ai-tap";
 

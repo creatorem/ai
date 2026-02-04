@@ -3,7 +3,7 @@ import {
   tapAssistantClientRef,
   type ClientOutput,
   attachDefaultPeers,
-} from "@creatorem/ai-store";
+} from "@creatorem/ai-assistant-store";
 import { ToolsState } from "../types/scopes";
 import type { Tool } from "@creatorem/stream";
 import { type Toolkit } from "../model-context/toolbox";
