@@ -1,5 +1,5 @@
-import { AssistantStreamChunk } from "../../AssistantStreamChunk";
-import { Counter } from "../Counter";
+import { AssistantStreamChunk } from "../../assistant-stream-chunk";
+import { Counter } from "../counter";
 
 export class PathAppendEncoder extends TransformStream<
   AssistantStreamChunk,

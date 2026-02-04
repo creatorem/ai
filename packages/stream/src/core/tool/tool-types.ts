@@ -2,7 +2,7 @@ import type { JSONSchema7 } from "json-schema";
 import { DeepPartial, TypeAtPath, TypePath } from "./type-path-utils";
 import { AsyncIterableStream } from "../../utils";
 import type { StandardSchemaV1 } from "@standard-schema/spec";
-import { ToolResponse } from "./ToolResponse";
+import { ToolResponse } from "./tool-response";
 
 /**
  * Interface for reading tool call arguments from a stream, which are

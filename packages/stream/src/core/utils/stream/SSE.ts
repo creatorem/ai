@@ -1,5 +1,5 @@
-import { PipeableTransformStream } from "./PipeableTransformStream";
-import { LineDecoderStream } from "./LineDecoderStream";
+import { PipeableTransformStream } from "./pipeable-transform-stream";
+import { LineDecoderStream } from "./line-decoder-stream";
 
 export class SSEEncoder<T> extends PipeableTransformStream<
   T,

@@ -10,7 +10,7 @@ import {
 import { useCallbackRef } from "@radix-ui/react-use-callback-ref";
 import { useSmoothStatusStore } from "./smooth-context";
 import { writableStore } from "../../context/readonly-store";
-import { MessagePartState } from "../../legacy-runtime/runtime/message-part-runtime";
+import { MessagePartState } from "../../runtime/runtime/message-part-runtime";
 
 class TextStreamAnimator {
   private animationFrameId: number | null = null;

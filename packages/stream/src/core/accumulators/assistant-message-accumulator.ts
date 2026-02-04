@@ -1,5 +1,5 @@
-import { AssistantStreamChunk } from "../AssistantStreamChunk";
-import { generateId } from "../utils/generateId";
+import { AssistantStreamChunk } from "../assistant-stream-chunk";
+import { generateId } from "../utils/generate-id";
 import { parsePartialJsonObject } from "../../utils/json/parse-partial-json-object";
 import {
   AssistantMessage,
@@ -11,7 +11,7 @@ import {
   ReasoningPart,
   FilePart,
 } from "../utils/types";
-import { ObjectStreamAccumulator } from "../object/ObjectStreamAccumulator";
+import { ObjectStreamAccumulator } from "../object/object-stream-accumulator";
 import { ReadonlyJSONValue } from "../../utils";
 
 export const createInitialMessage = ({

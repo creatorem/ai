@@ -9,4 +9,4 @@ export {
   type GenericFilePart,
   type GenericToolCallPart,
   type GenericToolResultPart,
-} from "./toGenericMessages";
+} from "./to-generic-messages";

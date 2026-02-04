@@ -2,8 +2,8 @@
 
 import { type FC, type PropsWithChildren } from "react";
 import { useAui, AuiProvider, Derived } from "@creatorem/ai-store";
-import type { ThreadListItemRuntime } from "../../legacy-runtime/runtime/thread-list-item-runtime";
-import { ThreadListItemClient } from "../../legacy-runtime/client/thread-list-item-runtime-client";
+import type { ThreadListItemRuntime } from "../../runtime/runtime/thread-list-item-runtime";
+import { ThreadListItemClient } from "../../runtime/client/thread-list-item-runtime-client";
 
 export const ThreadListItemByIndexProvider: FC<
   PropsWithChildren<{

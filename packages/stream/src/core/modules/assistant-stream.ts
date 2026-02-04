@@ -1,25 +1,25 @@
-import { AssistantStream } from "../AssistantStream";
-import { AssistantStreamChunk, PartInit } from "../AssistantStreamChunk";
+import { AssistantStream } from "../assistant-stream";
+import { AssistantStreamChunk, PartInit } from "../assistant-stream-chunk";
 import { createMergeStream } from "../utils/stream/merge";
 import { createTextStreamController, TextStreamController } from "./text";
 import {
   createToolCallStreamController,
   ToolCallStreamController,
 } from "./tool-call";
-import { Counter } from "../utils/Counter";
+import { Counter } from "../utils/counter";
 import {
   PathAppendEncoder,
   PathMergeEncoder,
 } from "../utils/stream/path-utils";
-import { DataStreamEncoder } from "../serialization/data-stream/DataStream";
+import { DataStreamEncoder } from "../serialization/data-stream/data-stream";
 import { FilePart, SourcePart } from "../utils/types";
-import { generateId } from "../utils/generateId";
+import { generateId } from "../utils/generate-id";
 import {
   ReadonlyJSONObject,
   ReadonlyJSONValue,
 } from "../../utils/json/json-value";
-import { ToolResponseLike } from "../tool/ToolResponse";
-import { promiseWithResolvers } from "../../utils/promiseWithResolvers";
+import { ToolResponseLike } from "../tool/tool-response";
+import { promiseWithResolvers } from "../../utils/promise-with-resolvers";
 
 type ToolCallPartInit = {
   toolCallId?: string;

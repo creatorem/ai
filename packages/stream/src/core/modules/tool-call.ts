@@ -1,8 +1,8 @@
-import { AssistantStream } from "../AssistantStream";
-import { AssistantStreamChunk } from "../AssistantStreamChunk";
-import { ToolResponseLike } from "../tool/ToolResponse";
+import { AssistantStream } from "../assistant-stream";
+import { AssistantStreamChunk } from "../assistant-stream-chunk";
+import { ToolResponseLike } from "../tool/tool-response";
 import { ReadonlyJSONValue } from "../../utils/json/json-value";
-import { UnderlyingReadable } from "../utils/stream/UnderlyingReadable";
+import { UnderlyingReadable } from "../utils/stream/underlying-readable";
 import { createTextStream, TextStreamController } from "./text";
 
 export type ToolCallStreamController = {

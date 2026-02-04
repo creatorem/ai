@@ -1,5 +1,5 @@
-import { AssistantStreamChunk } from "../../AssistantStreamChunk";
-import { promiseWithResolvers } from "../../../utils/promiseWithResolvers";
+import { AssistantStreamChunk } from "../../assistant-stream-chunk";
+import { promiseWithResolvers } from "../../../utils/promise-with-resolvers";
 
 type MergeStreamItem = {
   reader: ReadableStreamDefaultReader<AssistantStreamChunk>;

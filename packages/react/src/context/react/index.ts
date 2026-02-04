@@ -8,7 +8,7 @@ export {
 export {
   useAssistantRuntime,
   useThreadList,
-} from "../../legacy-runtime/hooks/assistant-context";
+} from "../../runtime/hooks/assistant-context";
 
 export {
   useAttachmentRuntime,
@@ -19,32 +19,32 @@ export {
   useEditComposerAttachment,
   useMessageAttachment,
   useMessageAttachmentRuntime,
-} from "../../legacy-runtime/hooks/attachment-context";
+} from "../../runtime/hooks/attachment-context";
 
 export {
   useComposerRuntime,
   useComposer,
-} from "../../legacy-runtime/hooks/composer-context";
+} from "../../runtime/hooks/composer-context";
 
 export {
   useMessageRuntime,
   useEditComposer,
   useMessage,
-} from "../../legacy-runtime/hooks/message-context";
+} from "../../runtime/hooks/message-context";
 
 export {
   useMessagePartRuntime,
   useMessagePart,
-} from "../../legacy-runtime/hooks/message-part-context";
+} from "../../runtime/hooks/message-part-context";
 
 export {
   useThreadRuntime,
   useThread,
   useThreadComposer,
   useThreadModelContext,
-} from "../../legacy-runtime/hooks/thread-context";
+} from "../../runtime/hooks/thread-context";
 
 export {
   useThreadListItemRuntime,
   useThreadListItem,
-} from "../../legacy-runtime/hooks/thread-list-item-context";
+} from "../../runtime/hooks/thread-list-item-context";

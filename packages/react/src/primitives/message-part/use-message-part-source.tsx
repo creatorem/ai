@@ -1,6 +1,6 @@
 "use client";
 
-import type { MessagePartState } from "../../legacy-runtime/runtime/message-part-runtime";
+import type { MessagePartState } from "../../runtime/runtime/message-part-runtime";
 import { useAuiState } from "@creatorem/ai-store";
 import { SourceMessagePart } from "../../types";
 

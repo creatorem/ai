@@ -1,5 +1,5 @@
 export {
   asAsyncIterableStream,
   type AsyncIterableStream,
-} from "./AsyncIterableStream";
+} from "./async-iterable-stream";
 export type { ReadonlyJSONObject, ReadonlyJSONValue } from "./json";

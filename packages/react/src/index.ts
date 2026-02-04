@@ -16,9 +16,9 @@ export {
   type AssistantEventCallback,
 } from "@creatorem/ai-store";
 
-export * from "./legacy-runtime/runtime";
-export * from "./legacy-runtime/cloud";
-export * from "./legacy-runtime/runtime-cores";
+export * from "./runtime/runtime";
+export * from "./runtime/cloud";
+export * from "./runtime/runtime-cores";
 
 export * from "./context";
 export * from "./model-context";

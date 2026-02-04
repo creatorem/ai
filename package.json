@@ -28,6 +28,7 @@
   "prettier": "@tooling/prettier-config",
   "packageManager": "pnpm@10.28.0",
   "dependencies": {
+    "assistant-cloud": "^0.1.16",
     "react": "19.1.0",
     "react-dom": "19.1.0"
   },

@@ -4,7 +4,7 @@ import { AssistantRuntimeProvider } from "@creatorem/ai-react";
 import {
   useChatRuntime,
   AssistantChatTransport,
-} from "@creatorem/ai-sdk";
+} from "../../../packages/ai-sdk/src";
 import { Thread } from "@/components/assistant-ui/thread";
 import {
   SidebarInset,

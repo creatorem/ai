@@ -5,12 +5,12 @@ export {
 export {
   type AsyncIterableStream,
   asAsyncIterableStream,
-} from "./utils/AsyncIterableStream";
+} from "./utils/async-iterable-stream";
 export type {
   ReadonlyJSONValue,
   ReadonlyJSONArray,
   ReadonlyJSONObject,
 } from "./utils/json/json-value";
 
-export { AssistantTransformStream } from "./core/utils/stream/AssistantTransformStream";
-export { AssistantMetaTransformStream } from "./core/utils/stream/AssistantMetaTransformStream";
+export { AssistantTransformStream } from "./core/utils/stream/assistant-transform-stream";
+export { AssistantMetaTransformStream } from "./core/utils/stream/assistant-meta-transform-stream";
