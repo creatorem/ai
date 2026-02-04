@@ -8,7 +8,7 @@ import {
   MessagePrimitive,
   useAssistantState,
   useAssistantApi,
-} from "@creatorem/ai-react";
+} from "../../../../packages/assistant-react/src";
 import { useShallow } from "zustand/shallow";
 import {
   Tooltip,

@@ -3,7 +3,7 @@
  *
  * @example
  * ```typescript
- * declare module "@creatorem/ai-react" {
+ * declare module "@creatorem/ai-assistant-react" {
  *   namespace Assistant {
  *     interface Commands {
  *       myCustomCommand: {

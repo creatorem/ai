@@ -8,7 +8,7 @@ import {
   type SourceMessagePart,
   type useExternalMessageConverter,
   type ThreadMessageLike,
-} from "@creatorem/ai-react";
+} from "../../../../assistant-react/src";
 import type { ReadonlyJSONObject } from "@creatorem/stream/utils";
 
 type MessageMetadata = ThreadMessageLike["metadata"];

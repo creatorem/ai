@@ -1,6 +1,6 @@
 "use client";
 
-import { INTERNAL, useMessagePartText } from "@creatorem/ai-react";
+import { INTERNAL, useMessagePartText } from "../../../assistant-react/src";
 import {
   ComponentRef,
   ElementType,

@@ -1,4 +1,4 @@
-import { AttachmentAdapter } from "@creatorem/ai-react";
+import { AttachmentAdapter } from "../../../../assistant-react/src";
 import { generateId } from "ai";
 
 const getFileDataURL = (file: File) =>

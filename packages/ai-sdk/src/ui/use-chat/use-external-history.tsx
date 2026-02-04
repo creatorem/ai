@@ -10,7 +10,7 @@ import {
   ExportedMessageRepository,
   INTERNAL,
   useAui,
-} from "@creatorem/ai-react";
+} from "../../../../assistant-react/src";
 import { useRef, useEffect, useState, RefObject, useCallback } from "react";
 
 const { MessageRepository } = INTERNAL;

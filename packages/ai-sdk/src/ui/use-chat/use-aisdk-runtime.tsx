@@ -14,7 +14,7 @@ import {
   INTERNAL,
   type ToolExecutionStatus,
   type AppendMessage,
-} from "@creatorem/ai-react";
+} from "../../../../assistant-react/src";
 import { sliceMessagesUntil } from "../utils/slice-messages-until";
 import { toCreateMessage } from "../utils/to-create-message";
 import { vercelAttachmentAdapter } from "../utils/vercel-attachment-adapter";

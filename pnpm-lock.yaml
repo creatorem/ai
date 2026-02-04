@@ -57,15 +57,15 @@ importers:
       '@ai-sdk/openai':
         specifier: ^3.0.19
         version: 3.0.25(zod@4.3.6)
-      '@creatorem/ai-react':
+      '@creatorem/ai-assistant-react':
         specifier: workspace:*
         version: link:../../packages/react
-      '@creatorem/ai-react-markdown':
+      '@creatorem/ai-assistant-react-markdown':
         specifier: workspace:*
         version: link:../../packages/react-markdown
       '@creatorem/ai-sdk':
         specifier: workspace:*
-        version: link:../../packages/react-ai-sdk
+        version: link:../../packages/ai-sdk
       '@radix-ui/react-avatar':
         specifier: ^1.1.11
         version: 1.1.11(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -149,6 +149,43 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  packages/ai-sdk:
+    dependencies:
+      '@ai-sdk/react':
+        specifier: ^3.0.52
+        version: 3.0.71(react@19.2.4)(zod@4.3.6)
+      ai:
+        specifier: ^6.0.50
+        version: 6.0.69(zod@4.3.6)
+      zod:
+        specifier: ^4.3.6
+        version: 4.3.6
+    devDependencies:
+      '@creatorem/ai-assistant-react':
+        specifier: workspace:*
+        version: link:../react
+      '@creatorem/stream':
+        specifier: workspace:*
+        version: link:../stream
+      '@tooling/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint-config
+      '@tooling/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/prettier-config
+      '@tooling/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/tsconfig
+      '@types/json-schema':
+        specifier: ^7.0.15
+        version: 7.0.15
+      '@types/react':
+        specifier: ^19.1.0
+        version: 19.2.10
+      react:
+        specifier: ^19.1.0
+        version: 19.2.4
+
   packages/react:
     dependencies:
       '@creatorem/ai-store':
@@ -231,43 +268,6 @@ importers:
         specifier: ^4.0.18
         version: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@25.2.0)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@27.4.0)(lightningcss@1.30.2)
 
-  packages/react-ai-sdk:
-    dependencies:
-      '@ai-sdk/react':
-        specifier: ^3.0.52
-        version: 3.0.71(react@19.2.4)(zod@4.3.6)
-      ai:
-        specifier: ^6.0.50
-        version: 6.0.69(zod@4.3.6)
-      zod:
-        specifier: ^4.3.6
-        version: 4.3.6
-    devDependencies:
-      '@creatorem/ai-react':
-        specifier: workspace:*
-        version: link:../react
-      '@creatorem/stream':
-        specifier: workspace:*
-        version: link:../stream
-      '@tooling/eslint-config':
-        specifier: workspace:*
-        version: link:../../tooling/eslint-config
-      '@tooling/prettier-config':
-        specifier: workspace:*
-        version: link:../../tooling/prettier-config
-      '@tooling/tsconfig':
-        specifier: workspace:*
-        version: link:../../tooling/tsconfig
-      '@types/json-schema':
-        specifier: ^7.0.15
-        version: 7.0.15
-      '@types/react':
-        specifier: ^19.1.0
-        version: 19.2.10
-      react:
-        specifier: ^19.1.0
-        version: 19.2.4
-
   packages/react-markdown:
     dependencies:
       '@radix-ui/react-primitive':
@@ -283,7 +283,7 @@ importers:
         specifier: ^10.1.0
         version: 10.1.0(@types/react@19.2.10)(react@19.2.4)
     devDependencies:
-      '@creatorem/ai-react':
+      '@creatorem/ai-assistant-react':
         specifier: workspace:*
         version: link:../react
       '@tooling/eslint-config':

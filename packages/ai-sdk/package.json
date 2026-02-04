@@ -25,7 +25,7 @@
     "zod": "^4.3.6"
   },
   "peerDependencies": {
-    "@creatorem/ai-react": "workspace:*",
+    "@creatorem/ai-assistant-react": "workspace:*",
     "@types/react": "*",
     "react": "^18 || ^19"
   },
@@ -39,7 +39,7 @@
     "@tooling/prettier-config": "workspace:*",
     "@tooling/tsconfig": "workspace:*",
     "@creatorem/stream": "workspace:*",
-    "@creatorem/ai-react": "workspace:*",
+    "@creatorem/ai-assistant-react": "workspace:*",
     "@types/json-schema": "^7.0.15",
     "@types/react": "^19.1.0",
     "react": "^19.1.0"

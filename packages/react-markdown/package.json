@@ -1,5 +1,5 @@
 {
-  "name": "@creatorem/ai-react-markdown",
+  "name": "@creatorem/ai-assistant-react-markdown",
   "version": "0.0.1",
   "license": "MIT",
   "type": "module",
@@ -29,7 +29,7 @@
     "react-markdown": "^10.1.0"
   },
   "peerDependencies": {
-    "@creatorem/ai-react": "workspace:*",
+    "@creatorem/ai-assistant-react": "workspace:*",
     "@types/react": "*",
     "react": "^18 || ^19"
   },
@@ -39,7 +39,7 @@
     }
   },
   "devDependencies": {
-    "@creatorem/ai-react": "workspace:*",
+    "@creatorem/ai-assistant-react": "workspace:*",
     "@tooling/eslint-config": "workspace:*",
     "@tooling/prettier-config": "workspace:*",
     "@tooling/tsconfig": "workspace:*",

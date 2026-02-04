@@ -111,7 +111,7 @@ export namespace MessagePrimitiveUnstable_PartsGrouped {
      * @example
      * ```tsx
      * // Group by tool name
-     * import { groupMessagePartsByToolName } from "@creatorem/ai-react";
+     * import { groupMessagePartsByToolName } from "@creatorem/ai-assistant-react";
      *
      * <MessagePrimitive.Unstable_PartsGrouped
      *   groupingFunction={groupMessagePartsByToolName}
@@ -405,7 +405,7 @@ const EmptyParts = memo(
  * @example
  * ```tsx
  * // Group by tool name
- * import { groupMessagePartsByToolName } from "@creatorem/ai-react";
+ * import { groupMessagePartsByToolName } from "@creatorem/ai-assistant-react";
  *
  * <MessagePrimitive.Unstable_PartsGrouped
  *   groupingFunction={groupMessagePartsByToolName}

@@ -1,6 +1,6 @@
 "use client";
 
-import { AssistantRuntimeProvider } from "@creatorem/ai-react";
+import { AssistantRuntimeProvider } from "../../../packages/assistant-react/src";
 import {
   useChatRuntime,
   AssistantChatTransport,

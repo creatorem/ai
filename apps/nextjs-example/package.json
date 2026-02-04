@@ -17,8 +17,8 @@
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.19",
-    "@creatorem/ai-react": "workspace:*",
-    "@creatorem/ai-react-markdown": "workspace:*",
+    "@creatorem/ai-assistant-react": "workspace:*",
+    "@creatorem/ai-assistant-react-markdown": "workspace:*",
     "@creatorem/ai-sdk": "workspace:*",
     "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-collapsible": "^1.1.12",

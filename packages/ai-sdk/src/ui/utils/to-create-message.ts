@@ -1,4 +1,4 @@
-import { AppendMessage } from "@creatorem/ai-react";
+import { AppendMessage } from "../../../../assistant-react/src";
 import {
   CreateUIMessage,
   UIDataTypes,

@@ -8,7 +8,7 @@ import {
   useAssistantState,
   type ReasoningMessagePartComponent,
   type ReasoningGroupComponent,
-} from "@creatorem/ai-react";
+} from "../../../../packages/assistant-react/src";
 import { MarkdownText } from "@/components/assistant-ui/markdown-text";
 import {
   Collapsible,

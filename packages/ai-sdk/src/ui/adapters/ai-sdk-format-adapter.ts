@@ -3,7 +3,7 @@ import {
   MessageFormatAdapter,
   MessageFormatItem,
   MessageStorageEntry,
-} from "@creatorem/ai-react";
+} from "../../../../assistant-react/src";
 
 // Storage format for AI SDK messages - just the UIMessage
 export type AISDKStorageFormat = Omit<UIMessage, "id">;

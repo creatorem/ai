@@ -1,4 +1,4 @@
-import { AssistantRuntime } from "@creatorem/ai-react";
+import { AssistantRuntime } from "../../../../assistant-react/src";
 import {
   DefaultChatTransport,
   HttpChatTransportInitOptions,

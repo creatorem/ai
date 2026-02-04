@@ -7,7 +7,7 @@ import {
   unstable_useCloudThreadListAdapter,
   unstable_useRemoteThreadListRuntime,
   useAuiState,
-} from "@creatorem/ai-react";
+} from "../../../../assistant-react/src";
 import {
   useAISDKRuntime,
   type AISDKRuntimeAdapter,
