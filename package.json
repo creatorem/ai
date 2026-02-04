@@ -26,7 +26,7 @@
     "syncpack:fix": "pnpm dlx syncpack fix-mismatches"
   },
   "prettier": "@tooling/prettier-config",
-  "packageManager": "pnpm@9.12.0",
+  "packageManager": "pnpm@10.28.0",
   "dependencies": {
     "react": "19.1.0",
     "react-dom": "19.1.0"

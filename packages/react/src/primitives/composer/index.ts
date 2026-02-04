@@ -1,0 +1,12 @@
+export { ComposerPrimitiveRoot as Root } from "./composer-root";
+export { ComposerPrimitiveInput as Input } from "./composer-input";
+export { ComposerPrimitiveSend as Send } from "./composer-send";
+export { ComposerPrimitiveCancel as Cancel } from "./composer-cancel";
+export { ComposerPrimitiveAddAttachment as AddAttachment } from "./composer-add-attachment";
+export { ComposerPrimitiveAttachments as Attachments } from "./composer-attachments";
+export { ComposerPrimitiveAttachmentByIndex as AttachmentByIndex } from "./composer-attachments";
+export { ComposerPrimitiveAttachmentDropzone as AttachmentDropzone } from "./composer-attachment-dropzone";
+export { ComposerPrimitiveDictate as Dictate } from "./composer-dictate";
+export { ComposerPrimitiveStopDictation as StopDictation } from "./composer-stop-dictation";
+export { ComposerPrimitiveDictationTranscript as DictationTranscript } from "./composer-dictation-transcript";
+export { ComposerPrimitiveIf as If } from "./composer-if";

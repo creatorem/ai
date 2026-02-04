@@ -1,0 +1,32 @@
+"use client";
+
+import { MessagePartRuntime } from "../runtime/message-part-runtime";
+import { createStateHookForRuntime } from "../../context/react/utils/create-state-hook-for-runtime";
+import { useAui, useAuiState } from "@creatorem/ai-store";
+
+/**
+ * @deprecated Use `useAui()` with `aui.part()` instead. See migration guide: https://assistant-ui.com/docs/migrations/v0-12
+ */
+export function useMessagePartRuntime(options?: {
+  optional?: false | undefined;
+}): MessagePartRuntime;
+export function useMessagePartRuntime(options?: {
+  optional?: boolean | undefined;
+}): MessagePartRuntime | null;
+export function useMessagePartRuntime(options?: {
+  optional?: boolean | undefined;
+}) {
+  const aui = useAui();
+  const runtime = useAuiState(() =>
+    aui.part.source ? (aui.part().__internal_getRuntime?.() ?? null) : null,
+  );
+  if (!runtime && !options?.optional) {
+    throw new Error("MessagePartRuntime is not available");
+  }
+  return runtime;
+}
+
+/**
+ * @deprecated Use `useAuiState(({ part }) => part)` instead. See migration guide: https://assistant-ui.com/docs/migrations/v0-12
+ */
+export const useMessagePart = createStateHookForRuntime(useMessagePartRuntime);

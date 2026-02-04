@@ -1,0 +1,40 @@
+{
+  "name": "@creatorem/ai-store",
+  "version": "0.0.0",
+  "author": "Creatorem",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "prettier": "@tooling/prettier-config",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "git clean -xdf .turbo node_modules",
+    "format": "prettier --check \"**/*.{ts,tsx}\"",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@creatorem/ai-tap": "workspace:*",
+    "use-effect-event": "^2.0.3"
+  },
+  "peerDependencies": {
+    "@types/react": "*",
+    "react": "^18 || ^19"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.0",
+    "react": "^19.1.0"
+  }
+}
