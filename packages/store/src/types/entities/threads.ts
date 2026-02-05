@@ -16,7 +16,6 @@ export type ThreadsState = {
 };
 
 export type ThreadsMethods = {
-  getState(): ThreadsState;
   switchToThread(threadId: string): void;
   switchToNewThread(): void;
   item(
@@ -27,7 +26,7 @@ export type ThreadsMethods = {
   ): ThreadListItemMethods;
   thread(selector: "main"): ThreadMethods;
   /** @internal */
-  __internal_getAssistantRuntime?(): AssistantRuntime;
+  // __internal_getAssistantRuntime?(): AssistantRuntime;
 };
 
 export type ThreadsClientSchema = {

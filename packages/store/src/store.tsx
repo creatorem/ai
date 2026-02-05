@@ -3,37 +3,44 @@ import { createStore, useStore, StateCreator, create, Mutate, StoreApi } from 'z
 import { subscribeWithSelector } from 'zustand/middleware';
 // import {createContext} from 'zustand/context'
 // import { AttachmentState, ComposerState, MessageState, PartState, SuggestionsState, SuggestionState, ThreadListItemState, ThreadsState, ThreadState, ToolsState } from './types/entities';
-import { ComposerState, MessageState, PartState, SuggestionsState, SuggestionState, ThreadListItemState, ThreadsState, ThreadState, ToolsState } from './types/entities';
+import { ComposerMethods, ComposerState, MessageMethods, MessageState, PartMethods, PartState, SuggestionMethods, SuggestionsState, SuggestionState, ThreadListItemMethods, ThreadListItemState, ThreadMethods, ThreadsMethods, ThreadsState, ThreadState, ToolsMethods, ToolsState } from './types/entities';
 import { Attachment, ThreadMessage } from './types';
 import { RemoteThreadInitializeResponse, RemoteThreadListResponse, RemoteThreadMetadata } from './runtime-cores/remote-thread-list/types';
 import { AssistantStream } from '@creatorem/stream';
 import { AttachmentAdapter } from './types/adapters/attachment-adapter';
 import { FeedbackAdapter } from './types/adapters/feedback';
-import { SpeechSynthesisAdapter } from './types/adapters/speech';
+import { DictationAdapter, SpeechSynthesisAdapter } from './types/adapters/speech';
 import { ThreadListAdapter } from './types/adapters/threadlist-adapter';
-
-export type AttachmentState = Attachment | null;
+import { createComposerSlice } from './composer-slice';
+import { createToolsSlice } from './tools-slice';
+import { AttachmentState, createAttachmentSlice } from './attachment-slice';
+import { createThreadSlice } from './thread-slice';
+import { createThreadListItemSlice } from './thead-list-item-slice';
+import { createMessageSlice } from './message-slice';
+import { createPartSlice } from './part-slice';
+import { createThreadsSlice } from './threads-slice';
 
 interface StoreAdapters {
   attachment: AttachmentAdapter
+  dictation: DictationAdapter;
   feedback: FeedbackAdapter;
   speech: SpeechSynthesisAdapter;
   threadList: ThreadListAdapter
 }
 
-interface FilterStore {
+export interface FilterStore {
   adapters: StoreAdapters
   setAdapters: <N extends keyof StoreAdapters>(name: N, adapter: StoreAdapters[N]) => void;
-  attachment: { state: AttachmentState, remove: () => Promise<void>; };
-  // composer: ComposerState;
-  // message: MessageState;
-  // part: PartState;
-  // suggestion: SuggestionState;
-  // suggestions: SuggestionsState;
-  // thread: ThreadState;
-  // threadListItem: ThreadListItemState;
-  // threads: ThreadsState;
-  // tools: ToolsState;
+  attachment: { state: AttachmentState } & { methods: { remove: () => Promise<void> } };
+  composer: { state: ComposerState, methods: ComposerMethods };
+  message: {state: MessageState, methods: MessageMethods};
+  part: {state:PartState, methods: PartMethods};
+  suggestion: SuggestionState | null;
+  suggestions: SuggestionsState;
+  thread: {state: ThreadState, methods: ThreadMethods};
+  threadListItem: {state: ThreadListItemState, methods: ThreadListItemMethods};
+  threads: {state: ThreadsState, methods: ThreadsMethods};
+  tools: { state: ToolsState, methods: ToolsMethods };
 }
 
 const createAdapterSlice: StateCreator<
@@ -44,6 +51,7 @@ const createAdapterSlice: StateCreator<
 > = (set) => ({
   adapters: {
     attachment: {} as AttachmentAdapter,
+    dictation: {} as DictationAdapter,
     feedback: {} as FeedbackAdapter,
     speech: {} as SpeechSynthesisAdapter,
     threadList: {} as ThreadListAdapter
@@ -56,37 +64,20 @@ const createAdapterSlice: StateCreator<
   }))
 })
 
-const createAttachmentSlice: StateCreator<
-FilterStore,
-[],
-[],
-Pick<FilterStore, 'attachment'>
-> = (set, get) => ({
-  attachment: {
-    state: null,
-    remove: async () => {
-      const {attachment, adapters} = get();
-
-      if(!attachment.state){
-        return;
-      }
-  
-      await adapters.attachment.remove(attachment.state);
-
-      set((state) => ({
-        ...state,
-        attachment: {
-          ...state.attachment,
-          state: null
-        }
-      }))
-    }
-  },
-})
-
-const useAssitantStore = create<FilterStore>()((...a) => ({
+export const useAssitantStore = create<FilterStore>()((...a) => ({
   ...createAdapterSlice(...a),
   ...createAttachmentSlice(...a),
+  ...createComposerSlice(...a),
+  ...createMessageSlice(...a),
+  ...createPartSlice(...a),
+  suggestions: {
+    'suggestions': []
+  },
+  suggestion: null,
+  ...createThreadSlice(...a),
+  ...createThreadListItemSlice(...a),
+  ...createThreadsSlice(...a),
+  ...createToolsSlice(...a),
 }))
 
 

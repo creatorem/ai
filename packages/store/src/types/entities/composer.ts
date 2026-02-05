@@ -23,7 +23,7 @@ export type ComposerState = {
 };
 
 export type ComposerMethods = {
-  getState(): ComposerState;
+  // getState(): ComposerState;
   setText(text: string): void;
   setRole(role: MessageRole): void;
   setRunConfig(runConfig: RunConfig): void;

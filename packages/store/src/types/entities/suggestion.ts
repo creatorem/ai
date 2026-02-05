@@ -4,9 +4,6 @@ export type SuggestionState = {
   prompt: string;
 };
 
-export type SuggestionMethods = {
-  getState(): SuggestionState;
-};
 
 export type SuggestionMeta = {
   source: "suggestions";
@@ -15,6 +12,6 @@ export type SuggestionMeta = {
 
 export type SuggestionClientSchema = {
   state: SuggestionState;
-  methods: SuggestionMethods;
+  // methods: SuggestionMethods;
   meta: SuggestionMeta;
 };

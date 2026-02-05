@@ -6,7 +6,6 @@ export type ToolsState = {
 };
 
 export type ToolsMethods = {
-  getState(): ToolsState;
   setToolUI(
     toolName: string,
     render: ToolCallMessagePartComponent,

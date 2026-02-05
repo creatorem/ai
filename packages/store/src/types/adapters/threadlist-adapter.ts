@@ -1,5 +1,10 @@
 import { AssistantStream } from "@creatorem/stream";
 import { ThreadMessage } from "../assistant-types";
+import type {
+  RemoteThreadInitializeResponse,
+  RemoteThreadListResponse,
+  RemoteThreadMetadata,
+} from "../../runtime-cores/remote-thread-list/types";
 
 export type ThreadListAdapter = {
     list(): Promise<RemoteThreadListResponse>;

@@ -20,9 +20,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@creatorem/stream": "workspace:*",
     "@ai-sdk/react": "^3.0.52",
+    "@creatorem/stream": "workspace:*",
     "ai": "^6.0.50",
+    "nanoid": "^5.1.6",
     "zod": "^4.3.6",
     "zustand": "^5.0.11"
   },

@@ -10,8 +10,8 @@ export type ThreadListItemState = {
 };
 
 export type ThreadListItemMethods = {
-  getState(): ThreadListItemState;
-  switchTo(): void;
+  // getState(): ThreadListItemState;
+  switchToThread(): void;
   rename(newTitle: string): void;
   archive(): void;
   unarchive(): void;
@@ -20,7 +20,7 @@ export type ThreadListItemMethods = {
   initialize(): Promise<{ remoteId: string; externalId: string | undefined }>;
   detach(): void;
   /** @internal */
-  __internal_getRuntime?(): ThreadListItemRuntime;
+  // __internal_getRuntime?(): ThreadListItemRuntime;
 };
 
 export type ThreadListItemMeta = {

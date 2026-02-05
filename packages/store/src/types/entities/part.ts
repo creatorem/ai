@@ -15,7 +15,6 @@ export type PartMethods = {
   /**
    * Get the current state of the message part.
    */
-  getState(): PartState;
   /**
    * Add tool result to a tool call message part that has no tool result yet.
    * This is useful when you are collecting a tool result via user input ("human tool calls").
@@ -27,7 +26,7 @@ export type PartMethods = {
    */
   resumeToolCall(payload: unknown): void;
   /** @internal */
-  __internal_getRuntime?(): MessagePartRuntime;
+  // __internal_getRuntime?(): MessagePartRuntime;
 };
 
 export type PartMeta = {

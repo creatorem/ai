@@ -1,4 +1,4 @@
-import type { SuggestionMethods } from "./suggestion";
+// import type { SuggestionMethods } from "./suggestion";
 
 export type Suggestion = {
   title: string;
@@ -10,12 +10,12 @@ export type SuggestionsState = {
   suggestions: Suggestion[];
 };
 
-export type SuggestionsMethods = {
-  getState(): SuggestionsState;
-  suggestion(query: { index: number }): SuggestionMethods;
-};
+// export type SuggestionsMethods = {
+//   // getState(): SuggestionsState;
+//   suggestion(query: { index: number }): SuggestionMethods;
+// };
 
 export type SuggestionsClientSchema = {
   state: SuggestionsState;
-  methods: SuggestionsMethods;
+  // methods: SuggestionsMethods;
 };

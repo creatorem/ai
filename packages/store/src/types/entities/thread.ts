@@ -63,13 +63,9 @@ export type ThreadState = {
 
 export type ThreadMethods = {
   /**
-   * Get the current state of the thread.
-   */
-  getState(): ThreadState;
-  /**
    * The thread composer runtime.
    */
-  composer: ComposerMethods;
+  // composer: ComposerMethods;
   /**
    * Append a new message to the thread.
    *
