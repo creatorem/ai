@@ -6,7 +6,7 @@ import {
   CompleteAttachment,
   PendingAttachment,
   Unsubscribe,
-} from "../../types";
+} from "../types";
 import { AttachmentRuntimePath } from "./runtime-path-types";
 
 type MessageAttachmentState = CompleteAttachment & {

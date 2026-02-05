@@ -1,5 +1,5 @@
-import type { ThreadListItemRuntime } from "../../runtime/runtime";
-import type { ThreadListItemStatus } from "../../runtime/runtime/thread-list-item-runtime";
+import type { ThreadListItemRuntime } from "../../runtime";
+import type { ThreadListItemStatus } from "../../runtime/thread-list-item-runtime";
 
 export type ThreadListItemState = {
   readonly id: string;

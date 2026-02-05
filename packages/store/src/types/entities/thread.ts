@@ -2,18 +2,18 @@ import type { ReadonlyJSONValue } from "@creatorem/stream/utils";
 import type {
   RuntimeCapabilities,
   SpeechState,
-} from "../../runtime/runtime-cores/core/thread-runtime-core";
+} from "../../runtime-cores/core/thread-runtime-core";
 import type {
   ThreadSuggestion,
   ExportedMessageRepository,
   ThreadMessageLike,
-} from "../../runtime/runtime-cores";
+} from "../../runtime-cores";
 import type {
   CreateAppendMessage,
   CreateStartRunConfig,
   ThreadRuntime,
-} from "../../runtime/runtime";
-import type { CreateResumeRunConfig } from "../../runtime/runtime/thread-runtime";
+} from "../../runtime";
+import type { CreateResumeRunConfig } from "../../runtime/thread-runtime";
 import type { ModelContext } from "../../model-context";
 import type { MessageMethods, MessageState } from "./message";
 import type { ComposerMethods, ComposerState } from "./composer";

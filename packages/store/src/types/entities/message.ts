@@ -2,9 +2,9 @@ import type { ThreadMessage } from "../assistant-types";
 import type {
   SpeechState,
   SubmittedFeedback,
-} from "../../runtime/runtime-cores/core/thread-runtime-core";
+} from "../../runtime-cores/core/thread-runtime-core";
 import type { RunConfig } from "../assistant-types";
-import type { MessageRuntime } from "../../runtime/runtime";
+import type { MessageRuntime } from "../../runtime";
 import type { ComposerMethods, ComposerState } from "./composer";
 import type { PartMethods, PartState } from "./part";
 import type { AttachmentMethods } from "./attachment";

@@ -1,5 +1,5 @@
 import type { Attachment } from "../attachment-types";
-import type { AttachmentRuntime } from "../../runtime/runtime";
+import type { AttachmentRuntime } from "../../runtime";
 
 export type AttachmentState = Attachment;
 
