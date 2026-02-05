@@ -119,3 +119,28 @@ export type DictationAdapter = {
    */
   disableInputDuringDictation?: boolean;
 };
+
+export type SpeechState = {
+  readonly messageId: string;
+  readonly status: SpeechSynthesisAdapter.Status;
+};
+
+/**
+ * State representing an active dictation session.
+ */
+export type DictationState = {
+  readonly status: DictationAdapter.Status;
+  /**
+   * The current interim (partial) transcript being recognized.
+   * This is a preview of what the user is saying and may change
+   * as dictation refines its prediction.
+   *
+   * Note: By default, interim transcripts are shown directly in the composer
+   * input field (like native dictation). This property is provided for
+   * advanced customization when you want to display or style the interim
+   * transcript separately.
+   */
+  readonly transcript?: string;
+  /** Whether text input is disabled during this dictation session. */
+  readonly inputDisabled?: boolean;
+};

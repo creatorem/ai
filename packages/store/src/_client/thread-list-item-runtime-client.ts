@@ -3,7 +3,7 @@ import { type ClientOutput, tapAssistantEmit } from "@creatorem/ai-assistant-sto
 import {
   ThreadListItemEventType,
   ThreadListItemRuntime,
-} from "../runtime/thread-list-item-runtime";
+} from "../_runtime/thread-list-item-runtime";
 import { Unsubscribe } from "../../types";
 import { tapSubscribable } from "../util-hooks/tap-subscribable";
 

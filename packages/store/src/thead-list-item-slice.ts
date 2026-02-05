@@ -1,10 +1,9 @@
 import type { StateCreator } from "zustand";
 import type { FilterStore } from "./store";
 import type { ThreadListItemState } from "./types/entities";
-import type { ThreadListAdapter } from "./types/adapters/threadlist-adapter";
-import type { RemoteThreadInitializeResponse } from "./runtime-cores/remote-thread-list/types";
-import type { ThreadListItemStatus } from "./runtime/thread-list-item-runtime";
+import type { RemoteThreadInitializeResponse, ThreadListAdapter } from "./types/adapters/threadlist-adapter";
 import { DEFAULT_THREAD_ID } from "./threads-slice";
+import { ThreadListItemStatus } from "./types/entities/thread-list-item";
 
 type ThreadListItemSlice = StateCreator<
   FilterStore,

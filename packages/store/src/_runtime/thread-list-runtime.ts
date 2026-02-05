@@ -1,5 +1,5 @@
 import { LazyMemoizeSubject } from "./subscribable/lazy-memoize-subject";
-import { ThreadListRuntimeCore } from "../runtime-cores/core/thread-list-runtime-core";
+import { ThreadListRuntimeCore } from "../_runtime-cores/core/thread-list-runtime-core";
 import { Unsubscribe } from "../../types";
 import {
   ThreadListItemRuntime,

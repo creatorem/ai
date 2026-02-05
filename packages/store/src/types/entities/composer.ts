@@ -1,8 +1,7 @@
 import type { Attachment } from "../attachment-types";
 import type { MessageRole, RunConfig } from "../assistant-types";
 import type { AttachmentMethods } from "./attachment";
-import type { ComposerRuntime } from "../../runtime/composer-runtime";
-import { DictationState } from "../../runtime-cores";
+import { DictationState } from "../adapters/speech";
 
 export type ComposerState = {
   readonly text: string;
@@ -45,9 +44,6 @@ export type ComposerMethods = {
    * Stop the current dictation session.
    */
   stopDictation(): void;
-
-  /** @internal */
-  __internal_getRuntime?(): ComposerRuntime;
 };
 
 export type ComposerMeta = {

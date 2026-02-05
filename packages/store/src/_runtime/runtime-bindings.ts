@@ -1,15 +1,15 @@
 import type {
   ComposerRuntimeCore,
   ThreadComposerRuntimeCore,
-} from "../runtime-cores/core/composer-runtime-core";
-import type { ThreadRuntimeCore } from "../runtime-cores/core/thread-runtime-core";
-import type { ThreadListRuntimeCore } from "../runtime-cores/core/thread-list-runtime-core";
+} from "../_runtime-cores/core/composer-runtime-core";
+import type { ThreadRuntimeCore } from "../_runtime-cores/core/thread-runtime-core";
+import type { ThreadListRuntimeCore } from "../_runtime-cores/core/thread-list-runtime-core";
 import type { SubscribableWithState } from "./subscribable/subscribable";
 import type { ThreadMessage } from "../../types";
 import type {
   SpeechState,
   SubmittedFeedback,
-} from "../runtime-cores/core/thread-runtime-core";
+} from "../_runtime-cores/core/thread-runtime-core";
 import type {
   ComposerRuntimePath,
   ThreadRuntimePath,

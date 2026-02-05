@@ -1,12 +1,5 @@
-import { createContext, useContext, useRef } from 'react'
-import { createStore, useStore, StateCreator, create, Mutate, StoreApi } from 'zustand'
-import { subscribeWithSelector } from 'zustand/middleware';
-// import {createContext} from 'zustand/context'
-// import { AttachmentState, ComposerState, MessageState, PartState, SuggestionsState, SuggestionState, ThreadListItemState, ThreadsState, ThreadState, ToolsState } from './types/entities';
+import { StateCreator, create } from 'zustand'
 import { ComposerMethods, ComposerState, MessageMethods, MessageState, PartMethods, PartState, SuggestionMethods, SuggestionsState, SuggestionState, ThreadListItemMethods, ThreadListItemState, ThreadMethods, ThreadsMethods, ThreadsState, ThreadState, ToolsMethods, ToolsState } from './types/entities';
-import { Attachment, ThreadMessage } from './types';
-import { RemoteThreadInitializeResponse, RemoteThreadListResponse, RemoteThreadMetadata } from './runtime-cores/remote-thread-list/types';
-import { AssistantStream } from '@creatorem/stream';
 import { AttachmentAdapter } from './types/adapters/attachment-adapter';
 import { FeedbackAdapter } from './types/adapters/feedback';
 import { DictationAdapter, SpeechSynthesisAdapter } from './types/adapters/speech';
@@ -64,7 +57,7 @@ const createAdapterSlice: StateCreator<
   }))
 })
 
-export const useAssitantStore = create<FilterStore>()((...a) => ({
+export const useReactAIStore = create<FilterStore>()((...a) => ({
   ...createAdapterSlice(...a),
   ...createAttachmentSlice(...a),
   ...createComposerSlice(...a),

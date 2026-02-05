@@ -1,17 +1,18 @@
 import { resource } from "@creatorem/ai-tap";
 import { type ClientOutput } from "@creatorem/ai-assistant-store";
-import { AttachmentRuntime } from "../runtime";
+import { MessagePartRuntime } from "../_runtime/message-part-runtime";
 import { tapSubscribable } from "../util-hooks/tap-subscribable";
 
-export const AttachmentRuntimeClient = resource(
-  ({ runtime }: { runtime: AttachmentRuntime }): ClientOutput<"attachment"> => {
+export const MessagePartClient = resource(
+  ({ runtime }: { runtime: MessagePartRuntime }): ClientOutput<"part"> => {
     const state = tapSubscribable(runtime);
 
     return {
       state,
       methods: {
         getState: () => state,
-        remove: runtime.remove,
+        addToolResult: (result) => runtime.addToolResult(result),
+        resumeToolCall: (payload) => runtime.resumeToolCall(payload),
         __internal_getRuntime: () => runtime,
       },
     };

@@ -7,7 +7,7 @@ import type {
   ComposerRuntimeEventType,
   DictationState,
   ThreadComposerRuntimeCore,
-} from "../runtime-cores/core/composer-runtime-core";
+} from "../_runtime-cores/core/composer-runtime-core";
 import type { Unsubscribe } from "../../types";
 import type { MessageRole, RunConfig } from "../../types/assistant-types";
 import type {

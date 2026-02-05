@@ -1,0 +1,186 @@
+import { parsePartialJsonObject } from "@creatorem/stream/utils";
+import {
+  MessageStatus,
+  TextMessagePart,
+  ImageMessagePart,
+  ThreadMessage,
+  ThreadAssistantMessagePart,
+  ThreadAssistantMessage,
+  ThreadUserMessagePart,
+  ThreadUserMessage,
+  ThreadSystemMessage,
+  CompleteAttachment,
+  FileMessagePart,
+  DataMessagePart,
+  Unstable_AudioMessagePart,
+} from "../types";
+import {
+  ReasoningMessagePart,
+  SourceMessagePart,
+  ThreadStep,
+} from "../types/assistant-types";
+import { ReadonlyJSONObject, ReadonlyJSONValue } from "@creatorem/stream/utils";
+import { ThreadMessageLike } from "../types/entities/thread";
+import { generateId } from "../internal";
+
+
+export const fromThreadMessageLike = (
+  like: ThreadMessageLike,
+  fallbackId: string,
+  fallbackStatus: MessageStatus,
+): ThreadMessage => {
+  const { role, id, createdAt, attachments, status, metadata } = like;
+  const common = {
+    id: id ?? fallbackId,
+    createdAt: createdAt ?? new Date(),
+  };
+
+  const content =
+    typeof like.content === "string"
+      ? [{ type: "text" as const, text: like.content }]
+      : like.content;
+
+  const sanitizeImageContent = ({
+    image,
+    ...rest
+  }: ImageMessagePart): ImageMessagePart | null => {
+    const match = image.match(
+      /^data:image\/(png|jpeg|jpg|gif|webp);base64,(.*)$/,
+    );
+    if (match) {
+      return { ...rest, image };
+    }
+    console.warn(`Invalid image data format detected`);
+    return null;
+  };
+
+  if (role !== "user" && attachments?.length)
+    throw new Error("attachments are only supported for user messages");
+
+  if (role !== "assistant" && status)
+    throw new Error("status is only supported for assistant messages");
+
+  if (role !== "assistant" && metadata?.steps)
+    throw new Error("metadata.steps is only supported for assistant messages");
+
+  switch (role) {
+    case "assistant":
+      return {
+        ...common,
+        role,
+        content: content
+          .map((part): ThreadAssistantMessagePart | null => {
+            const type = part.type;
+            switch (type) {
+              case "text":
+              case "reasoning":
+                if (part.text.trim().length === 0) return null;
+                return part;
+
+              case "file":
+              case "source":
+                return part;
+
+              case "image":
+                return sanitizeImageContent(part);
+
+              case "data":
+                return part;
+
+              case "tool-call": {
+                const { parentId, messages, ...basePart } = part;
+                const commonProps = {
+                  ...basePart,
+                  toolCallId: part.toolCallId ?? `tool-${generateId()}`,
+                  ...(parentId !== undefined && { parentId }),
+                  ...(messages !== undefined && { messages }),
+                };
+
+                if (part.args) {
+                  return {
+                    ...commonProps,
+                    args: part.args,
+                    argsText: part.argsText ?? JSON.stringify(part.args),
+                  };
+                }
+                return {
+                  ...commonProps,
+                  args: parsePartialJsonObject(part.argsText ?? "") ?? {},
+                  argsText: part.argsText ?? "",
+                };
+              }
+
+              default: {
+                const unhandledType: "audio" = type;
+                throw new Error(
+                  `Unsupported assistant message part type: ${unhandledType}`,
+                );
+              }
+            }
+          })
+          .filter((c) => !!c),
+        status: status ?? fallbackStatus,
+        metadata: {
+          unstable_state: metadata?.unstable_state ?? null,
+          unstable_annotations: metadata?.unstable_annotations ?? [],
+          unstable_data: metadata?.unstable_data ?? [],
+          custom: metadata?.custom ?? {},
+          steps: metadata?.steps ?? [],
+          ...(metadata?.submittedFeedback && {
+            submittedFeedback: metadata.submittedFeedback,
+          }),
+        },
+      } satisfies ThreadAssistantMessage;
+
+    case "user":
+      return {
+        ...common,
+        role,
+        content: content.map((part): ThreadUserMessagePart => {
+          const type = part.type;
+          switch (type) {
+            case "text":
+            case "image":
+            case "audio":
+            case "file":
+              return part;
+
+            default: {
+              const unhandledType:
+                | "tool-call"
+                | "reasoning"
+                | "source"
+                | "data" = type;
+              throw new Error(
+                `Unsupported user message part type: ${unhandledType}`,
+              );
+            }
+          }
+        }),
+        attachments: attachments ?? [],
+        metadata: {
+          custom: metadata?.custom ?? {},
+        },
+      } satisfies ThreadUserMessage;
+
+    case "system":
+      if (content.length !== 1 || content[0]!.type !== "text")
+        throw new Error(
+          "System messages must have exactly one text message part.",
+        );
+
+      return {
+        ...common,
+        role,
+        content: content as [TextMessagePart],
+        metadata: {
+          custom: metadata?.custom ?? {},
+        },
+      } satisfies ThreadSystemMessage;
+
+    default: {
+      const unsupportedRole: never = role;
+      throw new Error(`Unknown message role: ${unsupportedRole}`);
+    }
+  }
+};

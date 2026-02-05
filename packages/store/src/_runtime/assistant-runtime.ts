@@ -1,9 +1,9 @@
-import { AssistantRuntimeCore } from "../runtime-cores/core/assistant-runtime-core";
+import { AssistantRuntimeCore } from "../_runtime-cores/core/assistant-runtime-core";
 import { ModelContextProvider } from "../../model-context/model-context-types";
 import { ThreadRuntime } from "./thread-runtime";
 import { Unsubscribe } from "../../types";
 import { ThreadListRuntime, ThreadListRuntimeImpl } from "./thread-list-runtime";
-import { ExportedMessageRepository, ThreadMessageLike } from "../runtime-cores";
+import { ExportedMessageRepository, ThreadMessageLike } from "../_runtime-cores";
 
 export type AssistantRuntime = {
   /**

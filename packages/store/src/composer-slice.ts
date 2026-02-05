@@ -11,7 +11,6 @@ import type { StateCreator } from "zustand";
 import type { FilterStore } from "./store";
 import type { ComposerState } from "./types/entities";
 import type { AttachmentMethods } from "./types/entities/attachment";
-import type { DictationState } from "./runtime-cores";
 
 
 type ComposerSlice = StateCreator<

@@ -1,6 +1,6 @@
 import { Unsubscribe } from "../../../types";
 import { ThreadRuntimeCore } from "./thread-runtime-core";
-import type { ThreadListItemStatus } from "../../runtime/runtime-bindings";
+import type { ThreadListItemStatus } from "../../_runtime/runtime-bindings";
 
 export type ThreadListItemCoreState = {
   readonly id: string;

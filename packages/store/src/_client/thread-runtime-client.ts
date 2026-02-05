@@ -1,5 +1,5 @@
-import { ThreadRuntimeEventType } from "../runtime-cores/core/thread-runtime-core";
-import { ThreadRuntime } from "../runtime/thread-runtime";
+import { ThreadRuntimeEventType } from "../_runtime-cores/core/thread-runtime-core";
+import { ThreadRuntime } from "../_runtime/thread-runtime";
 import {
   resource,
   tapInlineResource,

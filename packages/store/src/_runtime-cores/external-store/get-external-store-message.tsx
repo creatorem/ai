@@ -1,4 +1,4 @@
-import { ThreadState } from "../../runtime";
+import { ThreadState } from "../../_runtime";
 import { ThreadMessage } from "../../../types";
 
 export const symbolInnerMessage = Symbol("innerMessage");

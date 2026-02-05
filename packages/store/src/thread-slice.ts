@@ -1,34 +1,30 @@
 import type { Unsubscribe, AppendMessage, ThreadMessage } from "./types/index";
 import type { RunConfig } from "./types/assistant-types";
-import type { SpeechSynthesisAdapter } from "./types/adapters/speech";
+import type { SpeechState, SpeechSynthesisAdapter } from "./types/adapters/speech";
 import type { StateCreator } from "zustand";
 import type { FilterStore } from "./store";
 import type { MessageMethods, MessageState, ThreadState } from "./types/entities";
 import type { FeedbackAdapter } from "./types/adapters/feedback";
 import type { AttachmentAdapter } from "./types/adapters/attachment-adapter";
-import type { ModelContext } from "./model-context";
-import type {
-  RuntimeCapabilities,
-  SpeechState,
-  ThreadSuggestion,
-  StartRunConfig,
-  ResumeRunConfig,
-  ThreadRuntimeEventType,
-} from "./runtime-cores/core/thread-runtime-core";
-import type {
-  ExportedMessageRepository,
-  ThreadMessageLike,
-} from "./runtime-cores";
-import type {
-  CreateAppendMessage,
-  CreateStartRunConfig,
-  CreateResumeRunConfig,
-} from "./runtime/thread-runtime";
 import {
   MessageRepository,
   ExportedMessageRepository as ExportedMessageRepositoryUtils,
-} from "./runtime-cores/utils/message-repository";
+} from "./utils/message-repository";
 import { getThreadMessageText } from "./utils/get-thread-message-text";
+import type { CreateResumeRunConfig, CreateAppendMessage, ExportedMessageRepository, RuntimeCapabilities, ThreadMessageLike, CreateStartRunConfig } from "./types/entities/thread";
+
+type ThreadRuntimeEventType =
+  | "runStart"
+  | "runEnd"
+  | "initialize"
+  | "modelContextUpdate";
+
+
+type StartRunConfig = {
+  parentId: string | null;
+  sourceId: string | null;
+  runConfig: RunConfig;
+};
 
 type ThreadSlice = StateCreator<
   FilterStore,
@@ -311,10 +307,11 @@ class ThreadRuntime {
     this._notifyEventSubscribers("runEnd");
   }
 
-  public getModelContext = (): ModelContext => {
-    // TODO: Integrate with model context provider
-    return {};
-  }
+  // why this fn ?
+  // public getModelContext = (): ModelContext => {
+  //   // TODO: Integrate with model context provider
+  //   return {};
+  // }
 
   public export = (): ExportedMessageRepository => {
     return this._repository.export();
@@ -556,10 +553,6 @@ class ThreadRuntime {
     // TODO: Implement voice session stop
   }
 
-  public __internal_getRuntime = (): undefined => {
-    return undefined;
-  }
-
   public getSlice(): FilterStore['thread'] {
     return {
       state: this._state,
@@ -568,7 +561,7 @@ class ThreadRuntime {
         startRun: this.startRun,
         unstable_resumeRun: this.unstable_resumeRun,
         cancelRun: this.cancelRun,
-        getModelContext: this.getModelContext,
+        // getModelContext: this.getModelContext,
         export: this.export,
         import: this.import,
         reset: this.reset,
@@ -576,7 +569,6 @@ class ThreadRuntime {
         stopSpeaking: this.stopSpeaking,
         startVoice: this.startVoice,
         stopVoice: this.stopVoice,
-        __internal_getRuntime: this.__internal_getRuntime,
       }
     }
   }

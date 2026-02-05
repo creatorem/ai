@@ -6,7 +6,7 @@ import { ExternalStoreAdapter } from "./external-store-adapter";
 import {
   AssistantRuntime,
   AssistantRuntimeImpl,
-} from "../../runtime/assistant-runtime";
+} from "../../_runtime/assistant-runtime";
 import { useRuntimeAdapters } from "../adapters/runtime-adapter-provider";
 
 export const useExternalStoreRuntime = <T,>(

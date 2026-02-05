@@ -19,8 +19,8 @@ import {
   ThreadRuntimeImpl,
 } from "../../../internal";
 import { BaseSubscribable } from "./base-subscribable";
-import { AssistantRuntime } from "../../runtime";
-import { ThreadListRuntimeImpl } from "../../runtime/thread-list-runtime";
+import { AssistantRuntime } from "../../_runtime";
+import { ThreadListRuntimeImpl } from "../../_runtime/thread-list-runtime";
 
 type RemoteThreadListHook = () => AssistantRuntime;
 

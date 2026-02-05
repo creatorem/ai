@@ -7,7 +7,7 @@ import {
 } from "@creatorem/stream/utils";
 import { AppendMessage } from "../../../types";
 import { useExternalStoreRuntime } from "../external-store/use-external-store-runtime";
-import { AssistantRuntime } from "../../runtime/assistant-runtime";
+import { AssistantRuntime } from "../../_runtime/assistant-runtime";
 import { AddToolResultOptions } from "../core";
 import { useState, useRef, useMemo } from "react";
 import {

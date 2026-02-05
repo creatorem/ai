@@ -9,12 +9,12 @@ import {
   tapClientLookup,
   tapClientResource,
 } from "@creatorem/ai-assistant-store";
-import { ThreadListRuntime } from "../runtime/thread-list-runtime";
+import { ThreadListRuntime } from "../_runtime/thread-list-runtime";
 import { tapSubscribable } from "../util-hooks/tap-subscribable";
 import { ThreadListItemClient } from "./thread-list-item-runtime-client";
 import { ThreadClient } from "./thread-runtime-client";
 import { ThreadsState } from "../../types/scopes";
-import type { AssistantRuntime } from "../runtime/assistant-runtime";
+import type { AssistantRuntime } from "../_runtime/assistant-runtime";
 
 const ThreadListItemClientById = resource(
   ({ runtime, id }: { runtime: ThreadListRuntime; id: string }) => {

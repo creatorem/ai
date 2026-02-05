@@ -1,8 +1,8 @@
 import {
   SpeechState,
   SubmittedFeedback,
-} from "../runtime-cores/core/thread-runtime-core";
-import { symbolInnerMessage } from "../runtime-cores/external-store/get-external-store-message";
+} from "../_runtime-cores/core/thread-runtime-core";
+import { symbolInnerMessage } from "../_runtime-cores/external-store/get-external-store-message";
 import {
   ThreadMessage,
   ThreadAssistantMessagePart,

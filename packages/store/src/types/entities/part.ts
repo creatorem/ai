@@ -1,5 +1,4 @@
 import type { ToolResponse } from "@creatorem/stream";
-import type { MessagePartRuntime } from "../../runtime";
 import type {
   ThreadUserMessagePart,
   ThreadAssistantMessagePart,

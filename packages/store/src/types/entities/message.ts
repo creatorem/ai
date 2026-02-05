@@ -1,13 +1,13 @@
 import type { ThreadMessage } from "../assistant-types";
-import type {
-  SpeechState,
-  SubmittedFeedback,
-} from "../../runtime-cores/core/thread-runtime-core";
 import type { RunConfig } from "../assistant-types";
-import type { MessageRuntime } from "../../runtime";
 import type { ComposerMethods, ComposerState } from "./composer";
 import type { PartMethods, PartState } from "./part";
 import type { AttachmentMethods } from "./attachment";
+import { SpeechState } from "../adapters/speech";
+
+type SubmittedFeedback = {
+  readonly type: "negative" | "positive";
+};
 
 export type MessageState = ThreadMessage & {
   readonly parentId: string | null;
@@ -61,8 +61,6 @@ export type MessageMethods = {
   attachment(selector: { index: number } | { id: string }): AttachmentMethods;
   setIsCopied(value: boolean): void;
   setIsHovering(value: boolean): void;
-  /** @internal */
-  __internal_getRuntime?(): MessageRuntime;
 };
 
 export type MessageMeta = {

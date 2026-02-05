@@ -1,22 +1,139 @@
-import type { ReadonlyJSONValue } from "@creatorem/stream/utils";
-import type {
-  RuntimeCapabilities,
-  SpeechState,
-} from "../../runtime-cores/core/thread-runtime-core";
-import type {
-  ThreadSuggestion,
-  ExportedMessageRepository,
-  ThreadMessageLike,
-} from "../../runtime-cores";
-import type {
-  CreateAppendMessage,
-  CreateStartRunConfig,
-  ThreadRuntime,
-} from "../../runtime";
-import type { CreateResumeRunConfig } from "../../runtime/thread-runtime";
-import type { ModelContext } from "../../model-context";
+import type { ReadonlyJSONObject, ReadonlyJSONValue } from "@creatorem/stream/utils";
 import type { MessageMethods, MessageState } from "./message";
-import type { ComposerMethods, ComposerState } from "./composer";
+import type { ComposerState } from "./composer";
+import { SpeechState } from "../adapters/speech";
+import { DataMessagePart, ImageMessagePart, MessageStatus, ReasoningMessagePart, RunConfig, SourceMessagePart, TextMessagePart, ThreadMessage, Unstable_AudioMessagePart, ThreadStep, FileMessagePart, AppendMessage, ToolCallMessagePart, ThreadAssistantMessagePart } from "../assistant-types";
+import { CompleteAttachment } from "../attachment-types";
+
+
+type ChatModelRunResult = {
+  readonly content?: readonly ThreadAssistantMessagePart[] | undefined;
+  readonly status?: MessageStatus | undefined;
+  readonly metadata?: {
+    readonly unstable_state?: ReadonlyJSONValue;
+    readonly unstable_annotations?: readonly ReadonlyJSONValue[] | undefined;
+    readonly unstable_data?: readonly ReadonlyJSONValue[] | undefined;
+    readonly steps?: readonly ThreadStep[] | undefined;
+    readonly custom?: Record<string, unknown> | undefined;
+  };
+};
+
+type ChatModelRunOptions = {
+  readonly messages: readonly ThreadMessage[];
+  readonly runConfig: RunConfig;
+  readonly abortSignal: AbortSignal;
+  // readonly context: ModelContext;
+
+  /**
+   * @deprecated This field was renamed to `context`.
+   */
+  // readonly config: ModelContext;
+
+  readonly unstable_assistantMessageId?: string | undefined;
+  readonly unstable_threadId?: string | undefined;
+  readonly unstable_parentId?: string | null | undefined;
+  unstable_getMessage(): ThreadMessage;
+};
+
+export type CreateStartRunConfig = {
+  parentId: string | null;
+  sourceId?: string | null | undefined;
+  runConfig?: RunConfig | undefined;
+
+};
+export type CreateResumeRunConfig = CreateStartRunConfig & {
+  stream?: (
+    options: ChatModelRunOptions,
+  ) => AsyncGenerator<ChatModelRunResult, void, unknown>;
+};
+
+
+export type CreateAppendMessage =
+  | string
+  | {
+      parentId?: string | null | undefined;
+      sourceId?: string | null | undefined;
+      role?: AppendMessage["role"] | undefined;
+      content: AppendMessage["content"];
+      attachments?: AppendMessage["attachments"] | undefined;
+      metadata?: AppendMessage["metadata"] | undefined;
+      createdAt?: Date | undefined;
+      runConfig?: AppendMessage["runConfig"] | undefined;
+      startRun?: boolean | undefined;
+    };
+
+
+export type ThreadMessageLike = {
+  readonly role: "assistant" | "user" | "system";
+  readonly content:
+  | string
+  | readonly (
+    | TextMessagePart
+    | ReasoningMessagePart
+    | SourceMessagePart
+    | ImageMessagePart
+    | FileMessagePart
+    | DataMessagePart
+    | Unstable_AudioMessagePart
+    | {
+      readonly type: "tool-call";
+      readonly toolCallId?: string;
+      readonly toolName: string;
+      readonly args?: ReadonlyJSONObject;
+      readonly argsText?: string;
+      readonly artifact?: any;
+      readonly result?: any | undefined;
+      readonly isError?: boolean | undefined;
+      readonly parentId?: string | undefined;
+      readonly messages?: readonly ThreadMessage[] | undefined;
+    }
+  )[];
+  readonly id?: string | undefined;
+  readonly createdAt?: Date | undefined;
+  readonly status?: MessageStatus | undefined;
+  readonly attachments?: readonly CompleteAttachment[] | undefined;
+  readonly metadata?:
+  | {
+    readonly unstable_state?: ReadonlyJSONValue;
+    readonly unstable_annotations?:
+    | readonly ReadonlyJSONValue[]
+    | undefined;
+    readonly unstable_data?: readonly ReadonlyJSONValue[] | undefined;
+    readonly steps?: readonly ThreadStep[] | undefined;
+    readonly submittedFeedback?: { readonly type: "positive" | "negative" };
+    readonly custom?: Record<string, unknown> | undefined;
+  }
+  | undefined;
+};
+
+type ThreadSuggestion = {
+  prompt: string;
+};
+
+export type ExportedMessageRepository = {
+  /** ID of the head message, or null/undefined if no head */
+  headId?: string | null;
+  /** Array of all messages with their parent references */
+  messages: Array<{
+    message: ThreadMessage;
+    parentId: string | null;
+    runConfig?: RunConfig;
+  }>;
+};
+
+
+export type RuntimeCapabilities = {
+  readonly switchToBranch: boolean;
+  readonly switchBranchDuringRun: boolean;
+  readonly edit: boolean;
+  readonly reload: boolean;
+  readonly cancel: boolean;
+  readonly unstable_copy: boolean;
+  readonly speech: boolean;
+  readonly dictation: boolean;
+  readonly attachments: boolean;
+  readonly feedback: boolean;
+};
 
 export type ThreadState = {
   /**
@@ -94,7 +211,7 @@ export type ThreadMethods = {
    */
   unstable_resumeRun(config: CreateResumeRunConfig): void;
   cancelRun(): void;
-  getModelContext(): ModelContext;
+  // getModelContext(): ModelContext;
   export(): ExportedMessageRepository;
   import(repository: ExportedMessageRepository): void;
   /**
@@ -113,8 +230,6 @@ export type ThreadMethods = {
    * Stop the currently active voice session.
    */
   stopVoice(): Promise<void>;
-  /** @internal */
-  __internal_getRuntime?(): ThreadRuntime;
 };
 
 export type ThreadMeta = {

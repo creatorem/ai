@@ -8,9 +8,18 @@ import type {
   TextMessagePart,
   ToolCallMessagePart,
   Unstable_AudioMessagePart,
+  ThreadUserMessagePart,
+  ThreadAssistantMessagePart,
+  ToolCallMessagePartStatus,
 } from "./assistant-types";
-import { MessagePartState } from "../runtime/runtime/message-part-runtime";
 import { ToolResponse } from "@creatorem/stream";
+
+export type MessagePartState = (
+  | ThreadUserMessagePart
+  | ThreadAssistantMessagePart
+) & {
+  readonly status: MessagePartStatus | ToolCallMessagePartStatus;
+};
 
 export type EmptyMessagePartProps = {
   status: MessagePartStatus;

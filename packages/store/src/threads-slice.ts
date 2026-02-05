@@ -2,9 +2,8 @@
 
 import type { StateCreator } from "zustand";
 import type { FilterStore } from "./store";
-import type { ThreadListItemState, ThreadsMethods, ThreadsState, ThreadListItemMethods, ThreadMethods } from "./types/entities";
-import type { ThreadListAdapter } from "./types/adapters/threadlist-adapter";
-import type { RemoteThreadInitializeResponse, RemoteThreadMetadata } from "./runtime-cores/remote-thread-list/types";
+import type { ThreadListItemState, ThreadsState, ThreadListItemMethods, ThreadMethods } from "./types/entities";
+import type { RemoteThreadInitializeResponse, ThreadListAdapter } from "./types/adapters/threadlist-adapter";
 import { generateId } from "./internal";
 import { AssistantMessageStream } from "@creatorem/stream";
 

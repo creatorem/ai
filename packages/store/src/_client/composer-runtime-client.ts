@@ -14,9 +14,9 @@ import {
 import {
   ComposerRuntime,
   EditComposerRuntime,
-} from "../runtime/composer-runtime";
+} from "../_runtime/composer-runtime";
 import { Unsubscribe } from "../../types";
-import { ComposerRuntimeEventType } from "../runtime-cores/core/composer-runtime-core";
+import { ComposerRuntimeEventType } from "../_runtime-cores/core/composer-runtime-core";
 import { ComposerState } from "../../types/scopes";
 import { AttachmentRuntimeClient } from "./attachment-runtime-client";
 import { tapSubscribable } from "../util-hooks/tap-subscribable";

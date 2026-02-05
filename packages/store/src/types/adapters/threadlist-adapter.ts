@@ -1,10 +1,22 @@
 import { AssistantStream } from "@creatorem/stream";
 import { ThreadMessage } from "../assistant-types";
-import type {
-  RemoteThreadInitializeResponse,
-  RemoteThreadListResponse,
-  RemoteThreadMetadata,
-} from "../../runtime-cores/remote-thread-list/types";
+
+export type RemoteThreadMetadata = {
+  readonly status: "regular" | "archived";
+  readonly remoteId: string;
+  readonly externalId?: string | undefined;
+  readonly title?: string | undefined;
+};
+
+
+export type RemoteThreadListResponse = {
+  threads: RemoteThreadMetadata[];
+};
+
+export type RemoteThreadInitializeResponse = {
+  remoteId: string;
+  externalId: string | undefined;
+};
 
 export type ThreadListAdapter = {
     list(): Promise<RemoteThreadListResponse>;

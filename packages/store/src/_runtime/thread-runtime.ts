@@ -6,10 +6,10 @@ import {
   ThreadRuntimeEventType,
   StartRunConfig,
   ResumeRunConfig,
-} from "../runtime-cores/core/thread-runtime-core";
-import { ExportedMessageRepository } from "../runtime-cores/utils/message-repository";
+} from "../_runtime-cores/core/thread-runtime-core";
+import { ExportedMessageRepository } from "../_runtime-cores/utils/message-repository";
 import { AppendMessage, ThreadMessage, Unsubscribe } from "../../types";
-import { ThreadMessageLike } from "../runtime-cores/external-store";
+import { ThreadMessageLike } from "../_runtime-cores/external-store";
 import {
   MessageRuntime,
   MessageRuntimeImpl,
@@ -31,9 +31,9 @@ import {
 import type { ThreadListItemState } from "./runtime-bindings";
 import { RunConfig } from "../../types/assistant-types";
 import { EventSubscriptionSubject } from "./subscribable/event-subscription-subject";
-import { symbolInnerMessage } from "../runtime-cores/external-store/get-external-store-message";
+import { symbolInnerMessage } from "../_runtime-cores/external-store/get-external-store-message";
 import { ModelContext } from "../../model-context";
-import { ChatModelRunOptions, ChatModelRunResult } from "../runtime-cores";
+import { ChatModelRunOptions, ChatModelRunResult } from "../_runtime-cores";
 import { ReadonlyJSONValue } from "@creatorem/stream/utils";
 
 export type CreateStartRunConfig = {
