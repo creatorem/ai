@@ -2,7 +2,7 @@
 
 import { Primitive } from "@radix-ui/react-primitive";
 import { type ElementRef, forwardRef, ComponentPropsWithoutRef } from "react";
-import { useAuiState } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 
 export namespace SuggestionPrimitiveTitle {
   export type Element = ElementRef<typeof Primitive.span>;
@@ -21,7 +21,7 @@ export const SuggestionPrimitiveTitle = forwardRef<
   SuggestionPrimitiveTitle.Element,
   SuggestionPrimitiveTitle.Props
 >((props, ref) => {
-  const title = useAuiState(({ suggestion }) => suggestion.title);
+  const title = useAiChat(({ suggestion }) => suggestion.title);
 
   return (
     <Primitive.span {...props} ref={ref}>

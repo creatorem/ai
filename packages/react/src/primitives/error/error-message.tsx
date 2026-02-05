@@ -2,7 +2,7 @@
 
 import { Primitive } from "@radix-ui/react-primitive";
 import { type ComponentRef, forwardRef, ComponentPropsWithoutRef } from "react";
-import { useAuiState } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 
 export namespace ErrorPrimitiveMessage {
   export type Element = ComponentRef<typeof Primitive.span>;
@@ -13,7 +13,7 @@ export const ErrorPrimitiveMessage = forwardRef<
   ErrorPrimitiveMessage.Element,
   ErrorPrimitiveMessage.Props
 >(({ children, ...props }, forwardRef) => {
-  const error = useAuiState(({ message }) => {
+  const error = useAiChat(({ message }) => {
     return message.status?.type === "incomplete" &&
       message.status.reason === "error"
       ? message.status.error

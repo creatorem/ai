@@ -7,7 +7,7 @@ import {
   ComponentPropsWithoutRef,
   useCallback,
 } from "react";
-import { useAui, useAuiState } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 import { useManagedRef } from "../../utils/hooks/use-managed-ref";
 import { useSizeHandle } from "../../utils/hooks/use-size-handle";
 import { useComposedRefs } from "@radix-ui/react-compose-refs";
@@ -15,16 +15,15 @@ import { useThreadViewport } from "../../context/react/thread-viewport-context";
 import { ThreadPrimitiveViewportSlack } from "../thread/thread-viewport-slack";
 
 const useIsHoveringRef = () => {
-  const aui = useAui();
-  const message = useAuiState(() => aui.message());
+  const messageMethods = useAiChat(({message}) => message.methods);
 
   const callbackRef = useCallback(
     (el: HTMLElement) => {
       const handleMouseEnter = () => {
-        message.setIsHovering(true);
+        messageMethods.setIsHovering(true);
       };
       const handleMouseLeave = () => {
-        message.setIsHovering(false);
+        messageMethods.setIsHovering(false);
       };
 
       el.addEventListener("mouseenter", handleMouseEnter);
@@ -32,16 +31,16 @@ const useIsHoveringRef = () => {
 
       if (el.matches(":hover")) {
         // TODO this is needed for SSR to work, figure out why
-        queueMicrotask(() => message.setIsHovering(true));
+        queueMicrotask(() => messageMethods.setIsHovering(true));
       }
 
       return () => {
         el.removeEventListener("mouseenter", handleMouseEnter);
         el.removeEventListener("mouseleave", handleMouseLeave);
-        message.setIsHovering(false);
+        messageMethods.setIsHovering(false);
       };
     },
-    [message],
+    [messageMethods],
   );
 
   return useManagedRef(callbackRef);
@@ -59,7 +58,7 @@ const useMessageViewportRef = () => {
 
   // inset rules:
   // - the previous user message before the last assistant message registers its full height
-  const shouldRegisterAsInset = useAuiState(
+  const shouldRegisterAsInset = useAiChat(
     ({ thread, message }) =>
       turnAnchor === "top" &&
       message.role === "user" &&

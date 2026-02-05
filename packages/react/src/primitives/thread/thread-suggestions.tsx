@@ -1,7 +1,7 @@
 "use client";
 
 import { type ComponentType, type FC, memo, useMemo } from "react";
-import { useAuiState } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 import { SuggestionByIndexProvider } from "../../context/providers";
 
 export namespace ThreadPrimitiveSuggestions {
@@ -83,7 +83,7 @@ ThreadPrimitiveSuggestionByIndex.displayName =
 export const ThreadPrimitiveSuggestionsImpl: FC<
   ThreadPrimitiveSuggestions.Props
 > = ({ components }) => {
-  const suggestionsLength = useAuiState(
+  const suggestionsLength = useAiChat(
     ({ suggestions }) => suggestions.suggestions.length,
   );
 

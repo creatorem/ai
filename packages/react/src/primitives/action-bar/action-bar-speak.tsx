@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { useAuiState, useAui } from "@creatorem/ai-assistant-store";
+import { useAiChat, useAiChatShallow } from "@creatorem/ai-store";
 import {
   ActionButtonElement,
   ActionButtonProps,
@@ -9,12 +9,12 @@ import {
 } from "../../utils/create-action-button";
 
 const useActionBarSpeak = () => {
-  const aui = useAui();
+  const messageMethods = useAiChat(({message}) => message.methods);
   const callback = useCallback(async () => {
-    aui.message().speak();
-  }, [aui]);
+    messageMethods.speak();
+  }, [messageMethods]);
 
-  const hasSpeakableContent = useAuiState(({ message }) => {
+  const hasSpeakableContent = useAiChat(({ message }) => {
     return (
       (message.role !== "assistant" || message.status?.type !== "running") &&
       message.parts.some((c) => c.type === "text" && c.text.length > 0)

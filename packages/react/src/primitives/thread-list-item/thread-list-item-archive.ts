@@ -1,18 +1,18 @@
 "use client";
 
+import { useAiChat } from "@creatorem/ai-store";
 import {
   ActionButtonElement,
   ActionButtonProps,
   createActionButton,
 } from "../../utils/create-action-button";
-import { useAui } from "@creatorem/ai-assistant-store";
 import { useCallback } from "react";
 
 const useThreadListItemArchive = () => {
-  const aui = useAui();
+  const threadListItemMethods = useAiChat(({threadListItem})=> threadListItem.methods)
   return useCallback(() => {
-    aui.threadListItem().archive();
-  }, [aui]);
+    threadListItemMethods.archive();
+  }, [threadListItemMethods]);
 };
 
 export namespace ThreadListItemPrimitiveArchive {

@@ -5,14 +5,14 @@ import {
   ActionButtonProps,
   createActionButton,
 } from "../../utils/create-action-button";
-import { useAui } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 import { useCallback } from "react";
 
 const useThreadListItemDelete = () => {
-  const aui = useAui();
+  const threadListItemMethods = useAiChat(({threadListItem})=> threadListItem.methods)
   return useCallback(() => {
-    aui.threadListItem().delete();
-  }, [aui]);
+    threadListItemMethods.delete();
+  }, [threadListItemMethods]);
 };
 
 export namespace ThreadListItemPrimitiveDelete {

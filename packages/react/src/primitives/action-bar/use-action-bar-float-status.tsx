@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuiState } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 
 export enum HideAndFloatStatus {
   Hidden = "hidden",
@@ -19,7 +19,7 @@ export const useActionBarFloatStatus = ({
   autohide,
   autohideFloat,
 }: UseActionBarFloatStatusProps) => {
-  return useAuiState(({ thread, message }) => {
+  return useAiChat(({ thread, message }) => {
     if (hideWhenRunning && thread.isRunning) return HideAndFloatStatus.Hidden;
 
     const autohideEnabled =

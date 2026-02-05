@@ -2,7 +2,7 @@
 
 import { useComposedRefs } from "@radix-ui/react-compose-refs";
 import { useCallback, useRef, type RefCallback } from "react";
-import { useAuiEvent } from "@creatorem/ai-assistant-store";
+import { useAuiEvent } from "@creatorem/ai-store";
 import { useOnResizeContent } from "../../utils/hooks/use-on-resize-content";
 import { useOnScrollToBottom } from "../../utils/hooks/use-on-scroll-to-bottom";
 import { useManagedRef } from "../../utils/hooks/use-managed-ref";

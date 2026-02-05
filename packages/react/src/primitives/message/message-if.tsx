@@ -1,7 +1,7 @@
 "use client";
 
 import type { FC, PropsWithChildren } from "react";
-import { useAuiState } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 import type { RequireAtLeastOne } from "../../utils/require-at-least-one";
 
 type MessageIfFilters = {
@@ -20,7 +20,7 @@ type MessageIfFilters = {
 type UseMessageIfProps = RequireAtLeastOne<MessageIfFilters>;
 
 const useMessageIf = (props: UseMessageIfProps) => {
-  return useAuiState(({ message }) => {
+  return useAiChat(({ message }) => {
     const {
       role,
       attachments,

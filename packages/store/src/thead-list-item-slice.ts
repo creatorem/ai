@@ -1,15 +1,15 @@
 import type { StateCreator } from "zustand";
-import type { FilterStore } from "./store";
+import type { AiChatStore } from "./store";
 import type { ThreadListItemState } from "./types/entities";
 import type { RemoteThreadInitializeResponse, ThreadListAdapter } from "./types/adapters/threadlist-adapter";
 import { DEFAULT_THREAD_ID } from "./threads-slice";
 import { ThreadListItemStatus } from "./types/entities/thread-list-item";
 
 type ThreadListItemSlice = StateCreator<
-  FilterStore,
+  AiChatStore,
   [],
   [],
-  Pick<FilterStore, 'threadListItem'>
+  Pick<AiChatStore, 'threadListItem'>
 >
 
 class ThreadListItemRuntime {
@@ -231,9 +231,10 @@ class ThreadListItemRuntime {
     // to stop managing this thread's runtime
   }
 
-  public getSlice(): FilterStore['threadListItem'] {
+  public getSlice(): AiChatStore['threadListItem'] {
     return {
-      state: this._state,
+      // state: this._state,
+      ... this._state,
       methods: {
         switchToThread: this.switchToThread,
         rename: this.rename,
@@ -249,10 +250,10 @@ class ThreadListItemRuntime {
 }
 
 export const createThreadListItemSlice: StateCreator<
-  FilterStore,
+  AiChatStore,
   [],
   [],
-  Pick<FilterStore, 'threadListItem'>
+  Pick<AiChatStore, 'threadListItem'>
 > = (...a) => ({
   threadListItem: new ThreadListItemRuntime(...a).getSlice()
 })

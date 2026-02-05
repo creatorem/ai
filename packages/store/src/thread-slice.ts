@@ -2,7 +2,7 @@ import type { Unsubscribe, AppendMessage, ThreadMessage } from "./types/index";
 import type { RunConfig } from "./types/assistant-types";
 import type { SpeechState, SpeechSynthesisAdapter } from "./types/adapters/speech";
 import type { StateCreator } from "zustand";
-import type { FilterStore } from "./store";
+import type { AiChatStore } from "./store";
 import type { MessageMethods, MessageState, ThreadState } from "./types/entities";
 import type { FeedbackAdapter } from "./types/adapters/feedback";
 import type { AttachmentAdapter } from "./types/adapters/attachment-adapter";
@@ -27,10 +27,10 @@ type StartRunConfig = {
 };
 
 type ThreadSlice = StateCreator<
-  FilterStore,
+  AiChatStore,
   [],
   [],
-  Pick<FilterStore, 'thread'>
+  Pick<AiChatStore, 'thread'>
 >
 
 type ThreadAdapters = {
@@ -112,6 +112,11 @@ class ThreadRuntime {
         state: this._state,
       }
     }));
+  }
+
+  public getState(): ThreadState {
+    const {methods, ...state} = this.get().thread;
+    return state;
   }
 
   private updateCapabilities() {
@@ -553,10 +558,12 @@ class ThreadRuntime {
     // TODO: Implement voice session stop
   }
 
-  public getSlice(): FilterStore['thread'] {
+  public getSlice(): AiChatStore['thread'] {
     return {
-      state: this._state,
+      // state: this._state,
+      ... this._state,
       methods: {
+        getState: this.getState,
         append: this.append,
         startRun: this.startRun,
         unstable_resumeRun: this.unstable_resumeRun,
@@ -575,10 +582,10 @@ class ThreadRuntime {
 }
 
 export const createThreadSlice: StateCreator<
-  FilterStore,
+  AiChatStore,
   [],
   [],
-  Pick<FilterStore, 'thread'>
+  Pick<AiChatStore, 'thread'>
 > = (...a) => ({
   thread: new ThreadRuntime(...a).getSlice()
 })

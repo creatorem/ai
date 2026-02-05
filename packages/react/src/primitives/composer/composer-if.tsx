@@ -1,7 +1,7 @@
 "use client";
 
 import type { FC, PropsWithChildren } from "react";
-import { useAuiState } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 import type { RequireAtLeastOne } from "../../utils/require-at-least-one";
 
 type ComposerIfFilters = {
@@ -14,7 +14,7 @@ type ComposerIfFilters = {
 export type UseComposerIfProps = RequireAtLeastOne<ComposerIfFilters>;
 
 const useComposerIf = (props: UseComposerIfProps) => {
-  return useAuiState(({ composer }) => {
+  return useAiChat(({ composer }) => {
     if (props.editing === true && !composer.isEditing) return false;
     if (props.editing === false && composer.isEditing) return false;
 

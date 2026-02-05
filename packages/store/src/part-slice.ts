@@ -1,5 +1,5 @@
 import type { StateCreator } from "zustand";
-import type { FilterStore } from "./store";
+import type { AiChatStore } from "./store";
 import type { PartState } from "./types/entities";
 import type {
   ThreadMessage,
@@ -9,10 +9,10 @@ import type {
 import { ToolResponse } from "@creatorem/stream";
 
 type PartSlice = StateCreator<
-  FilterStore,
+  AiChatStore,
   [],
   [],
-  Pick<FilterStore, 'part'>
+  Pick<AiChatStore, 'part'>
 >
 
 // Selected part info - which part from message.content is currently selected
@@ -187,9 +187,10 @@ class PartRuntime {
     this.syncFromMessage();
   }
 
-  public getSlice(): FilterStore['part'] {
+  public getSlice(): AiChatStore['part'] {
     return {
-      state: this._state,
+      // state: this._state,
+      ... this._state,
       methods: {
         addToolResult: this.addToolResult,
         resumeToolCall: this.resumeToolCall,
@@ -199,10 +200,10 @@ class PartRuntime {
 }
 
 export const createPartSlice: StateCreator<
-  FilterStore,
+  AiChatStore,
   [],
   [],
-  Pick<FilterStore, 'part'>
+  Pick<AiChatStore, 'part'>
 > = (...a) => ({
   part: new PartRuntime(...a).getSlice()
 })

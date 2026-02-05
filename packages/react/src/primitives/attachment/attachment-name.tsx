@@ -1,7 +1,7 @@
 "use client";
 
 import type { FC } from "react";
-import { useAuiState } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 
 export namespace AttachmentPrimitiveName {
   export type Props = Record<string, never>;
@@ -10,7 +10,7 @@ export namespace AttachmentPrimitiveName {
 export const AttachmentPrimitiveName: FC<
   AttachmentPrimitiveName.Props
 > = () => {
-  const name = useAuiState(({ attachment }) => attachment.name);
+  const name = useAiChat(({ attachment }) => attachment.name);
   return <>{name}</>;
 };
 

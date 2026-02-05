@@ -2,7 +2,7 @@
 
 import { Primitive } from "@radix-ui/react-primitive";
 import { type ComponentRef, forwardRef, ComponentPropsWithoutRef } from "react";
-import { useAuiState } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 
 export namespace ComposerPrimitiveDictationTranscript {
   export type Element = ComponentRef<typeof Primitive.span>;
@@ -28,7 +28,7 @@ export const ComposerPrimitiveDictationTranscript = forwardRef<
   ComposerPrimitiveDictationTranscript.Element,
   ComposerPrimitiveDictationTranscript.Props
 >(({ children, ...props }, forwardRef) => {
-  const transcript = useAuiState(
+  const transcript = useAiChat(
     ({ composer }) => composer.dictation?.transcript,
   );
 

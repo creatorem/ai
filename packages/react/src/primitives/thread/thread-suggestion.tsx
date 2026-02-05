@@ -6,7 +6,7 @@ import {
   createActionButton,
 } from "../../utils/create-action-button";
 import { useCallback } from "react";
-import { useAuiState, useAui } from "@creatorem/ai-assistant-store";
+import { useAiChat, useAiChatShallow } from "@creatorem/ai-store";
 
 const useThreadSuggestion = ({
   prompt,
@@ -39,32 +39,32 @@ const useThreadSuggestion = ({
   /** @deprecated Use `clearComposer` instead. */
   method?: "replace";
 }) => {
-  const aui = useAui();
-  const disabled = useAuiState(({ thread }) => thread.isDisabled);
+  const threadMethods = useAiChat(({thread}) => thread.methods)
+  const composerMethods = useAiChat(({composer}) => composer.methods)
+  const disabled = useAiChat(({ thread }) => thread.isDisabled);
 
   // ========== Deprecation Mapping ==========
   const resolvedSend = send ?? autoSend ?? false;
   // ==========================================
 
   const callback = useCallback(() => {
-    const isRunning = aui.thread().getState().isRunning;
+    const isRunning = threadMethods.getState().isRunning;
 
     if (resolvedSend && !isRunning) {
-      aui.thread().append(prompt);
+      threadMethods.append(prompt);
       if (clearComposer) {
-        aui.composer().setText("");
+        composerMethods.setText("");
       }
     } else {
       if (clearComposer) {
-        aui.composer().setText(prompt);
+        composerMethods.setText(prompt);
       } else {
-        const currentText = aui.composer().getState().text;
-        aui
-          .composer()
+        const currentText = composerMethods.getState().text;
+        composerMethods
           .setText(currentText.trim() ? `${currentText} ${prompt}` : prompt);
       }
     }
-  }, [aui, resolvedSend, clearComposer, prompt]);
+  }, [composerMethods, threadMethods, resolvedSend, clearComposer, prompt]);
 
   if (disabled) return null;
   return callback;

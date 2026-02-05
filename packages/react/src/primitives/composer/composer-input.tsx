@@ -16,7 +16,7 @@ import TextareaAutosize, {
 } from "react-textarea-autosize";
 import { useEscapeKeydown } from "@radix-ui/react-use-escape-keydown";
 import { useOnScrollToBottom } from "../../utils/hooks/use-on-scroll-to-bottom";
-import { useAuiState, useAui } from "@creatorem/ai-assistant-store";
+import { useAiChat, useAiChatShallow } from "@creatorem/ai-store";
 import { flushResourcesSync } from "@creatorem/ai-tap";
 
 export namespace ComposerPrimitiveInput {
@@ -98,9 +98,11 @@ export const ComposerPrimitiveInput = forwardRef<
     },
     forwardedRef,
   ) => {
-    const aui = useAui();
+    // const aui = useAui();
+    const composerMethods = useAiChat(({composer}) => composer.methods);
+    const threadMethods = useAiChat(({thread}) => thread.methods);
 
-    const value = useAuiState(({ composer }) => {
+    const value = useAiChat(({ composer }) => {
       if (!composer.isEditing) return "";
       return composer.text;
     });
@@ -108,7 +110,7 @@ export const ComposerPrimitiveInput = forwardRef<
     const Component = asChild ? Slot : TextareaAutosize;
 
     const isDisabled =
-      useAuiState(
+      useAiChat(
         ({ thread, composer }) =>
           thread.isDisabled || composer.dictation?.inputDisabled,
       ) || disabledProp;
@@ -121,7 +123,7 @@ export const ComposerPrimitiveInput = forwardRef<
       // Only handle ESC if it originated from within this input
       if (!textareaRef.current?.contains(e.target as Node)) return;
 
-      const composer = aui.composer();
+      const composer = composerMethods;
       if (composer.getState().canCancel) {
         composer.cancel();
         e.preventDefault();
@@ -135,7 +137,7 @@ export const ComposerPrimitiveInput = forwardRef<
       if (e.nativeEvent.isComposing) return;
 
       if (e.key === "Enter" && e.shiftKey === false) {
-        const isRunning = aui.thread().getState().isRunning;
+        const isRunning = threadMethods.getState().isRunning;
 
         if (!isRunning) {
           e.preventDefault();
@@ -147,14 +149,14 @@ export const ComposerPrimitiveInput = forwardRef<
 
     const handlePaste = async (e: ClipboardEvent<HTMLTextAreaElement>) => {
       if (!addAttachmentOnPaste) return;
-      const threadCapabilities = aui.thread().getState().capabilities;
+      const threadCapabilities = threadMethods.getState().capabilities;
       const files = Array.from(e.clipboardData?.files || []);
 
       if (threadCapabilities.attachments && files.length > 0) {
         try {
           e.preventDefault();
           await Promise.all(
-            files.map((file) => aui.composer().addAttachment(file)),
+            files.map((file) => composerMethods.addAttachment(file)),
           );
         } catch (error) {
           console.error("Error adding attachment:", error);
@@ -175,7 +177,7 @@ export const ComposerPrimitiveInput = forwardRef<
 
     useOnScrollToBottom(() => {
       if (
-        aui.composer().getState().type === "thread" &&
+        composerMethods.getState().type === "thread" &&
         unstable_focusOnScrollToBottom
       ) {
         focus();
@@ -184,7 +186,7 @@ export const ComposerPrimitiveInput = forwardRef<
 
     useEffect(() => {
       if (
-        aui.composer().getState().type !== "thread" ||
+        composerMethods.getState().type !== "thread" ||
         !unstable_focusOnRunStart
       )
         return undefined;
@@ -194,7 +196,7 @@ export const ComposerPrimitiveInput = forwardRef<
 
     useEffect(() => {
       if (
-        aui.composer().getState().type !== "thread" ||
+        composerMethods.getState().type !== "thread" ||
         !unstable_focusOnThreadSwitched
       )
         return undefined;
@@ -210,9 +212,9 @@ export const ComposerPrimitiveInput = forwardRef<
         ref={ref as React.ForwardedRef<HTMLTextAreaElement>}
         disabled={isDisabled}
         onChange={composeEventHandlers(onChange, (e) => {
-          if (!aui.composer().getState().isEditing) return;
+          if (!composerMethods.getState().isEditing) return;
           flushResourcesSync(() => {
-            aui.composer().setText(e.target.value);
+            composerMethods.setText(e.target.value);
           });
         })}
         onKeyDown={composeEventHandlers(onKeyDown, handleKeyPress)}

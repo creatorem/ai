@@ -5,7 +5,7 @@ import { ActionButtonProps } from "../../utils/create-action-button";
 import { composeEventHandlers } from "@radix-ui/primitive";
 import { Primitive } from "@radix-ui/react-primitive";
 import { useCallback } from "react";
-import { useAuiState, useAui } from "@creatorem/ai-assistant-store";
+import { useAiChat, useAiChatShallow } from "@creatorem/ai-store";
 
 /**
  * Hook that provides copy functionality for action bar buttons.
@@ -36,27 +36,28 @@ const useActionBarPrimitiveCopy = ({
 }: {
   copiedDuration?: number | undefined;
 } = {}) => {
-  const aui = useAui();
-  const hasCopyableContent = useAuiState(({ message }) => {
+  const hasCopyableContent = useAiChatShallow(({ message }) => {
     return (
       (message.role !== "assistant" || message.status?.type !== "running") &&
       message.parts.some((c) => c.type === "text" && c.text.length > 0)
     );
   });
 
-  const isEditing = useAuiState(({ composer }) => composer.isEditing);
-  const composerValue = useAuiState(({ composer }) => composer.text);
+  const isEditing = useAiChatShallow(({ composer }) => composer.isEditing);
+  const composerValue = useAiChatShallow(({ composer }) => composer.text);
+
+  const messageMethods = useAiChat(({message}) => message.methods);
 
   const callback = useCallback(() => {
-    const valueToCopy = isEditing ? composerValue : aui.message().getCopyText();
+    const valueToCopy = isEditing ? composerValue : messageMethods.getCopyText();
 
     if (!valueToCopy) return;
 
     navigator.clipboard.writeText(valueToCopy).then(() => {
-      aui.message().setIsCopied(true);
-      setTimeout(() => aui.message().setIsCopied(false), copiedDuration);
+      messageMethods.setIsCopied(true);
+      setTimeout(() => messageMethods.setIsCopied(false), copiedDuration);
     });
-  }, [aui, isEditing, composerValue, copiedDuration]);
+  }, [messageMethods, isEditing, composerValue, copiedDuration]);
 
   if (!hasCopyableContent) return null;
   return callback;
@@ -89,7 +90,7 @@ export const ActionBarPrimitiveCopy = forwardRef<
   ActionBarPrimitiveCopy.Element,
   ActionBarPrimitiveCopy.Props
 >(({ copiedDuration, onClick, disabled, ...props }, forwardedRef) => {
-  const isCopied = useAuiState(({ message }) => message.isCopied);
+  const isCopied = useAiChatShallow(({ message  }) => message.isCopied);
   const callback = useActionBarPrimitiveCopy({ copiedDuration });
   return (
     <Primitive.button

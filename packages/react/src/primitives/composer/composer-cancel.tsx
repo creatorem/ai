@@ -6,15 +6,15 @@ import {
   createActionButton,
 } from "../../utils/create-action-button";
 import { useCallback } from "react";
-import { useAuiState, useAui } from "@creatorem/ai-assistant-store";
+import { useAiChat, useAiChatShallow } from "@creatorem/ai-store";
 
 const useComposerCancel = () => {
-  const aui = useAui();
-  const disabled = useAuiState(({ composer }) => !composer.canCancel);
+  const composerMethods = useAiChat(({composer}) => composer.methods);
+  const disabled = useAiChat(({ composer }) => !composer.canCancel);
 
   const callback = useCallback(() => {
-    aui.composer().cancel();
-  }, [aui]);
+    composerMethods.cancel();
+  }, [composerMethods]);
 
   if (disabled) return null;
   return callback;

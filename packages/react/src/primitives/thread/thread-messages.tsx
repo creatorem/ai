@@ -1,7 +1,7 @@
 "use client";
 
 import { type ComponentType, type FC, memo, useMemo } from "react";
-import { useAuiState } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 import { MessageByIndexProvider } from "../../context/providers";
 import { ThreadMessage as ThreadMessageType } from "../../types";
 
@@ -129,8 +129,8 @@ type ThreadMessageComponentProps = {
 const ThreadMessageComponent: FC<ThreadMessageComponentProps> = ({
   components,
 }) => {
-  const role = useAuiState(({ message }) => message.role);
-  const isEditing = useAuiState(({ message }) => message.composer.isEditing);
+  const role = useAiChat(({ message }) => message.role);
+  const isEditing = useAiChat(({ message }) => message.composer.isEditing);
   const Component = getComponent(components, role, isEditing);
 
   return <Component />;
@@ -196,7 +196,7 @@ ThreadPrimitiveMessageByIndex.displayName = "ThreadPrimitive.MessageByIndex";
 export const ThreadPrimitiveMessagesImpl: FC<ThreadPrimitiveMessages.Props> = ({
   components,
 }) => {
-  const messagesLength = useAuiState(({ thread }) => thread.messages.length);
+  const messagesLength = useAiChat(({ thread }) => thread.messages.length);
 
   const messageElements = useMemo(() => {
     if (messagesLength === 0) return null;

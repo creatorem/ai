@@ -1,7 +1,7 @@
 "use client";
 
 import { ComponentPropsWithoutRef, forwardRef, type ComponentRef } from "react";
-import { useAuiState } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 import { Primitive } from "@radix-ui/react-primitive";
 
 type PrimitiveDivProps = ComponentPropsWithoutRef<typeof Primitive.div>;
@@ -15,7 +15,7 @@ export const AttachmentPrimitiveThumb = forwardRef<
   AttachmentPrimitiveThumb.Element,
   AttachmentPrimitiveThumb.Props
 >((props, ref) => {
-  const ext = useAuiState(({ attachment }) => {
+  const ext = useAiChat(({ attachment }) => {
     const parts = attachment.name.split(".");
     return parts.length > 1 ? parts.pop()! : "";
   });

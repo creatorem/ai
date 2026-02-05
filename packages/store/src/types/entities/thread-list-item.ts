@@ -9,7 +9,7 @@ export type ThreadListItemState = {
 };
 
 export type ThreadListItemMethods = {
-  // getState(): ThreadListItemState;
+  getState(): ThreadListItemState;
   switchToThread(): void;
   rename(newTitle: string): void;
   archive(): void;

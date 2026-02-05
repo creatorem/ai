@@ -6,14 +6,14 @@ import {
   createActionButton,
 } from "../../utils/create-action-button";
 import { useCallback } from "react";
-import { useAui } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 
 const useAttachmentRemove = () => {
-  const aui = useAui();
+  const attachmentMethods = useAiChat(({attachment}) => attachment.methods);
 
   const handleRemoveAttachment = useCallback(() => {
-    aui.attachment().remove();
-  }, [aui]);
+    attachmentMethods.remove();
+  }, [attachmentMethods]);
 
   return handleRemoveAttachment;
 };

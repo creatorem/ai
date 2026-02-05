@@ -1,10 +1,10 @@
 "use client";
 
-import { useAuiState } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 import { DataMessagePart } from "../../types";
 
 export const useMessagePartData = <T = any>(name?: string) => {
-  const part = useAuiState(({ part }) => {
+  const part = useAiChat(({ part }) => {
     if (part.type !== "data") {
       return null;
     }

@@ -1,10 +1,10 @@
 "use client";
 
 import type { FC } from "react";
-import { useAuiState } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 
 const useBranchPickerNumber = () => {
-  const branchNumber = useAuiState(({ message }) => message.branchNumber);
+  const branchNumber = useAiChat(({ message }) => message.branchNumber);
   return branchNumber;
 };
 

@@ -1,11 +1,11 @@
 "use client";
 
 import { MessagePartState } from "../../runtime/runtime/message-part-runtime";
-import { useAuiState } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 import { ImageMessagePart } from "../../types";
 
 export const useMessagePartImage = () => {
-  const image = useAuiState(({ part }) => {
+  const image = useAiChat(({ part }) => {
     if (part.type !== "image")
       throw new Error(
         "MessagePartImage can only be used inside image message parts.",

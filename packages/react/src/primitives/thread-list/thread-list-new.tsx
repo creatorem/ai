@@ -7,7 +7,7 @@ import {
 import { forwardRef } from "react";
 import { Primitive } from "@radix-ui/react-primitive";
 import { composeEventHandlers } from "@radix-ui/primitive";
-import { useAuiState, useAui } from "@creatorem/ai-assistant-store";
+import { useAiChat, useAiChatShallow } from "@creatorem/ai-store";
 
 export namespace ThreadListPrimitiveNew {
   export type Element = ActionButtonElement;
@@ -18,11 +18,11 @@ export const ThreadListPrimitiveNew = forwardRef<
   ThreadListPrimitiveNew.Element,
   ThreadListPrimitiveNew.Props
 >(({ onClick, disabled, ...props }, forwardedRef) => {
-  const isMain = useAuiState(
+  const isMain = useAiChat(
     ({ threads }) => threads.newThreadId === threads.mainThreadId,
   );
 
-  const aui = useAui();
+  const threadsMethods = useAiChat(({threads}) => threads.methods);
 
   return (
     <Primitive.button
@@ -32,7 +32,7 @@ export const ThreadListPrimitiveNew = forwardRef<
       ref={forwardedRef}
       disabled={disabled}
       onClick={composeEventHandlers(onClick, () => {
-        aui.threads().switchToNewThread();
+        threadsMethods.switchToNewThread();
       })}
     />
   );

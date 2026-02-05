@@ -1,7 +1,7 @@
 "use client";
 
 import { FC, PropsWithChildren } from "react";
-import { useAuiState } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 
 export namespace MessagePartPrimitiveInProgress {
   export type Props = PropsWithChildren;
@@ -11,7 +11,7 @@ export namespace MessagePartPrimitiveInProgress {
 export const MessagePartPrimitiveInProgress: FC<
   MessagePartPrimitiveInProgress.Props
 > = ({ children }) => {
-  const isInProgress = useAuiState(
+  const isInProgress = useAiChat(
     ({ part }) => part.status.type === "running",
   );
 

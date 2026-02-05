@@ -6,7 +6,7 @@ import {
   createActionButton,
 } from "../../utils/create-action-button";
 import { useCallback } from "react";
-import { useAuiState, useAui } from "@creatorem/ai-assistant-store";
+import { useAiChat, useAiChatShallow } from "@creatorem/ai-store";
 
 const useSuggestionTrigger = ({
   send,
@@ -27,31 +27,32 @@ const useSuggestionTrigger = ({
    */
   clearComposer?: boolean | undefined;
 }) => {
-  const aui = useAui();
-  const disabled = useAuiState(({ thread }) => thread.isDisabled);
-  const prompt = useAuiState(({ suggestion }) => suggestion.prompt);
+  // const aui = useAui();
+  const composerMethods = useAiChat(({composer}) => composer.methods);
+  const threadMethods = useAiChat(({thread}) => thread.methods);
+
+  const disabled = useAiChat(({ thread }) => thread.isDisabled);
+  const prompt = useAiChat(({ suggestion }) => suggestion?.prompt);
 
   const resolvedSend = send ?? false;
 
   const callback = useCallback(() => {
-    const isRunning = aui.thread().getState().isRunning;
+    const isRunning = threadMethods.getState().isRunning;
 
     if (resolvedSend && !isRunning) {
-      aui.thread().append(prompt);
+      threadMethods.append(prompt);
       if (clearComposer) {
-        aui.composer().setText("");
+        composerMethods.setText("");
       }
     } else {
       if (clearComposer) {
-        aui.composer().setText(prompt);
+        composerMethods.setText(prompt);
       } else {
-        const currentText = aui.composer().getState().text;
-        aui
-          .composer()
-          .setText(currentText.trim() ? `${currentText} ${prompt}` : prompt);
+        const currentText = composerMethods.getState().text;
+        composerMethods.setText(currentText.trim() ? `${currentText} ${prompt}` : prompt);
       }
     }
-  }, [aui, resolvedSend, clearComposer, prompt]);
+  }, [composerMethods, threadMethods, resolvedSend, clearComposer, prompt]);
 
   if (disabled) return null;
   return callback;

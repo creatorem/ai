@@ -1,7 +1,7 @@
 // took ex on : class RemoteThreadListThreadListRuntimeCore
 
 import type { StateCreator } from "zustand";
-import type { FilterStore } from "./store";
+import type { AiChatStore } from "./store";
 import type { ThreadListItemState, ThreadsState, ThreadListItemMethods, ThreadMethods } from "./types/entities";
 import type { RemoteThreadInitializeResponse, ThreadListAdapter } from "./types/adapters/threadlist-adapter";
 import { generateId } from "./internal";
@@ -10,10 +10,10 @@ import { AssistantMessageStream } from "@creatorem/stream";
 export const DEFAULT_THREAD_ID = "__DEFAULT_THREAD_ID__";
 
 type ThreadsSlice = StateCreator<
-  FilterStore,
+  AiChatStore,
   [],
   [],
-  Pick<FilterStore, 'threads'>
+  Pick<AiChatStore, 'threads'>
 >
 
 // Internal thread data with initialization task
@@ -732,9 +732,9 @@ class ThreadsRuntime {
     return this.get().thread.methods;
   }
 
-  public getSlice(): FilterStore['threads'] {
+  public getSlice(): AiChatStore['threads'] {
     return {
-      state: this.getPublicState(),
+      ...this.getPublicState(),
       methods: {
         switchToThread: this.switchToThread,
         switchToNewThread: this.switchToNewThread,
@@ -747,10 +747,10 @@ class ThreadsRuntime {
 
 
 export const createThreadsSlice: StateCreator<
-  FilterStore,
+  AiChatStore,
   [],
   [],
-  Pick<FilterStore, 'threads'>
+  Pick<AiChatStore, 'threads'>
 > = (...a) => ({
   threads: new ThreadsRuntime(...a).getSlice()
 })

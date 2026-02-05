@@ -1,10 +1,10 @@
 "use client";
 
 import { FC, PropsWithChildren } from "react";
-import { useAuiState } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 
 export const MessagePrimitiveError: FC<PropsWithChildren> = ({ children }) => {
-  const hasError = useAuiState(
+  const hasError = useAiChat(
     ({ message }) =>
       message.status?.type === "incomplete" &&
       message.status.reason === "error",

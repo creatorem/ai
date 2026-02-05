@@ -1,7 +1,7 @@
 "use client";
 
 import type { FC, ReactNode } from "react";
-import { useAuiState } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 
 export namespace ThreadListItemPrimitiveTitle {
   export type Props = {
@@ -12,7 +12,7 @@ export namespace ThreadListItemPrimitiveTitle {
 export const ThreadListItemPrimitiveTitle: FC<
   ThreadListItemPrimitiveTitle.Props
 > = ({ fallback }) => {
-  const title = useAuiState(({ threadListItem }) => threadListItem.title);
+  const title = useAiChat(({ threadListItem }) => threadListItem.title);
   return <>{title || fallback}</>;
 };
 

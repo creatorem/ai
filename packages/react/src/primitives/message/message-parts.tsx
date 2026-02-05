@@ -7,7 +7,7 @@ import {
   PropsWithChildren,
   useMemo,
 } from "react";
-import { useAuiState, useAui } from "@creatorem/ai-assistant-store";
+import { useAiChat, useAiChatShallow } from "@creatorem/ai-store";
 import {
   PartByIndexProvider,
   TextMessagePartProvider,
@@ -106,7 +106,7 @@ const groupMessageParts = (
 };
 
 const useMessagePartsGroups = (): MessagePartRange[] => {
-  const messageTypes = useAuiState(
+  const messageTypes = useAiChat(
     useShallow((s) => s.message.parts.map((c: any) => c.type)),
   );
 
@@ -262,7 +262,7 @@ const ToolUIDisplay = ({
 }: {
   Fallback: ToolCallMessagePartComponent | undefined;
 } & ToolCallMessagePartProps) => {
-  const Render = useAuiState(({ tools }) => {
+  const Render = useAiChat(({ tools }) => {
     const Render = tools.tools[props.toolName] ?? Fallback;
     if (Array.isArray(Render)) return Render[0] ?? Fallback;
     return Render;
@@ -304,13 +304,14 @@ const MessagePartComponent: FC<MessagePartComponentProps> = ({
     tools = {},
   } = {},
 }) => {
-  const aui = useAui();
-  const part = useAuiState(({ part }) => part);
+  const partMethods = useAiChat(({part}) => part.methods);
+
+  const part = useAiChat(({ part }) => part);
 
   const type = part.type;
   if (type === "tool-call") {
-    const addResult = aui.part().addToolResult;
-    const resume = aui.part().resumeToolCall;
+    const addResult = partMethods.addToolResult;
+    const resume = partMethods.resumeToolCall;
     if ("Override" in tools)
       return <tools.Override {...part} addResult={addResult} resume={resume} />;
     const Tool = tools.by_name?.[part.toolName] ?? tools.Fallback;
@@ -419,7 +420,7 @@ const COMPLETE_STATUS: MessagePartStatus = Object.freeze({
 });
 
 const EmptyPartsImpl: FC<MessagePartComponentProps> = ({ components }) => {
-  const status = useAuiState(
+  const status = useAiChat(
     (s) => (s.message.status ?? COMPLETE_STATUS) as MessagePartStatus,
   );
 
@@ -444,7 +445,7 @@ const ConditionalEmptyImpl: FC<{
   components: MessagePrimitiveParts.Props["components"];
   enabled: boolean;
 }> = ({ components, enabled }) => {
-  const shouldShowEmpty = useAuiState(({ message }) => {
+  const shouldShowEmpty = useAiChat(({ message }) => {
     if (!enabled) return false;
     if (message.parts.length === 0) return false;
 
@@ -492,7 +493,7 @@ export const MessagePrimitiveParts: FC<MessagePrimitiveParts.Props> = ({
   components,
   unstable_showEmptyOnNonTextEnd = true,
 }) => {
-  const contentLength = useAuiState(({ message }) => message.parts.length);
+  const contentLength = useAiChat(({ message }) => message.parts.length);
   const messageRanges = useMessagePartsGroups();
 
   const partsElements = useMemo(() => {

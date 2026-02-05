@@ -1,15 +1,15 @@
 import { StateCreator } from "zustand";
 import { Attachment } from "./types";
-import { FilterStore } from "./store";
+import { AiChatStore } from "./store";
 
 export type AttachmentState = Attachment | null;
 
 
 export const createAttachmentSlice: StateCreator<
-  FilterStore,
+  AiChatStore,
   [],
   [],
-  Pick<FilterStore, 'attachment'>
+  Pick<AiChatStore, 'attachment'>
 > = (set, get) => ({
   attachment: {
     state: null,

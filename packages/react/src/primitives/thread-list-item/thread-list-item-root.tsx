@@ -2,7 +2,7 @@
 
 import { Primitive } from "@radix-ui/react-primitive";
 import { type ComponentRef, forwardRef, ComponentPropsWithoutRef } from "react";
-import { useAuiState } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 
 type PrimitiveDivProps = ComponentPropsWithoutRef<typeof Primitive.div>;
 
@@ -15,7 +15,7 @@ export const ThreadListItemPrimitiveRoot = forwardRef<
   ThreadListItemPrimitiveRoot.Element,
   ThreadListItemPrimitiveRoot.Props
 >((props, ref) => {
-  const isMain = useAuiState(
+  const isMain = useAiChat(
     ({ threads, threadListItem }) => threads.mainThreadId === threadListItem.id,
   );
 

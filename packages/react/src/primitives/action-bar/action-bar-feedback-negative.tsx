@@ -5,14 +5,14 @@ import { ActionButtonProps } from "../../utils/create-action-button";
 import { composeEventHandlers } from "@radix-ui/primitive";
 import { Primitive } from "@radix-ui/react-primitive";
 import { useCallback } from "react";
-import { useAuiState, useAui } from "@creatorem/ai-assistant-store";
+import { useAiChat, useAiChatShallow } from "@creatorem/ai-store";
 
 const useActionBarFeedbackNegative = () => {
-  const aui = useAui();
+  const messageMethods = useAiChat(({message}) => message.methods);
 
   const callback = useCallback(() => {
-    aui.message().submitFeedback({ type: "negative" });
-  }, [aui]);
+    messageMethods.submitFeedback({ type: "negative" });
+  }, [messageMethods]);
 
   return callback;
 };
@@ -26,7 +26,7 @@ export const ActionBarPrimitiveFeedbackNegative = forwardRef<
   ActionBarPrimitiveFeedbackNegative.Element,
   ActionBarPrimitiveFeedbackNegative.Props
 >(({ onClick, disabled, ...props }, forwardedRef) => {
-  const isSubmitted = useAuiState(
+  const isSubmitted = useAiChat(
     (s) => s.message.metadata.submittedFeedback?.type === "negative",
   );
   const callback = useActionBarFeedbackNegative();

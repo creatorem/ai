@@ -6,15 +6,15 @@ import { useEscapeKeydown } from "@radix-ui/react-use-escape-keydown";
 import { Primitive } from "@radix-ui/react-primitive";
 import { composeEventHandlers } from "@radix-ui/primitive";
 import { useCallback } from "react";
-import { useAuiState, useAui } from "@creatorem/ai-assistant-store";
+import { useAiChat, useAiChatShallow } from "@creatorem/ai-store";
 
 const useActionBarStopSpeaking = () => {
-  const aui = useAui();
-  const isSpeaking = useAuiState(({ message }) => message.speech != null);
+  const messageMethods = useAiChat(({message}) => message.methods);
+  const isSpeaking = useAiChat(({ message }) => message.speech != null);
 
   const callback = useCallback(() => {
-    aui.message().stopSpeaking();
-  }, [aui]);
+    messageMethods.stopSpeaking();
+  }, [messageMethods]);
 
   if (!isSpeaking) return null;
 

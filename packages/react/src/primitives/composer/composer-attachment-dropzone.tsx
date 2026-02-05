@@ -4,7 +4,7 @@ import { forwardRef, useCallback, useState } from "react";
 
 import { Slot } from "@radix-ui/react-slot";
 import React from "react";
-import { useAui } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 
 export namespace ComposerPrimitiveAttachmentDropzone {
   export type Element = HTMLDivElement;
@@ -19,7 +19,8 @@ export const ComposerPrimitiveAttachmentDropzone = forwardRef<
   ComposerPrimitiveAttachmentDropzone.Props
 >(({ disabled, asChild = false, children, ...rest }, ref) => {
   const [isDragging, setIsDragging] = useState(false);
-  const aui = useAui();
+  const composerMethods = useAiChat(({composer}) => composer.methods);
+  
 
   const handleDragEnterCapture = useCallback(
     (e: React.DragEvent) => {
@@ -59,13 +60,13 @@ export const ComposerPrimitiveAttachmentDropzone = forwardRef<
       setIsDragging(false);
       for (const file of e.dataTransfer.files) {
         try {
-          await aui.composer().addAttachment(file);
+          await composerMethods.addAttachment(file);
         } catch (error) {
           console.error("Failed to add attachment:", error);
         }
       }
     },
-    [disabled, aui],
+    [disabled, composerMethods],
   );
 
   const dragProps = {

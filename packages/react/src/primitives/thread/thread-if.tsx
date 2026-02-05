@@ -1,7 +1,7 @@
 "use client";
 
 import type { FC, PropsWithChildren } from "react";
-import { useAuiState } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 import type { RequireAtLeastOne } from "../../utils/require-at-least-one";
 
 type ThreadIfFilters = {
@@ -13,7 +13,7 @@ type ThreadIfFilters = {
 type UseThreadIfProps = RequireAtLeastOne<ThreadIfFilters>;
 
 const useThreadIf = (props: UseThreadIfProps) => {
-  return useAuiState(({ thread }) => {
+  return useAiChat(({ thread }) => {
     if (props.empty === true && !thread.isEmpty) return false;
     if (props.empty === false && thread.isEmpty) return false;
 

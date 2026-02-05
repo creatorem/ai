@@ -179,6 +179,7 @@ export type ThreadState = {
 };
 
 export type ThreadMethods = {
+  getState(): ThreadState
   /**
    * The thread composer runtime.
    */

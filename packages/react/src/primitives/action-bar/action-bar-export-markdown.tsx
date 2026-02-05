@@ -4,7 +4,7 @@ import { forwardRef, useCallback } from "react";
 import { ActionButtonProps } from "../../utils/create-action-button";
 import { composeEventHandlers } from "@radix-ui/primitive";
 import { Primitive } from "@radix-ui/react-primitive";
-import { useAuiState, useAui } from "@creatorem/ai-assistant-store";
+import { useAiChat, useAiChatShallow } from "@creatorem/ai-store";
 
 const useActionBarExportMarkdown = ({
   filename,
@@ -13,8 +13,8 @@ const useActionBarExportMarkdown = ({
   filename?: string | undefined;
   onExport?: ((content: string) => void | Promise<void>) | undefined;
 } = {}) => {
-  const aui = useAui();
-  const hasExportableContent = useAuiState(({ message }) => {
+  const messageMethods = useAiChat(({message}) => message.methods);
+  const hasExportableContent = useAiChat(({ message }) => {
     return (
       (message.role !== "assistant" || message.status?.type !== "running") &&
       message.parts.some((c) => c.type === "text" && c.text.length > 0)
@@ -22,7 +22,7 @@ const useActionBarExportMarkdown = ({
   });
 
   const callback = useCallback(async () => {
-    const content = aui.message().getCopyText();
+    const content = messageMethods.getCopyText();
     if (!content) return;
 
     if (onExport) {
@@ -37,7 +37,7 @@ const useActionBarExportMarkdown = ({
     a.download = filename ?? `message-${Date.now()}.md`;
     a.click();
     URL.revokeObjectURL(url);
-  }, [aui, filename, onExport]);
+  }, [messageMethods, filename, onExport]);
 
   if (!hasExportableContent) return null;
   return callback;

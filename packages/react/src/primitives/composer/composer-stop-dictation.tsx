@@ -1,21 +1,21 @@
 "use client";
 
 import { useCallback } from "react";
-import { useAui } from "@creatorem/ai-assistant-store";
+import { useAiChat, useAiChatShallow } from "@creatorem/ai-store";
 import type {
   ActionButtonElement,
   ActionButtonProps,
 } from "../../utils/create-action-button";
 import { createActionButton } from "../../utils/create-action-button";
-import { useAuiState } from "@creatorem/ai-assistant-store";
 
 const useComposerStopDictation = () => {
-  const aui = useAui();
-  const isDictating = useAuiState(({ composer }) => composer.dictation != null);
+  const isDictating = useAiChatShallow(({ composer }) => composer.dictation != null);
+  const composerMethods = useAiChat(({composer}) => composer.methods);
+
 
   const callback = useCallback(() => {
-    aui.composer().stopDictation();
-  }, [aui]);
+    composerMethods.stopDictation();
+  }, [composerMethods]);
 
   if (!isDictating) return null;
   return callback;

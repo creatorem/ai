@@ -9,7 +9,7 @@ import {
   useContext,
 } from "react";
 import { useThreadViewportStore } from "../../context/react/thread-viewport-context";
-import { useAuiState } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 import { useManagedRef } from "../../utils/hooks/use-managed-ref";
 
 const SlackNestingContext = createContext(false);
@@ -57,7 +57,7 @@ export const ThreadPrimitiveViewportSlack: FC<ThreadViewportSlackProps> = ({
   fillClampThreshold = "10em",
   fillClampOffset = "6em",
 }) => {
-  const shouldApplySlack = useAuiState(
+  const shouldApplySlack = useAiChat(
     // only add slack to the last assistant message following a user message (valid turn)
     ({ thread, message }) =>
       message.isLast &&

@@ -12,6 +12,7 @@ import { createThreadListItemSlice } from './thead-list-item-slice';
 import { createMessageSlice } from './message-slice';
 import { createPartSlice } from './part-slice';
 import { createThreadsSlice } from './threads-slice';
+import { useShallow } from 'zustand/shallow';
 
 interface StoreAdapters {
   attachment: AttachmentAdapter
@@ -21,26 +22,26 @@ interface StoreAdapters {
   threadList: ThreadListAdapter
 }
 
-export interface FilterStore {
+export interface AiChatStore {
   adapters: StoreAdapters
   setAdapters: <N extends keyof StoreAdapters>(name: N, adapter: StoreAdapters[N]) => void;
   attachment: { state: AttachmentState } & { methods: { remove: () => Promise<void> } };
-  composer: { state: ComposerState, methods: ComposerMethods };
-  message: {state: MessageState, methods: MessageMethods};
-  part: {state:PartState, methods: PartMethods};
+  composer: ComposerState & { methods: ComposerMethods };
+  message: MessageState & { methods: MessageMethods };
+  part: PartState & { methods: PartMethods }
   suggestion: SuggestionState | null;
   suggestions: SuggestionsState;
-  thread: {state: ThreadState, methods: ThreadMethods};
-  threadListItem: {state: ThreadListItemState, methods: ThreadListItemMethods};
-  threads: {state: ThreadsState, methods: ThreadsMethods};
-  tools: { state: ToolsState, methods: ToolsMethods };
+  thread: ThreadState & {methods:ThreadMethods}
+  threadListItem: ThreadListItemState & {methods:ThreadListItemMethods}
+  threads: ThreadsState & {methods:ThreadsMethods}
+  tools: ToolsState & {methods:ToolsMethods}
 }
 
 const createAdapterSlice: StateCreator<
-  FilterStore,
+  AiChatStore,
   [],
   [],
-  Pick<FilterStore, 'adapters' | 'setAdapters'>
+  Pick<AiChatStore, 'adapters' | 'setAdapters'>
 > = (set) => ({
   adapters: {
     attachment: {} as AttachmentAdapter,
@@ -57,7 +58,7 @@ const createAdapterSlice: StateCreator<
   }))
 })
 
-export const useReactAIStore = create<FilterStore>()((...a) => ({
+export const useAiChat = create<AiChatStore>()((...a) => ({
   ...createAdapterSlice(...a),
   ...createAttachmentSlice(...a),
   ...createComposerSlice(...a),
@@ -72,6 +73,24 @@ export const useReactAIStore = create<FilterStore>()((...a) => ({
   ...createThreadsSlice(...a),
   ...createToolsSlice(...a),
 }))
+
+export const useAiChatShallow = <T,>(selector: (state: AiChatStore) => T): T =>
+  useAiChat(useShallow(selector))
+
+// export const useAiChatState = <T,>(selector: (state: AiChatStore) => T): T => {
+//   // I would like to return select only the state values
+// }
+// const isComposerEditing = useAiChatState(({ composer }) => composer.isEditing)
+// instead of doing 
+// const isComposerEditing = useAiChat(({ composer: {state: composer} }) => composer.isEditing);
+
+// same for methods
+// export const useAiChatMethods = <T,>(selector: (state: AiChatStore) => T): T => {
+//   // I would like to return select only the state values
+// }
+// const isComposerEditing = useAiChatState(({ composer }) => composer.isEditing)
+// instead of doing 
+// const isComposerEditing = useAiChat(({ composer: {state: composer} }) => composer.isEditing);
 
 
 

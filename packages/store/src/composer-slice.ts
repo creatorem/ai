@@ -8,16 +8,16 @@ import type { AttachmentAdapter } from "./types/adapters/attachment-adapter";
 import type { MessageRole, RunConfig } from "./types/assistant-types";
 import type { DictationAdapter } from "./types/adapters/speech";
 import type { StateCreator } from "zustand";
-import type { FilterStore } from "./store";
+import type { AiChatStore } from "./store";
 import type { ComposerState } from "./types/entities";
 import type { AttachmentMethods } from "./types/entities/attachment";
 
 
 type ComposerSlice = StateCreator<
-  FilterStore,
+  AiChatStore,
   [],
   [],
-  Pick<FilterStore, 'composer'>
+  Pick<AiChatStore, 'composer'>
 >
 
 const isAttachmentComplete = (a: Attachment): a is CompleteAttachment =>
@@ -52,6 +52,11 @@ class ComposerRuntime {
 
     this.set = set;
     this.get = get;
+  }
+
+  public getState(): ComposerState {
+    const {methods, ...state} = this.get().composer;
+    return state;
   }
 
   public get state(): ComposerState {
@@ -418,10 +423,12 @@ class ComposerRuntime {
   }
 
 
-  public getSlice(): FilterStore['composer'] {
+  public getSlice(): AiChatStore['composer'] {
     return {
-      state: this._state,
+      // state: this._state,
+      ...this._state,
       methods: {
+        getState: this.getState,
         setText: this.setText,
         setRole: this.setRole,
         setRunConfig: this.setRunConfig,
@@ -441,10 +448,10 @@ class ComposerRuntime {
 
 
 export const createComposerSlice: StateCreator<
-  FilterStore,
+  AiChatStore,
   [],
   [],
-  Pick<FilterStore, 'composer'>
+  Pick<AiChatStore, 'composer'>
 > = (...a) => ({
   composer: new ComposerRuntime(...a).getSlice()
 })

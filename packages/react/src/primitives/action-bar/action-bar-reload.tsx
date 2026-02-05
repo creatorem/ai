@@ -6,7 +6,7 @@ import {
   createActionButton,
 } from "../../utils/create-action-button";
 import { useCallback } from "react";
-import { useAuiState, useAui } from "@creatorem/ai-assistant-store";
+import { useAiChat, useAiChatShallow } from "@creatorem/ai-store";
 
 /**
  * Hook that provides reload functionality for action bar buttons.
@@ -30,9 +30,9 @@ import { useAuiState, useAui } from "@creatorem/ai-assistant-store";
  * ```
  */
 const useActionBarReload = () => {
-  const aui = useAui();
+  const messageMethods = useAiChat(({message}) => message.methods);
 
-  const disabled = useAuiState(
+  const disabled = useAiChat(
     (s) =>
       s.thread.isRunning ||
       s.thread.isDisabled ||
@@ -40,8 +40,8 @@ const useActionBarReload = () => {
   );
 
   const callback = useCallback(() => {
-    aui.message().reload();
-  }, [aui]);
+    messageMethods.reload();
+  }, [messageMethods]);
 
   if (disabled) return null;
   return callback;

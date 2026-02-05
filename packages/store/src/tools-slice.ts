@@ -1,16 +1,14 @@
 import type { StateCreator } from "zustand";
-import type { FilterStore } from "./store";
+import type { AiChatStore } from "./store";
 
 export const createToolsSlice: StateCreator<
-  FilterStore,
+  AiChatStore,
   [],
   [],
-  Pick<FilterStore, 'tools'>
+  Pick<AiChatStore, 'tools'>
 > = (set, get) => ({
   tools: {
-    state: {
-      tools: {}
-    },
+    tools: {},
     methods: {
       'setToolUI': (toolName, render) => {
         set((prev) => {

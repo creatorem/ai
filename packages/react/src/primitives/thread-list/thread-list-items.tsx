@@ -1,7 +1,7 @@
 "use client";
 
 import { ComponentType, FC, memo, useMemo } from "react";
-import { useAuiState } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 import { ThreadListItemByIndexProvider } from "../../context/providers";
 
 export namespace ThreadListPrimitiveItems {
@@ -60,7 +60,7 @@ export const ThreadListPrimitiveItems: FC<ThreadListPrimitiveItems.Props> = ({
   archived = false,
   components,
 }) => {
-  const contentLength = useAuiState(({ threads }) =>
+  const contentLength = useAiChat(({ threads }) =>
     archived ? threads.archivedThreadIds.length : threads.threadIds.length,
   );
 

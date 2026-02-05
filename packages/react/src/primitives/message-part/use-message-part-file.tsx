@@ -1,11 +1,11 @@
 "use client";
 
 import { MessagePartState } from "../../runtime/runtime/message-part-runtime";
-import { useAuiState } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 import { FileMessagePart } from "../../types";
 
 export const useMessagePartFile = () => {
-  const file = useAuiState(({ part }) => {
+  const file = useAiChat(({ part }) => {
     if (part.type !== "file")
       throw new Error(
         "MessagePartFile can only be used inside file message parts.",

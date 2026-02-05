@@ -6,11 +6,11 @@ import {
   createActionButton,
 } from "../../utils/create-action-button";
 import { useCallback } from "react";
-import { useAuiState, useAui } from "@creatorem/ai-assistant-store";
+import { useAiChat, useAiChatShallow } from "@creatorem/ai-store";
 
 const useBranchPickerNext = () => {
-  const aui = useAui();
-  const disabled = useAuiState(({ thread, message }) => {
+  const messageMethods = useAiChat(({message}) => message.methods);
+  const disabled = useAiChat(({ thread, message }) => {
     // Disabled if no next branch
     if (message.branchNumber >= message.branchCount) return true;
 
@@ -23,8 +23,8 @@ const useBranchPickerNext = () => {
   });
 
   const callback = useCallback(() => {
-    aui.message().switchToBranch({ position: "next" });
-  }, [aui]);
+    messageMethods.switchToBranch({ position: "next" });
+  }, [messageMethods]);
 
   if (disabled) return null;
   return callback;

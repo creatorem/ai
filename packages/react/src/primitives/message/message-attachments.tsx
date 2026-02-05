@@ -1,7 +1,7 @@
 "use client";
 
 import { ComponentType, type FC, memo, useMemo } from "react";
-import { useAuiState } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 import { MessageAttachmentByIndexProvider } from "../../context/providers";
 import { CompleteAttachment } from "../../types";
 
@@ -39,7 +39,7 @@ const getComponent = (
 const AttachmentComponent: FC<{
   components: MessagePrimitiveAttachments.Props["components"];
 }> = ({ components }) => {
-  const attachment = useAuiState(({ attachment }) => attachment);
+  const attachment = useAiChat(({ attachment }) => attachment);
   if (!attachment) return null;
 
   const Component = getComponent(components, attachment as CompleteAttachment);
@@ -94,7 +94,7 @@ MessagePrimitiveAttachmentByIndex.displayName =
 export const MessagePrimitiveAttachments: FC<
   MessagePrimitiveAttachments.Props
 > = ({ components }) => {
-  const attachmentsCount = useAuiState(({ message }) => {
+  const attachmentsCount = useAiChat(({ message }) => {
     if (message.role !== "user") return 0;
     return message.attachments.length;
   });

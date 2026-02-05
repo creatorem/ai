@@ -2,7 +2,7 @@
 
 import { ComponentType, type FC, memo, useMemo } from "react";
 import { Attachment } from "../../types";
-import { useAuiState } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 import { ComposerAttachmentByIndexProvider } from "../../context/providers";
 
 export namespace ComposerPrimitiveAttachments {
@@ -39,7 +39,7 @@ const getComponent = (
 const AttachmentComponent: FC<{
   components: ComposerPrimitiveAttachments.Props["components"];
 }> = ({ components }) => {
-  const attachment = useAuiState(({ attachment }) => attachment);
+  const attachment = useAiChat(({ attachment }) => attachment);
   if (!attachment) return null;
 
   const Component = getComponent(components, attachment);
@@ -94,7 +94,7 @@ ComposerPrimitiveAttachmentByIndex.displayName =
 export const ComposerPrimitiveAttachments: FC<
   ComposerPrimitiveAttachments.Props
 > = ({ components }) => {
-  const attachmentsCount = useAuiState((s) => s.composer.attachments.length);
+  const attachmentsCount = useAiChat((s) => s.composer.attachments.length);
 
   const attachmentElements = useMemo(() => {
     return Array.from({ length: attachmentsCount }, (_, index) => (

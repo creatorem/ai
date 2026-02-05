@@ -7,7 +7,7 @@ import {
   PropsWithChildren,
   useMemo,
 } from "react";
-import { useAuiState, useAui } from "@creatorem/ai-assistant-store";
+import { useAiChat, useAiChatShallow } from "@creatorem/ai-store";
 import {
   PartByIndexProvider,
   TextMessagePartProvider,
@@ -74,7 +74,7 @@ const groupMessagePartsByParentId: GroupingFunction = (
 const useMessagePartsGrouped = (
   groupingFunction: GroupingFunction,
 ): MessagePartGroup[] => {
-  const parts = useAuiState(({ message }) => message.parts);
+  const parts = useAiChat(({ message }) => message.parts);
 
   return useMemo(() => {
     if (parts.length === 0) {
@@ -219,7 +219,7 @@ const ToolUIDisplay = ({
 }: {
   Fallback: ToolCallMessagePartComponent | undefined;
 } & ToolCallMessagePartProps) => {
-  const Render = useAuiState(({ tools }) => {
+  const Render = useAiChat(({ tools }) => {
     const Render = tools.tools[props.toolName] ?? Fallback;
     if (Array.isArray(Render)) return Render[0] ?? Fallback;
     return Render;
@@ -260,13 +260,13 @@ const MessagePartComponent: FC<MessagePartComponentProps> = ({
     tools = {},
   } = {},
 }) => {
-  const aui = useAui();
-  const part = useAuiState(({ part }) => part);
+  const partMethods = useAiChat(({part}) => part.methods);
+  const part = useAiChat(({ part }) => part);
 
   const type = part.type;
   if (type === "tool-call") {
-    const addResult = aui.part().addToolResult;
-    const resume = aui.part().resumeToolCall;
+    const addResult = partMethods.addToolResult;
+    const resume = partMethods.resumeToolCall;
     if ("Override" in tools)
       return <tools.Override {...part} addResult={addResult} resume={resume} />;
     const Tool = tools.by_name?.[part.toolName] ?? tools.Fallback;
@@ -354,7 +354,7 @@ const COMPLETE_STATUS: MessagePartStatus = Object.freeze({
 });
 
 const EmptyPartsImpl: FC<MessagePartComponentProps> = ({ components }) => {
-  const status = useAuiState(
+  const status = useAiChat(
     (s) => (s.message.status ?? COMPLETE_STATUS) as MessagePartStatus,
   );
 
@@ -426,7 +426,7 @@ const EmptyParts = memo(
 export const MessagePrimitiveUnstable_PartsGrouped: FC<
   MessagePrimitiveUnstable_PartsGrouped.Props
 > = ({ groupingFunction, components }) => {
-  const contentLength = useAuiState(({ message }) => message.parts.length);
+  const contentLength = useAiChat(({ message }) => message.parts.length);
   const messageGroups = useMessagePartsGrouped(groupingFunction);
 
   const partsElements = useMemo(() => {

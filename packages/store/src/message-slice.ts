@@ -1,5 +1,5 @@
 import type { StateCreator } from "zustand";
-import type { FilterStore } from "./store";
+import type { AiChatStore } from "./store";
 import type { MessageState, PartState } from "./types/entities";
 import type { AttachmentMethods } from "./types/entities/attachment";
 import type { PartMethods } from "./types/entities/part";
@@ -7,10 +7,10 @@ import type { RunConfig, ThreadMessage, MessagePartStatus, ToolCallMessagePartSt
 import { getThreadMessageText } from "./utils/get-thread-message-text";
 
 type MessageSlice = StateCreator<
-  FilterStore,
+  AiChatStore,
   [],
   [],
-  Pick<FilterStore, 'message'>
+  Pick<AiChatStore, 'message'>
 >
 
 // Selected message info - which message from thread.messages is currently selected
@@ -317,9 +317,10 @@ class MessageRuntime {
     this.syncFromThread();
   }
 
-  public getSlice(): FilterStore['message'] {
+  public getSlice(): AiChatStore['message'] {
     return {
-      state: this._state,
+      // state: this._state,
+      ... this._state,
       methods: {
         composer: this.get().composer.methods,
         reload: this.reload,
@@ -338,10 +339,10 @@ class MessageRuntime {
 }
 
 export const createMessageSlice: StateCreator<
-  FilterStore,
+  AiChatStore,
   [],
   [],
-  Pick<FilterStore, 'message'>
+  Pick<AiChatStore, 'message'>
 > = (...a) => ({
   message: new MessageRuntime(...a).getSlice()
 })

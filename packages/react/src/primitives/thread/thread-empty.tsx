@@ -1,7 +1,7 @@
 "use client";
 
 import type { FC, PropsWithChildren } from "react";
-import { useAuiState } from "@creatorem/ai-assistant-store";
+import { useAiChat } from "@creatorem/ai-store";
 
 export namespace ThreadPrimitiveEmpty {
   export type Props = PropsWithChildren;
@@ -10,7 +10,7 @@ export namespace ThreadPrimitiveEmpty {
 export const ThreadPrimitiveEmpty: FC<ThreadPrimitiveEmpty.Props> = ({
   children,
 }) => {
-  const empty = useAuiState(
+  const empty = useAiChat(
     ({ thread }) => thread.messages.length === 0 && !thread.isLoading,
   );
   return empty ? children : null;

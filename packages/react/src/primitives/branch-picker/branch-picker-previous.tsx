@@ -6,7 +6,7 @@ import {
   createActionButton,
 } from "../../utils/create-action-button";
 import { useCallback } from "react";
-import { useAuiState, useAui } from "@creatorem/ai-assistant-store";
+import { useAiChat, useAiChatShallow } from "@creatorem/ai-store";
 
 /**
  * Hook that provides navigation to the previous branch functionality.
@@ -30,8 +30,8 @@ import { useAuiState, useAui } from "@creatorem/ai-assistant-store";
  * ```
  */
 const useBranchPickerPrevious = () => {
-  const aui = useAui();
-  const disabled = useAuiState(({ thread, message }) => {
+  const messageMethods = useAiChat(({message}) => message.methods);
+  const disabled = useAiChat(({ thread, message }) => {
     // Disabled if no previous branch
     if (message.branchNumber <= 1) return true;
 
@@ -44,8 +44,8 @@ const useBranchPickerPrevious = () => {
   });
 
   const callback = useCallback(() => {
-    aui.message().switchToBranch({ position: "previous" });
-  }, [aui]);
+    messageMethods.switchToBranch({ position: "previous" });
+  }, [messageMethods]);
 
   if (disabled) return null;
   return callback;

@@ -6,7 +6,7 @@ import {
   createActionButton,
 } from "../../utils/create-action-button";
 import { useCallback } from "react";
-import { useAuiState, useAui } from "@creatorem/ai-assistant-store";
+import { useAiChat, useAiChatShallow } from "@creatorem/ai-store";
 
 /**
  * Hook that provides edit functionality for action bar buttons.
@@ -30,12 +30,12 @@ import { useAuiState, useAui } from "@creatorem/ai-assistant-store";
  * ```
  */
 const useActionBarEdit = () => {
-  const aui = useAui();
-  const disabled = useAuiState(({ composer }) => composer.isEditing);
+  const composerMethods = useAiChat(({composer}) => composer.methods);
+  const disabled = useAiChat(({ composer }) => composer.isEditing);
 
   const callback = useCallback(() => {
-    aui.composer().beginEdit();
-  }, [aui]);
+    composerMethods.beginEdit();
+  }, [composerMethods]);
 
   if (disabled) return null;
   return callback;
