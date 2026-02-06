@@ -13,7 +13,7 @@ import {
 } from "./utils/message-repository";
 import { getThreadMessageText } from "./utils/get-thread-message-text";
 import type { CreateResumeRunConfig, CreateAppendMessage, ExportedMessageRepository, RuntimeCapabilities, ThreadMessageLike, CreateStartRunConfig } from "./types/entities/thread";
-import { ModelContext } from "./model-context/model-context-types";
+import type { ModelContext } from "./store";
 
 type ThreadRuntimeEventType =
   | "runStart"

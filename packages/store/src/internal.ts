@@ -12,3 +12,7 @@ export const isOptimisticId = (id: string) => id.startsWith(optimisticPrefix);
 const errorPrefix = "__error__";
 export const generateErrorMessageId = () => `${errorPrefix}${generateId()}`;
 export const isErrorMessageId = (id: string) => id.startsWith(errorPrefix);
+
+// Re-export for INTERNAL module compatibility
+export { MessageRepository } from "./utils/message-repository";
+// export { useToolInvocations, type ToolExecutionStatus } from "./runtime/use-tool-invocations";

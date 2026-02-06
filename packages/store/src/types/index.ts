@@ -54,3 +54,17 @@ export type * from "./message-part-component-types";
 export type { ThreadListItemStatus } from "./entities/thread-list-item";
 
 export type { Unsubscribe } from "./unsubscribe";
+
+// Entity types
+export type {
+  MessageState,
+  MessageMethods,
+  ComposerState,
+  ComposerMethods,
+  PartState,
+  PartMethods,
+  AttachmentState,
+  AttachmentMethods,
+  ThreadState,
+  ThreadMethods,
+} from "./entities";

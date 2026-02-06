@@ -1,10 +1,6 @@
 "use client";
 
-import { AssistantRuntimeProvider } from "@creatorem/ai-react";
-import {
-  useChatRuntime,
-  AssistantChatTransport,
-} from "../../../../packages/ai-sdk/src";
+// import { AssistantRuntimeProvider } from "@creatorem/ai-react";
 import { Thread } from "@/components/creatorem-ai/thread";
 import {
   SidebarInset,
@@ -13,6 +9,8 @@ import {
 } from "@/components/ui/sidebar";
 import { ThreadListSidebar } from "@/components/creatorem-ai/threadlist-sidebar";
 import { Separator } from "@/components/ui/separator";
+import { useChatRuntime } from '../../../../packages/store/src/ai-sdk/ui/use-chat/use-chat-runtime';
+import { AssistantChatTransport } from "../../../../packages/store/src/ai-sdk/ui/use-chat/assistant-chat-transport";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -32,7 +30,7 @@ export const TestAssistant = () => {
   console.log( {runtime} )
 
   return (
-    <AssistantRuntimeProvider runtime={runtime}>
+    // <AssistantRuntimeProvider runtime={runtime}>
       <SidebarProvider>
         <div className="flex h-dvh w-full pr-0.5">
           <ThreadListSidebar />
@@ -64,6 +62,6 @@ export const TestAssistant = () => {
           </SidebarInset>
         </div>
       </SidebarProvider>
-    </AssistantRuntimeProvider>
+    // </AssistantRuntimeProvider>
   );
 };

@@ -1,19 +1,9 @@
 import { isToolUIPart, getToolName, type UIMessage } from "ai";
-// import {
-//   unstable_createMessageConverter,
-//   type ReasoningMessagePart,
-//   type ToolCallMessagePart,
-//   type TextMessagePart,
-//   type DataMessagePart,
-//   type SourceMessagePart,
-//   type useExternalMessageConverter,
-//   type ThreadMessageLike,
-// } from "../../../../assistant-react/src";
 import type { ReadonlyJSONObject } from "@creatorem/stream/utils";
 import { ThreadMessageLike } from "../../../types/entities/thread";
 import { DataMessagePart, ReasoningMessagePart, SourceMessagePart, TextMessagePart, ToolCallMessagePart } from "../../../types";
-import { useExternalMessageConverter } from '../../../../../assistant-react/src/runtime/runtime-cores/external-store/external-message-converter';
-import { unstable_createMessageConverter } from "../../../../../assistant-react/src";
+import { useExternalMessageConverter } from "../../../utils/external-message-converter";
+import { unstable_createMessageConverter } from "../../../utils/create-message-converter";
 
 type MessageMetadata = ThreadMessageLike["metadata"];
 

@@ -1,20 +1,53 @@
 "use client";
 
-import { ComponentType, type FC, memo, useMemo } from "react";
+import { ComponentType, type FC, memo, PropsWithChildren, useMemo } from "react";
 import { useAiChat } from "@creatorem/ai-store";
-import { MessageAttachmentByIndexProvider } from "../../context/providers";
 import type { CompleteAttachment } from "@creatorem/ai-store/types";
+import { AttachmentMethods } from "../../../../store/src/types/entities";
+import { createContext } from "react";
+
+type MessageAttachmentByIndexCtx = {
+  source: 'message',
+  index: number,
+  get: (selector: {
+    index: number;
+  } | {
+    id: string;
+  }) => AttachmentMethods,
+}
+
+const messageAttachmentByIndexContext = createContext<MessageAttachmentByIndexCtx>({
+  'source': 'message',
+  index: 0,
+  get: (() => { }) as any
+})
+
+const MessageAttachmentByIndexProvider: FC<
+  PropsWithChildren<{
+    index: number;
+  }>
+> = ({ index, children }) => {
+  const messageMethods = useAiChat(({ message }) => message.methods)
+
+  const ctx = useMemo((): MessageAttachmentByIndexCtx => ({
+    source: 'message',
+    index,
+    get: messageMethods.attachment
+  }), [messageMethods, index])
+
+  return <messageAttachmentByIndexContext.Provider value={ctx}>{children}</messageAttachmentByIndexContext.Provider>;
+};
 
 export namespace MessagePrimitiveAttachments {
   export type Props = {
     components:
-      | {
-          Image?: ComponentType | undefined;
-          Document?: ComponentType | undefined;
-          File?: ComponentType | undefined;
-          Attachment?: ComponentType | undefined;
-        }
-      | undefined;
+    | {
+      Image?: ComponentType | undefined;
+      Document?: ComponentType | undefined;
+      File?: ComponentType | undefined;
+      Attachment?: ComponentType | undefined;
+    }
+    | undefined;
   };
 }
 

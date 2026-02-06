@@ -2,11 +2,6 @@
 
 import { useChat, type UIMessage } from "@ai-sdk/react";
 import type { AssistantCloud } from "assistant-cloud";
-// import {
-//   AssistantRuntime,
-//   unstable_useCloudThreadListAdapter,
-//   unstable_useRemoteThreadListRuntime,
-// } from "../../../../assistant-react/src";
 import {
   useAISDKRuntime,
   type AISDKRuntimeAdapter,
@@ -15,12 +10,9 @@ import {
 import { ChatInit, ChatTransport } from "ai";
 import { AssistantChatTransport } from "./assistant-chat-transport";
 import { useEffect, useMemo, useRef } from "react";
-import { useAiChatShallow } from "../../../store";
-import { 
-  AssistantRuntime, 
-  unstable_useCloudThreadListAdapter, 
-  unstable_useRemoteThreadListRuntime 
-} from "../../../../../assistant-react/src";
+import { AiChatStore, useAiChat, useAiChatShallow } from "../../../store";
+import { createLocalStorageThreadAdapter } from '../adapters/use-local-storage-thread-adapter';
+
 
 export type UseChatRuntimeOptions<UI_MESSAGE extends UIMessage = UIMessage> =
   ChatInit<UI_MESSAGE> & {
@@ -52,9 +44,9 @@ const useDynamicChatTransport = <UI_MESSAGE extends UIMessage = UIMessage>(
   return dynamicTransport;
 };
 
-const useChatThreadRuntime = <UI_MESSAGE extends UIMessage = UIMessage>(
+export const useChatRuntime = <UI_MESSAGE extends UIMessage = UIMessage>(
   options?: UseChatRuntimeOptions<UI_MESSAGE>,
-): AssistantRuntime => {
+): AiChatStore => {
   const {
     adapters,
     transport: transportOptions,
@@ -66,36 +58,37 @@ const useChatThreadRuntime = <UI_MESSAGE extends UIMessage = UIMessage>(
     transportOptions ?? new AssistantChatTransport(),
   );
 
-  // const id = useAuiState(({ threadListItem }) => threadListItem.id);
-  const id = useAiChatShallow(({ threadListItem }) => threadListItem.id);
-  const chat = useChat({
-    ...chatOptions,
-    id,
-    transport,
-  });
+  // useAiChat.getState().adapters.
+  // const localStoreAdapter = useMemo(() => createLocalStorageThreadAdapter(), []);
+  // const setAdapters = useAiChat(({setAdapters}) => setAdapters)
+  // setAdapters(localStoreAdapter);
 
-  const runtime = useAISDKRuntime(chat, {
-    adapters,
-    ...(toCreateMessage && { toCreateMessage }),
-  });
+
+  // const id = useAuiState(({ threadListItem }) => threadListItem.id);
+  // const id = useAiChat(({ threadListItem }) => threadListItem.id);
+  // const chat = useChat({
+  //   ...chatOptions,
+  //   id,
+  //   transport,
+  // });
+
+  // const runtime = useAISDKRuntime(chat, {
+  //   adapters,
+  //   ...(toCreateMessage && { toCreateMessage }),
+  // });
+
+  const store = useAiChat.getState()
 
   if (transport instanceof AssistantChatTransport) {
-    transport.setRuntime(runtime);
+    transport.setStore(store);
   }
 
-  return runtime;
+  return store;
 };
 
-export const useChatRuntime = <UI_MESSAGE extends UIMessage = UIMessage>({
-  cloud,
-  ...options
-}: UseChatRuntimeOptions<UI_MESSAGE> = {}): AssistantRuntime => {
-  const cloudAdapter = unstable_useCloudThreadListAdapter({ cloud });
-  return unstable_useRemoteThreadListRuntime({
-    runtimeHook: function RuntimeHook() {
-      return useChatThreadRuntime(options);
-    },
-    adapter: cloudAdapter,
-    allowNesting: true,
-  });
-};
+// export const useChatRuntime = <UI_MESSAGE extends UIMessage = UIMessage>({
+//   options
+// }: UseChatRuntimeOptions<UI_MESSAGE> = {}): AiChatStore => {
+//   // const localStoreAdapter = useLocalStorageThreadAdapter();
+//       return useChatThreadRuntime(options);
+// };

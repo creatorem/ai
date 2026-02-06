@@ -1,4 +1,3 @@
-// import { AssistantRuntime } from "../../../../assistant-react/src";
 import {
   DefaultChatTransport,
   HttpChatTransportInitOptions,
@@ -6,20 +5,20 @@ import {
 } from "ai";
 import { toToolsJSONSchema } from "@creatorem/stream";
 import { AiChatStore } from "../../../store";
+// import type { AssistantRuntime } from "../../../runtime/types";
 
 export class AssistantChatTransport<
   UI_MESSAGE extends UIMessage,
 > extends DefaultChatTransport<UI_MESSAGE> {
-  // private runtime: AssistantRuntime | undefined;
-  private store: AiChatStore;
+  private store: AiChatStore | undefined;
+
   constructor(initOptions?: HttpChatTransportInitOptions<UI_MESSAGE>) {
     super({
       ...initOptions,
       prepareSendMessagesRequest: async (options) => {
-        // const context = this.store?.thread.getModelContext();
-        // const context = this.store.thread.;
+        const context = this.store?.context;
         const id =
-          (await this.runtime?.threads.mainItem.initialize())?.remoteId ??
+          (await this.store?.threadListItem.methods.initialize())?.remoteId ??
           options.id;
 
         const optionsEx = {
@@ -50,7 +49,7 @@ export class AssistantChatTransport<
     });
   }
 
-  setRuntime(runtime: AssistantRuntime) {
-    this.runtime = runtime;
+  setStore(store: AiChatStore) {
+    this.store = store;
   }
 }

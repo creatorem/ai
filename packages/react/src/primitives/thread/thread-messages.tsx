@@ -1,9 +1,45 @@
 "use client";
 
-import { type ComponentType, type FC, memo, useMemo } from "react";
+import { type ComponentType, type FC, type PropsWithChildren, memo, useMemo, createContext, useContext } from "react";
 import { useAiChat } from "@creatorem/ai-store";
-import { MessageByIndexProvider } from "../../context/providers";
-import type { ThreadMessage as ThreadMessageType } from "@creatorem/ai-store/types";
+import type { ThreadMessage as ThreadMessageType, MessageMethods, ComposerMethods } from "@creatorem/ai-store/types";
+
+// ============================================================================
+// MessageByIndex Context
+// ============================================================================
+
+type MessageByIndexCtx = {
+  source: 'thread';
+  index: number;
+  getMessage: (selector: { index: number } | { id: string }) => MessageMethods;
+  getComposer: () => ComposerMethods;
+};
+
+const messageByIndexContext = createContext<MessageByIndexCtx>({
+  source: 'thread',
+  index: 0,
+  getMessage: (() => { throw new Error('MessageByIndexProvider not found'); }) as any,
+  getComposer: (() => { throw new Error('MessageByIndexProvider not found'); }) as any,
+});
+
+export const useMessageByIndexContext = () => useContext(messageByIndexContext);
+
+export const MessageByIndexProvider: FC<
+  PropsWithChildren<{
+    index: number;
+  }>
+> = ({ index, children }) => {
+  const threadMethods = useAiChat(({ thread }) => thread.methods);
+
+  const ctx = useMemo((): MessageByIndexCtx => ({
+    source: 'thread',
+    index,
+    getMessage: threadMethods.message,
+    getComposer: () => threadMethods.message({ index }).composer,
+  }), [threadMethods, index]);
+
+  return <messageByIndexContext.Provider value={ctx}>{children}</messageByIndexContext.Provider>;
+};
 
 export namespace ThreadPrimitiveMessages {
   export type Props = {

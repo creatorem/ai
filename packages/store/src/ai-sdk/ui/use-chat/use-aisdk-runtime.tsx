@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import type { UIMessage, useChat, CreateUIMessage } from "@ai-sdk/react";
 import { isToolUIPart } from "ai";
 import { sliceMessagesUntil } from "../utils/slice-messages-until";
@@ -15,15 +15,18 @@ import {
 import { useExternalHistory } from "./use-external-history";
 import { AppendMessage, ThreadMessage } from "../../../types";
 import { MessageFormatAdapter } from "../adapters/thread-history";
-import { 
-  AssistantRuntime, 
-  ExternalStoreAdapter, 
-  INTERNAL, 
-  ThreadHistoryAdapter, 
-  ToolExecutionStatus, 
-  useExternalStoreRuntime, 
-  useRuntimeAdapters 
-} from "../../../../../assistant-react/src";
+import type {
+  ExternalStoreAdapter,
+  ThreadHistoryAdapter,
+} from "../../../runtime/types";
+import {
+  useRuntimeAdapters
+} from "../../../runtime/runtime-adapter-provider";
+import {
+  useToolInvocations,
+  type ToolExecutionStatus,
+} from "../../../runtime/use-tool-invocations";
+import { AiChatStore, useAiChat } from "../../../store";
 
 export type CustomToCreateMessageFunction = <
   UI_MESSAGE extends UIMessage = UIMessage,
@@ -56,8 +59,9 @@ export const useAISDKRuntime = <UI_MESSAGE extends UIMessage = UIMessage>(
     toCreateMessage: customToCreateMessage,
     cancelPendingToolCallsOnSend = true,
   }: AISDKRuntimeAdapter = {},
-) => {
+): AiChatStore => {
   const contextAdapters = useRuntimeAdapters();
+  const store = useAiChat();
   const [toolStatuses, setToolStatuses] = useState<
     Record<string, ToolExecutionStatus>
   >({});
@@ -82,18 +86,12 @@ export const useAISDKRuntime = <UI_MESSAGE extends UIMessage = UIMessage>(
     ),
   });
 
-  const [runtimeRef] = useState(() => ({
-    get current(): AssistantRuntime {
-      return runtime;
-    },
-  }));
-
-  const toolInvocations = INTERNAL.useToolInvocations({
+  const toolInvocations = useToolInvocations({
     state: {
       messages,
       isRunning,
     },
-    getTools: () => runtimeRef.current.thread.getModelContext().tools,
+    getTools: () => store.context.tools,
     onResult: (command) => {
       if (command.type === "add-tool-result") {
         chatHelpers.addToolResult({
@@ -107,7 +105,6 @@ export const useAISDKRuntime = <UI_MESSAGE extends UIMessage = UIMessage>(
   });
 
   const isLoading = useExternalHistory(
-    runtimeRef,
     adapters?.history ?? contextAdapters?.history,
     AISDKMessageConverter.toThreadMessages as (
       messages: UI_MESSAGE[],
@@ -150,84 +147,111 @@ export const useAISDKRuntime = <UI_MESSAGE extends UIMessage = UIMessage>(
     });
   };
 
-  const runtime = useExternalStoreRuntime({
-    isRunning,
-    messages,
-    setMessages: (messages) =>
-      chatHelpers.setMessages(
-        messages
-          .map(getVercelAIMessages<UI_MESSAGE>)
-          .filter(Boolean)
-          .flat(),
-      ),
-    onImport: (messages) =>
-      chatHelpers.setMessages(
-        messages
-          .map(getVercelAIMessages<UI_MESSAGE>)
-          .filter(Boolean)
-          .flat(),
-      ),
-    onCancel: async () => {
-      chatHelpers.stop();
-      await toolInvocations.abort();
-    },
-    onNew: async (message) => {
-      await completePendingToolCalls();
+  // Sync chat helpers state to store
+  useEffect(() => {
+    // Update store with adapters
+    if (adapters?.attachments) {
+      store.setAdapters("attachment", adapters.attachments);
+    }
+    if (adapters?.speech) {
+      store.setAdapters("speech", adapters.speech);
+    }
+    if (adapters?.dictation) {
+      store.setAdapters("dictation", adapters.dictation);
+    }
+    if (adapters?.feedback) {
+      store.setAdapters("feedback", adapters.feedback);
+    }
+  }, [store, adapters]);
 
-      const createMessage = (
-        customToCreateMessage ?? toCreateMessage
-      )<UI_MESSAGE>(message);
-      await chatHelpers.sendMessage(createMessage, {
-        metadata: message.runConfig,
+  // Create handler functions for the store
+  const handleNew = async (message: AppendMessage) => {
+    await completePendingToolCalls();
+
+    const createMessage = (
+      customToCreateMessage ?? toCreateMessage
+    )<UI_MESSAGE>(message);
+    await chatHelpers.sendMessage(createMessage, {
+      metadata: message.runConfig,
+    });
+  };
+
+  const handleEdit = async (message: AppendMessage) => {
+    const newMessages = sliceMessagesUntil(
+      chatHelpers.messages,
+      message.parentId,
+    );
+    chatHelpers.setMessages(newMessages);
+
+    const createMessage = (
+      customToCreateMessage ?? toCreateMessage
+    )<UI_MESSAGE>(message);
+    await chatHelpers.sendMessage(createMessage, {
+      metadata: message.runConfig,
+    });
+  };
+
+  const handleReload = async (parentId: string | null, config: { runConfig?: Record<string, unknown> }) => {
+    const newMessages = sliceMessagesUntil(chatHelpers.messages, parentId);
+    chatHelpers.setMessages(newMessages);
+
+    await chatHelpers.regenerate({ metadata: config.runConfig });
+  };
+
+  const handleCancel = async () => {
+    chatHelpers.stop();
+    await toolInvocations.abort();
+  };
+
+  const handleAddToolResult = ({ toolCallId, result, isError }: { toolCallId: string; result: unknown; isError?: boolean }) => {
+    if (isError) {
+      chatHelpers.addToolOutput({
+        state: "output-error",
+        tool: toolCallId,
+        toolCallId,
+        errorText:
+          typeof result === "string" ? result : JSON.stringify(result),
       });
-    },
-    onEdit: async (message) => {
-      const newMessages = sliceMessagesUntil(
-        chatHelpers.messages,
-        message.parentId,
-      );
-      chatHelpers.setMessages(newMessages);
-
-      const createMessage = (
-        customToCreateMessage ?? toCreateMessage
-      )<UI_MESSAGE>(message);
-      await chatHelpers.sendMessage(createMessage, {
-        metadata: message.runConfig,
+    } else {
+      chatHelpers.addToolOutput({
+        state: "output-available",
+        tool: toolCallId,
+        toolCallId,
+        output: result,
       });
-    },
-    onReload: async (parentId: string | null, config) => {
-      const newMessages = sliceMessagesUntil(chatHelpers.messages, parentId);
-      chatHelpers.setMessages(newMessages);
+    }
+  };
 
-      await chatHelpers.regenerate({ metadata: config.runConfig });
-    },
-    onAddToolResult: ({ toolCallId, result, isError }) => {
-      if (isError) {
-        chatHelpers.addToolOutput({
-          state: "output-error",
-          tool: toolCallId,
-          toolCallId,
-          errorText:
-            typeof result === "string" ? result : JSON.stringify(result),
-        });
-      } else {
-        chatHelpers.addToolOutput({
-          state: "output-available",
-          tool: toolCallId,
-          toolCallId,
-          output: result,
-        });
-      }
-    },
-    onResumeToolCall: (options) =>
-      toolInvocations.resume(options.toolCallId, options.payload),
-    adapters: {
-      attachments: vercelAttachmentAdapter,
-      ...contextAdapters,
-      ...adapters,
-    },
-    isLoading,
-  });
+  const handleResumeToolCall = (options: { toolCallId: string; payload: unknown }) => {
+    toolInvocations.resume(options.toolCallId, options.payload);
+  };
 
-  return runtime;
+  const handleSetMessages = (newMessages: ThreadMessage[]) => {
+    chatHelpers.setMessages(
+      newMessages
+        .map(getVercelAIMessages<UI_MESSAGE>)
+        .filter(Boolean)
+        .flat(),
+    );
+  };
+
+  // Expose handlers via the store - these can be used by components
+  // Note: In a full implementation, these would be integrated into the thread slice
+  const storeWithHandlers = {
+    ...store,
+    // Chat-specific handlers (not part of core store interface)
+    __chatHandlers: {
+      onNew: handleNew,
+      onEdit: handleEdit,
+      onReload: handleReload,
+      onCancel: handleCancel,
+      onAddToolResult: handleAddToolResult,
+      onResumeToolCall: handleResumeToolCall,
+      setMessages: handleSetMessages,
+      isLoading,
+      isRunning,
+    },
+  };
+
+  return storeWithHandlers as AiChatStore;
 };

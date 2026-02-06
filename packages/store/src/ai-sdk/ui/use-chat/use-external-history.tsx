@@ -1,24 +1,12 @@
 "use client";
 
-// import {
-//   AssistantRuntime,
-//   ThreadHistoryAdapter,
-//   ThreadMessage,
-//   MessageFormatAdapter,
-//   getExternalStoreMessages,
-//   MessageFormatRepository,
-//   ExportedMessageRepository,
-//   INTERNAL,
-//   useAui,
-// } from "../../../../assistant-react/src";
-import { useRef, useEffect, useState, RefObject, useCallback } from "react";
-import { ExportedMessageRepository } from "../../../utils/message-repository";
+import { useRef, useEffect, useState } from "react";
+import { ExportedMessageRepository, MessageRepository } from "../../../utils/message-repository";
 import { ThreadMessage } from "../../../types";
 import { MessageFormatAdapter, MessageFormatRepository } from "../adapters/thread-history";
 import { useAiChat, useAiChatShallow } from "../../../store";
-import { AssistantRuntime, getExternalStoreMessages, INTERNAL, ThreadHistoryAdapter } from "../../../../../assistant-react/src";
-
-const { MessageRepository } = INTERNAL;
+import { getExternalStoreMessages } from "../../../utils/get-external-store-message";
+import type { ThreadHistoryAdapter } from "../../../runtime/types";
 
 export const toExportedMessageRepository = <TMessage,>(
   toThreadMessages: (messages: TMessage[]) => ThreadMessage[],
@@ -37,7 +25,6 @@ export const toExportedMessageRepository = <TMessage,>(
 };
 
 export const useExternalHistory = <TMessage,>(
-  runtimeRef: RefObject<AssistantRuntime>,
   historyAdapter: ThreadHistoryAdapter | undefined,
   toThreadMessages: (messages: TMessage[]) => ThreadMessage[],
   storageFormatAdapter: MessageFormatAdapter<TMessage, any>,
@@ -45,13 +32,8 @@ export const useExternalHistory = <TMessage,>(
 ) => {
   const loadedRef = useRef(false);
 
-  // const aui = useAui();
-  // const threadListItem = useAiChat(({threadListItem}));
   const optionalThreadListItem = useAiChatShallow(({threadListItem}) => threadListItem);
-  // const optionalThreadListItem = useCallback(
-  //   () => (threadListItem.source ? aui.threadListItem() : null),
-  //   [threadListItem],
-  // );
+  const threadMethods = useAiChat(({thread}) => thread.methods);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -74,7 +56,7 @@ export const useExternalHistory = <TMessage,>(
           .load();
         if (repo && repo.messages.length > 0) {
           const converted = toExportedMessageRepository(toThreadMessages, repo);
-          runtimeRef.current.thread.import(converted);
+          threadMethods.import(converted);
 
           const tempRepo = new MessageRepository();
           tempRepo.import(converted);
@@ -97,7 +79,8 @@ export const useExternalHistory = <TMessage,>(
 
     if (!loadedRef.current) {
       loadedRef.current = true;
-      if (!optionalThreadListItem.methods.getState().remoteId) {
+      // Access remoteId directly from the state (not via methods.getState())
+      if (!optionalThreadListItem.remoteId) {
         setIsLoading(false);
         return;
       }
@@ -108,14 +91,34 @@ export const useExternalHistory = <TMessage,>(
     historyAdapter,
     storageFormatAdapter,
     toThreadMessages,
-    runtimeRef,
+    threadMethods,
     optionalThreadListItem,
   ]);
 
+  // Subscribe to thread changes to persist new messages
   useEffect(() => {
-    return runtimeRef.current.thread.subscribe(async () => {
-      const { messages, isRunning } = runtimeRef.current.thread.getState();
-      if (isRunning) return;
+    if (!historyAdapter) return;
+
+    let prevMessagesLength = 0;
+    let prevIsRunning = false;
+
+    // Use Zustand's subscribe to watch for thread changes
+    const unsubscribe = useAiChat.subscribe((state) => {
+      const { messages, isRunning } = state.thread;
+
+      // Skip if still running or no meaningful change
+      if (isRunning) {
+        prevIsRunning = isRunning;
+        return;
+      }
+
+      // Only process if we just finished running or have new messages
+      if (!prevIsRunning && messages.length === prevMessagesLength) {
+        return;
+      }
+
+      prevMessagesLength = messages.length;
+      prevIsRunning = isRunning;
 
       for (let i = 0; i < messages.length; i++) {
         const message = messages[i]!;
@@ -128,14 +131,16 @@ export const useExternalHistory = <TMessage,>(
           historyIds.current.add(message.id);
 
           const parentId = i > 0 ? messages[i - 1]!.id : null;
-          await historyAdapter?.withFormat?.(storageFormatAdapter).append({
+          historyAdapter.withFormat?.(storageFormatAdapter).append({
             parentId,
             message: getExternalStoreMessages<TMessage>(message)[0]!,
           });
         }
       }
     });
-  }, [historyAdapter, storageFormatAdapter, runtimeRef]);
+
+    return unsubscribe;
+  }, [historyAdapter, storageFormatAdapter]);
 
   return isLoading;
 };
