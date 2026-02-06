@@ -1,10 +1,10 @@
 import { getPartialJsonObjectFieldState } from "@creatorem/stream/utils";
-import { useAuiState } from "@creatorem/ai-store";
+import { useAiChat } from "@creatorem/ai-store";
 
 const COMPLETE_STATUS = { type: "complete" };
 
 export const useToolArgsFieldStatus = (fieldPath: (string | number)[]) => {
-  return useAuiState(({ part }) => {
+  return useAiChat(({ part }) => {
     if (part.type !== "tool-call")
       throw new Error(
         "useToolArgsFieldStatus can only be used inside tool-call message parts",

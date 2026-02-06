@@ -27,26 +27,28 @@ export type {
   ThreadMessage,
 } from "./assistant-types";
 
-export type {
-  EmptyMessagePartComponent,
-  EmptyMessagePartProps,
-  TextMessagePartComponent,
-  TextMessagePartProps,
-  ReasoningMessagePartComponent,
-  ReasoningMessagePartProps,
-  SourceMessagePartComponent,
-  SourceMessagePartProps,
-  ImageMessagePartComponent,
-  ImageMessagePartProps,
-  FileMessagePartComponent,
-  FileMessagePartProps,
-  Unstable_AudioMessagePartComponent,
-  Unstable_AudioMessagePartProps,
-  ToolCallMessagePartComponent,
-  ToolCallMessagePartProps,
-  ReasoningGroupProps,
-  ReasoningGroupComponent,
-} from "./message-part-component-types";
+// export type {
+//   EmptyMessagePartComponent,
+//   EmptyMessagePartProps,
+//   TextMessagePartComponent,
+//   TextMessagePartProps,
+//   ReasoningMessagePartComponent,
+//   ReasoningMessagePartProps,
+//   SourceMessagePartComponent,
+//   SourceMessagePartProps,
+//   ImageMessagePartComponent,
+//   ImageMessagePartProps,
+//   FileMessagePartComponent,
+//   FileMessagePartProps,
+//   Unstable_AudioMessagePartComponent,
+//   Unstable_AudioMessagePartProps,
+//   ToolCallMessagePartComponent,
+//   ToolCallMessagePartProps,
+//   ReasoningGroupProps,
+//   ReasoningGroupComponent,
+//   MessagePartState,
+// } from "./message-part-component-types";
+export type * from "./message-part-component-types";
 
 // Thread list item types
 export type { ThreadListItemStatus } from "./entities/thread-list-item";

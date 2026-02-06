@@ -191,7 +191,7 @@ class ThreadsRuntime {
       threadIds: this._internalState.threadIds,
       archivedThreadIds: this._internalState.archivedThreadIds,
       threadItems,
-      main: this.get().thread.state,
+      main: this.get().thread,
     };
   }
 
@@ -632,7 +632,7 @@ class ThreadsRuntime {
     }
 
     // Get the current thread messages
-    const threadState = this.get().thread.state;
+    const threadState = this.get().thread;
     const messages = threadState.messages;
 
     try {
@@ -675,6 +675,11 @@ class ThreadsRuntime {
     // In a full implementation, this would stop any active runtime for the thread
   }
 
+  // public getState(): ThreadsState {
+  //   const {methods, ...state} = this.get().threads;
+  //   return state;
+  // }
+
   public item = (
     threadIdOrOptions: "main" | { id: string } | { index: number; archived?: boolean }
   ): ThreadListItemMethods => {
@@ -697,6 +702,7 @@ class ThreadsRuntime {
     if (!data) throw new Error("Thread not found");
 
     return {
+      // getState: this.getState,
       switchToThread: () => {
         this.switchToThread(threadId);
       },

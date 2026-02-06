@@ -4,7 +4,7 @@ import { forwardRef, useCallback } from "react";
 import { ActionButtonProps } from "../../utils/create-action-button";
 import { composeEventHandlers } from "@radix-ui/primitive";
 import { Primitive } from "@radix-ui/react-primitive";
-import { useAiChat, useAiChatShallow } from "@creatorem/ai-store";
+import { useAiChat } from "@creatorem/ai-store";
 
 const useActionBarExportMarkdown = ({
   filename,

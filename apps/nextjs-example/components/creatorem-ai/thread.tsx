@@ -18,7 +18,7 @@ import {
   ErrorPrimitive,
   MessagePrimitive,
   ThreadPrimitive,
-} from "../../../../packages/assistant-react/src";
+} from "@creatorem/ai-react";
 import {
   ArrowDownIcon,
   ArrowUpIcon,

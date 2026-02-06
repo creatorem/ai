@@ -1,17 +1,19 @@
 import type { Unsubscribe, AppendMessage, ThreadMessage } from "./types/index";
-import type { RunConfig } from "./types/assistant-types";
+import type { RunConfig, MessagePartStatus } from "./types/assistant-types";
 import type { SpeechState, SpeechSynthesisAdapter } from "./types/adapters/speech";
 import type { StateCreator } from "zustand";
 import type { AiChatStore } from "./store";
-import type { MessageMethods, MessageState, ThreadState } from "./types/entities";
+import type { ComposerState, MessageMethods, MessageState, PartState, ThreadState } from "./types/entities";
 import type { FeedbackAdapter } from "./types/adapters/feedback";
 import type { AttachmentAdapter } from "./types/adapters/attachment-adapter";
+import type { ReadonlyJSONValue } from "@creatorem/stream/utils";
 import {
   MessageRepository,
   ExportedMessageRepository as ExportedMessageRepositoryUtils,
 } from "./utils/message-repository";
 import { getThreadMessageText } from "./utils/get-thread-message-text";
 import type { CreateResumeRunConfig, CreateAppendMessage, ExportedMessageRepository, RuntimeCapabilities, ThreadMessageLike, CreateStartRunConfig } from "./types/entities/thread";
+import { ModelContext } from "./model-context/model-context-types";
 
 type ThreadRuntimeEventType =
   | "runStart"
@@ -39,6 +41,12 @@ type ThreadAdapters = {
   attachments?: AttachmentAdapter | undefined;
 };
 
+// Helper to extract ComposerState from the flat store structure
+const extractComposerState = (composer: AiChatStore['composer']): ComposerState => {
+  const { methods: _, ...state } = composer;
+  return state;
+};
+
 class ThreadRuntime {
   private set: Parameters<ThreadSlice>[0]
   private get: Parameters<ThreadSlice>[1]
@@ -54,7 +62,7 @@ class ThreadRuntime {
 
   constructor(...[set, get]: Parameters<ThreadSlice>) {
     this._state = {
-      composer: get().composer.state,
+      composer: extractComposerState(get().composer),
       speech: undefined,
       capabilities: {
         switchToBranch: true,
@@ -109,13 +117,13 @@ class ThreadRuntime {
       ...store,
       thread: {
         ...store.thread,
-        state: this._state,
+        ...this._state,
       }
     }));
   }
 
-  public getState(): ThreadState {
-    const {methods, ...state} = this.get().thread;
+  public getState = (): ThreadState => {
+    const { methods: _, ...state } = this.get().thread;
     return state;
   }
 
@@ -148,10 +156,22 @@ class ThreadRuntime {
 
   private getMessagesState(): readonly MessageState[] {
     const messages = this._repository.getMessages();
+    const composerState = extractComposerState(this.get().composer);
+
     return messages.map((message, index) => {
       const parentId = index > 0 ? messages[index - 1]?.id ?? null : null;
       const branches = this._repository.getBranches(message.id);
       const branchIndex = branches.indexOf(message.id);
+
+      const COMPLETE_STATUS: MessagePartStatus = { type: 'complete' };
+      const RUNNING_STATUS: MessagePartStatus = { type: 'running' };
+
+      const parts: readonly PartState[] = message.content.map((part) => ({
+        ...part,
+        status: part.type === 'tool-call'
+          ? (part.result !== undefined ? COMPLETE_STATUS : RUNNING_STATUS)
+          : COMPLETE_STATUS,
+      })) as readonly PartState[];
 
       return {
         ...message,
@@ -161,11 +181,8 @@ class ThreadRuntime {
         branchCount: branches.length,
         speech: this._speech?.messageId === message.id ? this._speech : undefined,
         submittedFeedback: message.metadata?.submittedFeedback,
-        composer: this.get().composer.state,
-        parts: message.content.map((part, partIndex) => ({
-          ...part,
-          status: part.type === 'tool-call' ? part.result !== undefined ? { type: 'complete' as const } : { type: 'running' as const } : undefined,
-        })),
+        composer: composerState,
+        parts,
         isCopied: false,
         isHovering: false,
         index,
@@ -173,7 +190,7 @@ class ThreadRuntime {
     });
   }
 
-  private getThreadState(): ThreadState["state"] {
+  private getThreadStateValue(): ReadonlyJSONValue {
     const messages = this._repository.getMessages();
     for (let i = messages.length - 1; i >= 0; i--) {
       const message = messages[i];
@@ -187,7 +204,7 @@ class ThreadRuntime {
   private syncMessagesToState() {
     this.updateState({
       messages: this.getMessagesState(),
-      state: this.getThreadState(),
+      state: this.getThreadStateValue(),
     });
   }
 
@@ -228,15 +245,15 @@ class ThreadRuntime {
 
     const appendMessage = this.toAppendMessage(message);
 
-    const newMessage: ThreadMessage = {
+    const newMessage = {
       id: crypto.randomUUID(),
       role: appendMessage.role,
       content: appendMessage.content,
       attachments: appendMessage.attachments,
       createdAt: appendMessage.createdAt,
       metadata: appendMessage.metadata ?? { custom: {} },
-      status: { type: "complete", reason: "unknown" },
-    };
+      status: { type: "complete" as const, reason: "unknown" as const },
+    } as ThreadMessage;
 
     this._repository.addOrUpdateMessage(appendMessage.parentId, newMessage);
 
@@ -273,7 +290,7 @@ class ThreadRuntime {
       createdAt: new Date(),
       status: { type: "running" },
       metadata: {
-        unstable_state: this.getThreadState(),
+        unstable_state: this.getThreadStateValue(),
         unstable_annotations: [],
         unstable_data: [],
         steps: [],
@@ -312,11 +329,10 @@ class ThreadRuntime {
     this._notifyEventSubscribers("runEnd");
   }
 
-  // why this fn ?
-  // public getModelContext = (): ModelContext => {
-  //   // TODO: Integrate with model context provider
-  //   return {};
-  // }
+  public getModelContext = (): ModelContext => {
+    // TODO: Integrate with model context provider
+    return {};
+  }
 
   public export = (): ExportedMessageRepository => {
     return this._repository.export();
@@ -357,7 +373,6 @@ class ThreadRuntime {
       throw new Error("Message not found");
     }
 
-    const composerState = this.get().composer.state;
     const composerMethods = this.get().composer.methods;
 
     return {
@@ -482,24 +497,31 @@ class ThreadRuntime {
         const part = findPart();
         if (!part) throw new Error("Part not found");
 
+        const COMPLETE_STATUS: MessagePartStatus = { type: 'complete' };
+        const RUNNING_STATUS: MessagePartStatus = { type: 'running' };
+
         return {
-          getState: () => {
+          getState: (): PartState => {
             const currentPart = findPart();
             if (!currentPart) throw new Error("Part not found");
             return {
               ...currentPart,
               status: currentPart.type === 'tool-call'
-                ? currentPart.result !== undefined
-                  ? { type: 'complete' as const }
-                  : { type: 'running' as const }
-                : undefined,
-            };
+                ? (currentPart.result !== undefined ? COMPLETE_STATUS : RUNNING_STATUS)
+                : COMPLETE_STATUS,
+            } as PartState;
           },
-          addToolResult: (result: { result: unknown; isError?: boolean; artifact?: unknown }) => {
+          addToolResult: (result: unknown) => {
             if (part.type !== "tool-call") {
               throw new Error("Cannot add tool result to non-tool-call part");
             }
             // TODO: Implement tool result handling
+          },
+          resumeToolCall: (payload: unknown) => {
+            if (part.type !== "tool-call") {
+              throw new Error("Cannot resume tool call on non-tool-call part");
+            }
+            // TODO: Implement tool call resume handling
           },
         };
       },

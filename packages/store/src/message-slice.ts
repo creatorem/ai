@@ -66,7 +66,7 @@ class MessageRuntime {
       branchCount: 1,
       speech: undefined,
       submittedFeedback: undefined,
-      composer: get().composer.state,
+      composer: get().composer,
       parts: [],
       isCopied: false,
       isHovering: false,
@@ -97,7 +97,7 @@ class MessageRuntime {
   }
 
   private getCurrentMessage(): ThreadMessage | undefined {
-    const threadState = this.get().thread.state;
+    const threadState = this.get().thread;
     const messages = threadState.messages;
 
     if (this._selectedMessage.type === "index") {
@@ -108,7 +108,7 @@ class MessageRuntime {
   }
 
   private getCurrentMessageIndex(): number {
-    const threadState = this.get().thread.state;
+    const threadState = this.get().thread;
     const messages = threadState.messages;
 
     if (this._selectedMessage.type === "index") {
@@ -122,7 +122,7 @@ class MessageRuntime {
     const message = this.getCurrentMessage();
     if (!message) return;
 
-    const threadState = this.get().thread.state;
+    const threadState = this.get().thread;
     const messages = threadState.messages;
     const index = this.getCurrentMessageIndex();
 
@@ -143,7 +143,7 @@ class MessageRuntime {
       branchCount: 1,  // Simplified - would need branch calculation
       speech: threadState.speech?.messageId === message.id ? threadState.speech : undefined,
       submittedFeedback: message.metadata?.submittedFeedback,
-      composer: this.get().composer.state,
+      composer: this.get().composer,
       parts,
       index,
     });
@@ -158,7 +158,7 @@ class MessageRuntime {
     }
 
     const threadMethods = this.get().thread.methods;
-    const composerState = this.get().composer.state;
+    const composerState = this.get().composer;
 
     threadMethods.startRun({
       parentId: this._state.parentId,
@@ -180,7 +180,7 @@ class MessageRuntime {
     const message = this.getCurrentMessage();
     if (!message) throw new Error("No message selected");
 
-    const threadState = this.get().thread.state;
+    const threadState = this.get().thread;
     if (threadState.speech?.messageId !== message.id) {
       throw new Error("Message is not being spoken");
     }

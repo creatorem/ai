@@ -10,7 +10,7 @@ export namespace AttachmentPrimitiveName {
 export const AttachmentPrimitiveName: FC<
   AttachmentPrimitiveName.Props
 > = () => {
-  const name = useAiChat(({ attachment }) => attachment.name);
+  const name = useAiChat(({ attachment }) => attachment.state?.name);
   return <>{name}</>;
 };
 

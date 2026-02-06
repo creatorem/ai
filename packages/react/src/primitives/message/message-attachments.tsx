@@ -3,7 +3,7 @@
 import { ComponentType, type FC, memo, useMemo } from "react";
 import { useAiChat } from "@creatorem/ai-store";
 import { MessageAttachmentByIndexProvider } from "../../context/providers";
-import { CompleteAttachment } from "../../types";
+import type { CompleteAttachment } from "@creatorem/ai-store/types";
 
 export namespace MessagePrimitiveAttachments {
   export type Props = {
@@ -39,7 +39,7 @@ const getComponent = (
 const AttachmentComponent: FC<{
   components: MessagePrimitiveAttachments.Props["components"];
 }> = ({ components }) => {
-  const attachment = useAiChat(({ attachment }) => attachment);
+  const attachment = useAiChat(({ attachment }) => attachment.state);
   if (!attachment) return null;
 
   const Component = getComponent(components, attachment as CompleteAttachment);

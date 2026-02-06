@@ -5,10 +5,10 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { BrainIcon, ChevronDownIcon } from "lucide-react";
 import {
   useScrollLock,
-  useAssistantState,
+  useAiChat,
   type ReasoningMessagePartComponent,
   type ReasoningGroupComponent,
-} from "../../../../packages/assistant-react/src";
+} from "@creatorem/ai-react";
 import { MarkdownText } from "@/components/assistant-ui/markdown-text";
 import {
   Collapsible,
@@ -221,7 +221,7 @@ const ReasoningGroupImpl: ReasoningGroupComponent = ({
   startIndex,
   endIndex,
 }) => {
-  const isReasoningStreaming = useAssistantState(({ message }) => {
+  const isReasoningStreaming = useAiChat(({ message }) => {
     if (message.status?.type !== "running") return false;
     const lastIndex = message.parts.length - 1;
     if (lastIndex < 0) return false;

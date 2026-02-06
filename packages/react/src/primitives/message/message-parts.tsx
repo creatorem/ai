@@ -25,9 +25,9 @@ import type {
   FileMessagePartComponent,
   ReasoningMessagePartComponent,
   ReasoningGroupComponent,
-} from "../../types/message-part-component-types";
+  MessagePartStatus,
+} from "@creatorem/ai-store/types";
 import { MessagePartPrimitiveInProgress } from "../message-part/message-part-in-progress";
-import { MessagePartStatus } from "../../types/assistant-types";
 import { useShallow } from "zustand/shallow";
 
 type MessagePartRange =

@@ -1,8 +1,7 @@
 "use client";
 
-import { MessagePartState } from "../../runtime/runtime/message-part-runtime";
 import { useAiChat } from "@creatorem/ai-store";
-import { ReasoningMessagePart } from "../../types";
+import type { ReasoningMessagePart,MessagePartState } from "@creatorem/ai-store/types";
 
 export const useMessagePartReasoning = () => {
   const text = useAiChat(({ part }) => {

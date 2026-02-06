@@ -1,7 +1,7 @@
 "use client";
 
 import { ComponentType, type FC, memo, useMemo } from "react";
-import { Attachment } from "../../types";
+import type { Attachment } from "@creatorem/ai-store/types";
 import { useAiChat } from "@creatorem/ai-store";
 import { ComposerAttachmentByIndexProvider } from "../../context/providers";
 
@@ -39,7 +39,7 @@ const getComponent = (
 const AttachmentComponent: FC<{
   components: ComposerPrimitiveAttachments.Props["components"];
 }> = ({ components }) => {
-  const attachment = useAiChat(({ attachment }) => attachment);
+  const attachment = useAiChat(({ attachment }) => attachment.state);
   if (!attachment) return null;
 
   const Component = getComponent(components, attachment);

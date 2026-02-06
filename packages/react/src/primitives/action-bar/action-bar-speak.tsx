@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { useAiChat, useAiChatShallow } from "@creatorem/ai-store";
+import { useAiChat } from "@creatorem/ai-store";
 import {
   ActionButtonElement,
   ActionButtonProps,

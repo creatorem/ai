@@ -14,9 +14,10 @@ import { create, UseBoundStore } from "zustand";
 import {
   MessagePartStatus,
   ToolCallMessagePartStatus,
-} from "../../types/assistant-types";
-import { useAui } from "@creatorem/ai-store";
+} from "@creatorem/ai-store/types";
+// import { useAui } from "@creatorem/ai-store";
 import { createContextStoreHook } from "../../context/react/utils/create-context-store-hook";
+import { useAiChat } from "@creatorem/ai-store";
 
 type SmoothContextValue = {
   useSmoothStatus: UseBoundStore<
@@ -35,10 +36,10 @@ const makeSmoothContext = (
 
 export const SmoothContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const outer = useSmoothContext({ optional: true });
-  const aui = useAui();
+  const partMethods = useAiChat(({part}) => part.methods)
 
   const [context] = useState(() =>
-    makeSmoothContext(aui.part().getState().status),
+    makeSmoothContext(partMethods.getState().status),
   );
 
   // do not wrap if there is an outer SmoothContextProvider

@@ -5,7 +5,7 @@ import {
   ThreadListItemMorePrimitive,
   ThreadListItemPrimitive,
   ThreadListPrimitive,
-} from "../../../../packages/assistant-react/src";
+} from "@creatorem/ai-react";
 import { ArchiveIcon, MoreHorizontalIcon, PlusIcon } from "lucide-react";
 import type { FC } from "react";
 

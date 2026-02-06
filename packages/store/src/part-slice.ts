@@ -1,6 +1,6 @@
 import type { StateCreator } from "zustand";
 import type { AiChatStore } from "./store";
-import type { PartState } from "./types/entities";
+import type { ComposerState, PartState } from "./types/entities";
 import type {
   ThreadMessage,
   MessagePartStatus,
@@ -82,8 +82,13 @@ class PartRuntime {
     }));
   }
 
+  public getState(): PartState {
+    const {methods, ...state} = this.get().part;
+    return state;
+  }
+
   private getCurrentMessage(): ThreadMessage | undefined {
-    const messageState = this.get().message.state;
+    const messageState = this.get().message;
     // The message state already contains the full message data
     if (!messageState.id) return undefined;
     return messageState;
@@ -192,6 +197,7 @@ class PartRuntime {
       // state: this._state,
       ... this._state,
       methods: {
+        getState: this.getState,
         addToolResult: this.addToolResult,
         resumeToolCall: this.resumeToolCall,
       }

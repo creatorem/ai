@@ -2,7 +2,7 @@ import type {
   AppendMessage,
   TextMessagePart,
   ThreadMessage,
-} from "../types/assistant-types";
+} from "@creatorem/ai-store/types";
 
 export const getThreadMessageText = (
   message: ThreadMessage | AppendMessage,

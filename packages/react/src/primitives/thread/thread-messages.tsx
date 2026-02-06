@@ -3,7 +3,7 @@
 import { type ComponentType, type FC, memo, useMemo } from "react";
 import { useAiChat } from "@creatorem/ai-store";
 import { MessageByIndexProvider } from "../../context/providers";
-import { ThreadMessage as ThreadMessageType } from "../../types";
+import type { ThreadMessage as ThreadMessageType } from "@creatorem/ai-store/types";
 
 export namespace ThreadPrimitiveMessages {
   export type Props = {

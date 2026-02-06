@@ -6,7 +6,7 @@ import { useEscapeKeydown } from "@radix-ui/react-use-escape-keydown";
 import { Primitive } from "@radix-ui/react-primitive";
 import { composeEventHandlers } from "@radix-ui/primitive";
 import { useCallback } from "react";
-import { useAiChat, useAiChatShallow } from "@creatorem/ai-store";
+import { useAiChat } from "@creatorem/ai-store";
 
 const useActionBarStopSpeaking = () => {
   const messageMethods = useAiChat(({message}) => message.methods);

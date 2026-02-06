@@ -16,7 +16,7 @@ export const createToolsSlice: StateCreator<
             ...prev,
             tools: {
               ...prev.tools,
-              [toolName]: [...(prev.tools.state.tools[toolName] ?? []), render],
+              [toolName]: [...(prev.tools.tools[toolName] ?? []), render],
             },
           };
         });
@@ -28,7 +28,7 @@ export const createToolsSlice: StateCreator<
               tools: {
                 ...prev.tools,
                 [toolName]:
-                  prev.tools.state.tools[toolName]?.filter((r) => r !== render) ?? [],
+                  prev.tools.tools[toolName]?.filter((r) => r !== render) ?? [],
               },
             };
           });

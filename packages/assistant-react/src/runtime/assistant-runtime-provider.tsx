@@ -67,7 +67,7 @@ export const AssistantRuntimeProviderImpl: FC<
   AssistantRuntimeProvider.Props
 > = ({ children, aui: parent = null, runtime }) => {
   const aui = useAui({ threads: RuntimeAdapter(runtime) }, { parent: parent });
-  console.log( {aui} )
+  // console.log( {aui} )
 
 
   

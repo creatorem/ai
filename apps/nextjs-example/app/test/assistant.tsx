@@ -1,10 +1,10 @@
 "use client";
 
-import { AssistantRuntimeProvider } from "../../../packages/assistant-react/src";
+import { AssistantRuntimeProvider } from "@creatorem/ai-react";
 import {
   useChatRuntime,
   AssistantChatTransport,
-} from "../../../packages/ai-sdk/src";
+} from "../../../../packages/ai-sdk/src";
 import { Thread } from "@/components/creatorem-ai/thread";
 import {
   SidebarInset,

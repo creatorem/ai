@@ -24,9 +24,9 @@ import type {
   ToolCallMessagePartProps,
   FileMessagePartComponent,
   ReasoningMessagePartComponent,
-} from "../../types/message-part-component-types";
+  MessagePartStatus,
+} from "@creatorem/ai-store/types";
 import { MessagePartPrimitiveInProgress } from "../message-part/message-part-in-progress";
-import { MessagePartStatus } from "../../types/assistant-types";
 
 type MessagePartGroup = {
   groupKey: string | undefined;

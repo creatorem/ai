@@ -6,10 +6,10 @@ import {
   AttachmentPrimitive,
   ComposerPrimitive,
   MessagePrimitive,
-  useAssistantState,
-  useAssistantApi,
-} from "../../../../packages/assistant-react/src";
-import { useShallow } from "zustand/shallow";
+  useAiChatShallow,
+  // useAssistantState,
+  // useAssistantApi,
+} from "@creatorem/ai-react";
 import {
   Tooltip,
   TooltipContent,
@@ -46,11 +46,10 @@ const useFileSrc = (file: File | undefined) => {
 };
 
 const useAttachmentSrc = () => {
-  const { file, src } = useAssistantState(
-    useShallow(({ attachment }): { file?: File; src?: string } => {
-      if (attachment.type !== "image") return {};
-      if (attachment.file) return { file: attachment.file };
-      const src = attachment.content?.filter((c) => c.type === "image")[0]
+  const { file, src } = useAiChatShallow((({ attachment }) => {
+      if (attachment.state?.type !== "image") return {};
+      if (attachment.state.file) return { file: attachment.state.file };
+      const src = attachment.state.content?.filter((c) => c.type === "image")[0]
         ?.image;
       if (!src) return {};
       return { src };
@@ -107,8 +106,8 @@ const AttachmentPreviewDialog: FC<PropsWithChildren> = ({ children }) => {
 };
 
 const AttachmentThumb: FC = () => {
-  const isImage = useAssistantState(
-    ({ attachment }) => attachment.type === "image",
+  const isImage = useAiChatShallow(
+    ({ attachment }) => attachment.state?.type === "image",
   );
   const src = useAttachmentSrc();
 
@@ -127,14 +126,15 @@ const AttachmentThumb: FC = () => {
 };
 
 const AttachmentUI: FC = () => {
-  const api = useAssistantApi();
-  const isComposer = api.attachment.source === "composer";
+  // const api = useAssistantApi();
+  const isComposer = useAiChatShallow(({attachment}) => attachment.state.type === 'composer')
+  // const isComposer = api.attachment.source === "composer";
 
-  const isImage = useAssistantState(
-    ({ attachment }) => attachment.type === "image",
+  const isImage = useAiChatShallow(
+    ({ attachment }) => attachment.state?.type === "image",
   );
-  const typeLabel = useAssistantState(({ attachment }) => {
-    const type = attachment.type;
+  const typeLabel = useAiChatShallow(({ attachment }) => {
+    const type = attachment.state?.type;
     switch (type) {
       case "image":
         return "Image";

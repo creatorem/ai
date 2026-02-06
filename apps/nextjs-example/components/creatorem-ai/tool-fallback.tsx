@@ -1,4 +1,4 @@
-import type { ToolCallMessagePartComponent } from "../../../../packages/assistant-react/src";
+import type { ToolCallMessagePartComponent } from "@creatorem/ai-react";
 import {
   CheckIcon,
   ChevronDownIcon,

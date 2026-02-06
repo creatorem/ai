@@ -5,7 +5,7 @@ import { ActionButtonProps } from "../../utils/create-action-button";
 import { composeEventHandlers } from "@radix-ui/primitive";
 import { Primitive } from "@radix-ui/react-primitive";
 import { useCallback } from "react";
-import { useAiChat, useAiChatShallow } from "@creatorem/ai-store";
+import { useAiChat } from "@creatorem/ai-store";
 
 const useActionBarFeedbackNegative = () => {
   const messageMethods = useAiChat(({message}) => message.methods);

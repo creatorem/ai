@@ -1,7 +1,7 @@
 "use client";
 
 import { useAiChat } from "@creatorem/ai-store";
-import { DataMessagePart } from "../../types";
+import type { DataMessagePart } from "@creatorem/ai-store/types";
 
 export const useMessagePartData = <T = any>(name?: string) => {
   const part = useAiChat(({ part }) => {

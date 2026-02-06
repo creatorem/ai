@@ -16,7 +16,7 @@ export const AttachmentPrimitiveThumb = forwardRef<
   AttachmentPrimitiveThumb.Props
 >((props, ref) => {
   const ext = useAiChat(({ attachment }) => {
-    const parts = attachment.name.split(".");
+    const parts = attachment.state?.name.split(".") || [];
     return parts.length > 1 ? parts.pop()! : "";
   });
   return (

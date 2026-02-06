@@ -157,7 +157,7 @@ class ThreadListItemRuntime {
     }
 
     // Get the current thread messages
-    const threadState = this.get().thread.state;
+    const threadState = this.get().thread;
     const messages = threadState.messages;
 
     // Generate title asynchronously
@@ -231,11 +231,18 @@ class ThreadListItemRuntime {
     // to stop managing this thread's runtime
   }
 
+
+  public getState(): ThreadListItemState {
+    const {methods, ...state} = this.get().threadListItem;
+    return state;
+  }
+
   public getSlice(): AiChatStore['threadListItem'] {
     return {
       // state: this._state,
       ... this._state,
       methods: {
+        getState: this.getState,
         switchToThread: this.switchToThread,
         rename: this.rename,
         archive: this.archive,

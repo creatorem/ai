@@ -21,7 +21,7 @@ export const SuggestionPrimitiveDescription = forwardRef<
   SuggestionPrimitiveDescription.Element,
   SuggestionPrimitiveDescription.Props
 >((props, ref) => {
-  const label = useAiChat(({ suggestion }) => suggestion.label);
+  const label = useAiChat(({ suggestion }) => suggestion?.label);
 
   return (
     <Primitive.span {...props} ref={ref}>

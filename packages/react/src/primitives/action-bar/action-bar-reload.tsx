@@ -6,7 +6,7 @@ import {
   createActionButton,
 } from "../../utils/create-action-button";
 import { useCallback } from "react";
-import { useAiChat, useAiChatShallow } from "@creatorem/ai-store";
+import { useAiChat } from "@creatorem/ai-store";
 
 /**
  * Hook that provides reload functionality for action bar buttons.

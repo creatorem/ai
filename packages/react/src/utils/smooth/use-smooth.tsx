@@ -1,16 +1,16 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useAuiState } from "@creatorem/ai-store";
 import {
   MessagePartStatus,
   ReasoningMessagePart,
   TextMessagePart,
-} from "../../types/assistant-types";
+  MessagePartState
+} from "@creatorem/ai-store/types";
 import { useCallbackRef } from "@radix-ui/react-use-callback-ref";
 import { useSmoothStatusStore } from "./smooth-context";
 import { writableStore } from "../../context/readonly-store";
-import { MessagePartState } from "../../runtime/runtime/message-part-runtime";
+import { useAiChat } from "@creatorem/ai-store";
 
 class TextStreamAnimator {
   private animationFrameId: number | null = null;
@@ -75,7 +75,7 @@ export const useSmooth = (
   smooth: boolean = false,
 ): MessagePartState & (TextMessagePart | ReasoningMessagePart) => {
   const { text } = state;
-  const id = useAuiState(({ message }) => message.id);
+  const id = useAiChat(({ message }) => message.id);
 
   const idRef = useRef(id);
   const [displayedText, setDisplayedText] = useState(text);

@@ -2,7 +2,7 @@
 
 import { useComposedRefs } from "@radix-ui/react-compose-refs";
 import { useCallback, useRef, type RefCallback } from "react";
-import { useAuiEvent } from "@creatorem/ai-store";
+// import { useAuiEvent } from "@creatorem/ai-store";
 import { useOnResizeContent } from "../../utils/hooks/use-on-resize-content";
 import { useOnScrollToBottom } from "../../utils/hooks/use-on-scroll-to-bottom";
 import { useManagedRef } from "../../utils/hooks/use-managed-ref";
@@ -121,32 +121,33 @@ export const useThreadViewportAutoScroll = <TElement extends HTMLElement>({
     scrollToBottom(behavior);
   });
 
+  // disabled by myself
   // autoscroll on run start
-  useAuiEvent("thread.runStart", () => {
-    if (!scrollToBottomOnRunStart) return;
-    scrollingToBottomBehaviorRef.current = "auto";
-    requestAnimationFrame(() => {
-      scrollToBottom("auto");
-    });
-  });
+  // useAuiEvent("thread.runStart", () => {
+  //   if (!scrollToBottomOnRunStart) return;
+  //   scrollingToBottomBehaviorRef.current = "auto";
+  //   requestAnimationFrame(() => {
+  //     scrollToBottom("auto");
+  //   });
+  // });
 
-  // scroll to bottom instantly when thread history is first loaded
-  useAuiEvent("thread.initialize", () => {
-    if (!scrollToBottomOnInitialize) return;
-    scrollingToBottomBehaviorRef.current = "instant";
-    requestAnimationFrame(() => {
-      scrollToBottom("instant");
-    });
-  });
+  // // scroll to bottom instantly when thread history is first loaded
+  // useAuiEvent("thread.initialize", () => {
+  //   if (!scrollToBottomOnInitialize) return;
+  //   scrollingToBottomBehaviorRef.current = "instant";
+  //   requestAnimationFrame(() => {
+  //     scrollToBottom("instant");
+  //   });
+  // });
 
-  // scroll to bottom instantly when switching threads
-  useAuiEvent("threadListItem.switchedTo", () => {
-    if (!scrollToBottomOnThreadSwitch) return;
-    scrollingToBottomBehaviorRef.current = "instant";
-    requestAnimationFrame(() => {
-      scrollToBottom("instant");
-    });
-  });
+  // // scroll to bottom instantly when switching threads
+  // useAuiEvent("threadListItem.switchedTo", () => {
+  //   if (!scrollToBottomOnThreadSwitch) return;
+  //   scrollingToBottomBehaviorRef.current = "instant";
+  //   requestAnimationFrame(() => {
+  //     scrollToBottom("instant");
+  //   });
+  // });
 
   const autoScrollRef = useComposedRefs<TElement>(resizeRef, scrollRef, divRef);
   return autoScrollRef as RefCallback<TElement>;

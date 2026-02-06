@@ -3,7 +3,7 @@
 import { forwardRef, useCallback } from "react";
 import { ActionButtonProps } from "../../utils/create-action-button";
 import { composeEventHandlers } from "@radix-ui/primitive";
-import { useAiChat, useAiChatShallow } from "@creatorem/ai-store";
+import { useAiChat } from "@creatorem/ai-store";
 import { Primitive } from "@radix-ui/react-primitive";
 
 const useActionBarFeedbackPositive = () => {

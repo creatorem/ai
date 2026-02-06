@@ -17,7 +17,7 @@ import TextareaAutosize, {
 import { useEscapeKeydown } from "@radix-ui/react-use-escape-keydown";
 import { useOnScrollToBottom } from "../../utils/hooks/use-on-scroll-to-bottom";
 import { useAiChat, useAiChatShallow } from "@creatorem/ai-store";
-import { flushResourcesSync } from "@creatorem/ai-tap";
+// import { flushResourcesSync } from "@creatorem/ai-tap";
 
 export namespace ComposerPrimitiveInput {
   export type Element = HTMLTextAreaElement;
@@ -184,25 +184,27 @@ export const ComposerPrimitiveInput = forwardRef<
       }
     });
 
-    useEffect(() => {
-      if (
-        composerMethods.getState().type !== "thread" ||
-        !unstable_focusOnRunStart
-      )
-        return undefined;
+    // disabled by myself
+    // useEffect(() => {
+    //   if (
+    //     composerMethods.getState().type !== "thread" ||
+    //     !unstable_focusOnRunStart
+    //   )
+    //     return undefined;
 
-      return aui.on("thread.runStart", focus);
-    }, [unstable_focusOnRunStart, focus, aui]);
+    //   return aui.on("thread.runStart", focus);
+    // }, [unstable_focusOnRunStart, focus, aui]);
 
-    useEffect(() => {
-      if (
-        composerMethods.getState().type !== "thread" ||
-        !unstable_focusOnThreadSwitched
-      )
-        return undefined;
+    // disabled by myself
+    // useEffect(() => {
+    //   if (
+    //     composerMethods.getState().type !== "thread" ||
+    //     !unstable_focusOnThreadSwitched
+    //   )
+    //     return undefined;
 
-      return aui.on("threadListItem.switchedTo", focus);
-    }, [unstable_focusOnThreadSwitched, focus, aui]);
+    //   return aui.on("threadListItem.switchedTo", focus);
+    // }, [unstable_focusOnThreadSwitched, focus, aui]);
 
     return (
       <Component
@@ -213,9 +215,9 @@ export const ComposerPrimitiveInput = forwardRef<
         disabled={isDisabled}
         onChange={composeEventHandlers(onChange, (e) => {
           if (!composerMethods.getState().isEditing) return;
-          flushResourcesSync(() => {
+          // flushResourcesSync(() => {
             composerMethods.setText(e.target.value);
-          });
+          // });
         })}
         onKeyDown={composeEventHandlers(onKeyDown, handleKeyPress)}
         onPaste={composeEventHandlers(onPaste, handlePaste)}
