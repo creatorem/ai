@@ -7,6 +7,8 @@ import { ThreadPrimitiveRoot } from '@creatorem/ai-chat/primitives/thread/thread
 import { ThreadPrimitiveViewport } from '@creatorem/ai-chat/primitives/thread/thread-viewport'
 import { ThreadPrimitiveViewportFooter } from '@creatorem/ai-chat/primitives/thread/thread-viewport-footer'
 import { ThreadPrimitiveMessages } from '@creatorem/ai-chat/primitives/thread/thread-messages'
+import { ThreadPrimitiveSuggestion } from '@creatorem/ai-chat/primitives/thread/thread-suggestion'
+import { ThreadPrimitiveScrollToBottom } from '@creatorem/ai-chat/primitives/thread/thread-scroll-to-bottom'
 import { ComposerPrimitiveRoot } from '@creatorem/ai-chat/primitives/composer/composer-root'
 import { ComposerPrimitiveInput } from '@creatorem/ai-chat/primitives/composer/composer-input'
 import { ComposerPrimitiveAttachmentDropzone } from '@creatorem/ai-chat/primitives/composer/composer-attachment-dropzone'
@@ -14,57 +16,59 @@ import { ComposerPrimitiveSend } from '@creatorem/ai-chat/primitives/composer/co
 import { ComposerPrimitiveCancel } from '@creatorem/ai-chat/primitives/composer/composer-cancel'
 import { ThreadPrimitiveIf } from '@creatorem/ai-chat/primitives/thread/thread-if'
 import { MessagePrimitiveRoot } from '@creatorem/ai-chat/primitives/message/message-root'
+import { MessagePrimitiveParts } from '@creatorem/ai-chat/primitives/message/message-parts'
 import { MessagePrimitiveIf } from '@creatorem/ai-chat/primitives/message/message-if'
 import { MessagePrimitiveError } from '@creatorem/ai-chat/primitives/message/message-error'
 import { ErrorPrimitiveRoot } from '@creatorem/ai-chat/primitives/error/error-root'
 import { ErrorPrimitiveMessage } from '@creatorem/ai-chat/primitives/error/error-message'
 import * as ActionBarPrimitive from '@creatorem/ai-chat/primitives/action-bar/index'
 import * as BranchPickerPrimitive from '@creatorem/ai-chat/primitives/branch-picker/index'
+import * as ActionBarMorePrimitive from '@creatorem/ai-chat/primitives/action-bar-more/index'
 import { Button } from '@/components/ui/button';
-import { ArrowUpIcon, CheckIcon, ChevronLeftIcon, ChevronRightIcon, CopyIcon, DownloadIcon, MoreHorizontalIcon, PencilIcon, RefreshCwIcon, SquareIcon } from 'lucide-react';
+import { ArrowDownIcon, ArrowUpIcon, CheckIcon, ChevronLeftIcon, ChevronRightIcon, CopyIcon, DownloadIcon, MoreHorizontalIcon, PencilIcon, RefreshCwIcon, SquareIcon } from 'lucide-react';
 import { TooltipIconButton } from '@/components/ai-chat/tooltip-icon-button';
 import { cn } from '@/lib/utils';
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { Separator } from '@/components/ui/separator';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
+import { MarkdownText } from '@/components/creatorem-ai/markdown-text';
+import { ToolFallback } from '@/components/creatorem-ai/tool-fallback';
 
 export default function Chat() {
 
   return (
     <AiProvider>
-      <Thread />
-      {/* <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
-        {messages.map(message => (
-          <div key={message.id} className="whitespace-pre-wrap">
-            {message.role === 'user' ? 'User: ' : 'AI: '}
-            {message.parts.map((part, i) => {
-              switch (part.type) {
-                case 'text':
-                  return <div key={`${message.id}-${i}`}>{part.text}</div>;
-                case 'tool-weather':
-                case 'tool-convertFahrenheitToCelsius':
-                  return (
-                    <pre key={`${message.id}-${i}`}>
-                      {JSON.stringify(part, null, 2)}
-                    </pre>
-                  );
-              }
-            })}
-          </div>
-        ))}
-
-        <form
-          onSubmit={e => {
-            e.preventDefault();
-            sendMessage({ text: input });
-            setInput('');
-          }}
-        >
-          <input
-            className="fixed dark:bg-zinc-900 bottom-0 w-full max-w-md p-2 mb-8 border border-zinc-300 dark:border-zinc-800 rounded shadow-xl"
-            value={input}
-            placeholder="Say something..."
-            onChange={e => setInput(e.currentTarget.value)}
-          />
-        </form>
-      </div> */}
+      <SidebarProvider>
+        <div className="flex h-dvh w-full pr-0.5">
+          {/* <ThreadListSidebar /> */}
+          <SidebarInset>
+            <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+              <SidebarTrigger />
+              <Separator orientation="vertical" className="mr-2 h-4" />
+              <Breadcrumb>
+                <BreadcrumbList>
+                  <BreadcrumbItem className="hidden md:block">
+                    <BreadcrumbLink
+                      href="https://www.assistant-ui.com/docs/getting-started"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Build Your Own ChatGPT UX
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator className="hidden md:block" />
+                  <BreadcrumbItem>
+                    <BreadcrumbPage>Starter Template</BreadcrumbPage>
+                  </BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb>
+            </header>
+            <div className="flex-1 overflow-hidden">
+              <Thread />
+            </div>
+          </SidebarInset>
+        </div>
+      </SidebarProvider>
     </AiProvider>
   );
 }
@@ -73,39 +77,110 @@ const Thread: React.FC = () => {
   return (
     <ThreadPrimitiveRoot>
       <div
-        className="aui-root aui-thread-root @container flex h-full flex-col bg-background"
+        className="aui-root aui-thread-root @container flex h-full flex-col"
         style={{
           ["--thread-max-width" as string]: "44rem",
         }}
       >
         <ThreadPrimitiveViewport
           turnAnchor="top"
+          className='aui-thread-viewport relative flex flex-1 flex-col overflow-x-auto overflow-y-scroll scroll-smooth px-4 pt-4'
         >
-          <div
-            className="aui-thread-viewport relative flex flex-1 flex-col overflow-x-auto overflow-y-scroll scroll-smooth px-4 pt-4"
-          >
 
-            {/* <AssistantIf condition={({ thread }) => thread.isEmpty}>
+          <ThreadPrimitiveIf empty={true}>
             <ThreadWelcome />
-          </AssistantIf> */}
+          </ThreadPrimitiveIf>
 
-            <ThreadPrimitiveMessages
-              components={{
-                UserMessage,
-                EditComposer,
-                AssistantMessage,
-              }}
-            />
+          <ThreadPrimitiveMessages
+            components={{
+              UserMessage,
+              EditComposer,
+              AssistantMessage,
+            }}
+          />
 
-            <ThreadPrimitiveViewportFooter className="aui-thread-viewport-footer sticky bottom-0 mx-auto mt-auto flex w-full max-w-(--thread-max-width) flex-col gap-4 overflow-visible rounded-t-3xl bg-background pb-4 md:pb-6">
-              {/* <ThreadScrollToBottom /> */}
-              <Composer />
-            </ThreadPrimitiveViewportFooter>
-          </div>
+          <ThreadPrimitiveViewportFooter className="aui-thread-viewport-footer sticky bottom-0 mx-auto mt-auto flex w-full max-w-(--thread-max-width) flex-col gap-4 overflow-visible rounded-t-3xl bg-background pb-4 md:pb-6">
+            <ThreadScrollToBottom />
+            <Composer />
+          </ThreadPrimitiveViewportFooter>
         </ThreadPrimitiveViewport>
 
       </div>
     </ThreadPrimitiveRoot>
+  );
+};
+
+const ThreadScrollToBottom: FC = () => {
+  return (
+    <ThreadPrimitiveScrollToBottom asChild>
+      <TooltipIconButton
+        tooltip="Scroll to bottom"
+        variant="outline"
+        className="aui-thread-scroll-to-bottom absolute -top-12 z-10 self-center rounded-full p-4 disabled:invisible dark:bg-background dark:hover:bg-accent"
+      >
+        <ArrowDownIcon />
+      </TooltipIconButton>
+    </ThreadPrimitiveScrollToBottom>
+  );
+};
+
+const ThreadWelcome: FC = () => {
+  return (
+    <div className="aui-thread-welcome-root mx-auto my-auto flex w-full max-w-(--thread-max-width) grow flex-col">
+      <div className="aui-thread-welcome-center flex w-full grow flex-col items-center justify-center">
+        <div className="aui-thread-welcome-message flex size-full flex-col justify-center px-4">
+          <h1 className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in font-semibold text-2xl duration-200">
+            Hello there!
+          </h1>
+          <p className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in text-muted-foreground text-xl delay-75 duration-200">
+            How can I help you today?
+          </p>
+        </div>
+      </div>
+      <ThreadSuggestions />
+    </div>
+  );
+};
+
+const SUGGESTIONS = [
+  {
+    title: "What's the weather",
+    label: "in San Francisco?",
+    prompt: "What's the weather in San Francisco?",
+  },
+  {
+    title: "Explain React hooks",
+    label: "like useState and useEffect",
+    prompt: "Explain React hooks like useState and useEffect",
+  },
+] as const;
+
+const ThreadSuggestions: FC = () => {
+  return (
+    <div className="aui-thread-welcome-suggestions grid w-full @md:grid-cols-2 gap-2 pb-4">
+      {SUGGESTIONS.map((suggestion, index) => (
+        <div
+          key={suggestion.prompt}
+          className="aui-thread-welcome-suggestion-display fade-in slide-in-from-bottom-2 @md:nth-[n+3]:block nth-[n+3]:hidden animate-in fill-mode-both duration-200"
+          style={{ animationDelay: `${100 + index * 50}ms` }}
+        >
+          <ThreadPrimitiveSuggestion prompt={suggestion.prompt} send asChild>
+            <Button
+              variant="ghost"
+              className="aui-thread-welcome-suggestion h-auto w-full @md:flex-col flex-wrap items-start justify-start gap-1 rounded-2xl border px-4 py-3 text-left text-sm transition-colors hover:bg-muted"
+              aria-label={suggestion.prompt}
+            >
+              <span className="aui-thread-welcome-suggestion-text-1 font-medium">
+                {suggestion.title}
+              </span>
+              <span className="aui-thread-welcome-suggestion-text-2 text-muted-foreground">
+                {suggestion.label}
+              </span>
+            </Button>
+          </ThreadPrimitiveSuggestion>
+        </div>
+      ))}
+    </div>
   );
 };
 
@@ -255,10 +330,10 @@ const AssistantMessage: FC = () => {
       <div className="aui-assistant-message-content wrap-break-word px-2 text-foreground leading-relaxed">
         <MessagePrimitiveParts
           components={{
-            Text: MarkdownText,
-            Reasoning,
-            ReasoningGroup,
-            tools: { Fallback: ToolFallback },
+            // Text: MarkdownText,
+            // Reasoning,
+            // ReasoningGroup,
+            // tools: { Fallback: ToolFallback },
           }}
         />
         <MessageError />
@@ -327,7 +402,7 @@ const UserMessage: FC = () => {
       className="aui-user-message-root fade-in slide-in-from-bottom-1 mx-auto grid w-full max-w-(--thread-max-width) animate-in auto-rows-auto grid-cols-[minmax(72px,1fr)_auto] content-start gap-y-2 px-2 py-3 duration-150 [&:where(>*)]:col-start-2"
       data-role="user"
     >
-      <UserMessageAttachments />
+      {/* <UserMessageAttachments /> */}
 
       <div className="aui-user-message-content-wrapper relative col-start-2 min-w-0">
         <div className="aui-user-message-content wrap-break-word rounded-2xl bg-muted px-4 py-2.5 text-foreground">

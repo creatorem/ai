@@ -7,6 +7,7 @@ import type { DictationAdapter, DictationState } from "../../types/adapters";
 import type { Unsubscribe } from "../../types/unsuscribe";
 import { useAiContext } from "../ai-provider";
 import { useThread } from "../thread/thread-root";
+import { createContextHook } from "../../utils/create-context-hook";
 
 type ComposerMethods = {
     setText(text: string): void;
@@ -35,13 +36,10 @@ type ComposerCtxType = Composer & ComposerMethods
 
 const ComposerCtx = React.createContext<ComposerCtxType | null>(null);
 
-export const useComposer = (): ComposerCtxType => {
-    const ctx = useContext(ComposerCtx);
-    if (!ctx) {
-        throw new Error('ComposerCtxType context not found.');
-    }
-    return ctx;
-};
+export const useComposer = createContextHook(
+    ComposerCtx,
+    "ComposerCtx.Provider",
+);
 
 const _isAttachmentComplete = (a: Attachment): a is CompleteAttachment =>
     a.status.type === "complete";
@@ -188,15 +186,15 @@ export function ComposerPrimitiveRoot({ children }: { children: React.ReactNode 
     }, []);
 
     const send = useCallback((): void => {
-        console.log( 'send' )
+        console.log('send')
         if (_dictationSessionRef.current) {
             _dictationSessionRef.current.cancel();
             _cleanupDictation();
         }
 
         const currentText = _textRef.current;
-        console.log( 'currentText' )
-        console.log( currentText )
+        console.log('currentText')
+        console.log(currentText)
         const currentRole = _roleRef.current;
         const currentAttachments = _attachmentsRef.current;
         const adapter = _adaptersRef.current?.attachment;
@@ -218,8 +216,8 @@ export function ComposerPrimitiveRoot({ children }: { children: React.ReactNode 
                     )
                     : [];
 
-                    console.log( 'currentText before sendMessage' )
-                    console.log( currentText )
+            console.log('currentText before sendMessage')
+            console.log(currentText)
             _threadRef.current.sendMessage({
                 text: currentText,
                 // TODO: pass processedAttachments when supported
@@ -249,7 +247,7 @@ export function ComposerPrimitiveRoot({ children }: { children: React.ReactNode 
             }
             _dictationUnsubscribesRef.current = [];
             const oldSession = _dictationSessionRef.current;
-            oldSession.stop().catch(() => {});
+            oldSession.stop().catch(() => { });
             _dictationSessionRef.current = undefined;
         }
 

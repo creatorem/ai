@@ -1,6 +1,8 @@
 "use client";
 
-import { useAuiState } from "@creatorem/ai-assistant-store";
+import { useMemo } from "react";
+import { useThread } from "../thread/thread-root";
+import { useMessage } from "../message/message-by-index-provider";
 
 export enum HideAndFloatStatus {
   Hidden = "hidden",
@@ -19,7 +21,10 @@ export const useActionBarFloatStatus = ({
   autohide,
   autohideFloat,
 }: UseActionBarFloatStatusProps) => {
-  return useAuiState(({ thread, message }) => {
+  const thread = useThread();
+  const message = useMessage();
+
+  return useMemo(() => {
     if (hideWhenRunning && thread.isRunning) return HideAndFloatStatus.Hidden;
 
     const autohideEnabled =
@@ -39,5 +44,5 @@ export const useActionBarFloatStatus = ({
       return HideAndFloatStatus.Floating;
 
     return HideAndFloatStatus.Normal;
-  });
+  }, [thread, message]);
 };

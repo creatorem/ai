@@ -50,7 +50,7 @@ export type AISDKRuntimeAdapter = {
   cancelPendingToolCallsOnSend?: boolean | undefined;
 };
 
-export const useAISDKRuntime = <UI_MESSAGE extends UIMessage = UIMessage>(
+export const useAISDKRuntime = <UI_MESSAGE extends UIMessage = UIMessage,>(
   chatHelpers: ReturnType<typeof useChat<UI_MESSAGE>>,
   {
     adapters,
@@ -157,8 +157,7 @@ export const useAISDKRuntime = <UI_MESSAGE extends UIMessage = UIMessage>(
     setMessages: (messages) =>
       chatHelpers.setMessages(
         messages
-          .map(getVerce
-            lAIMessages<UI_MESSAGE>)
+          .map(getVercelAIMessages<UI_MESSAGE>)
           .filter(Boolean)
           .flat(),
       ),

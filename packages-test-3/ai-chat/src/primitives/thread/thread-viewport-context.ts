@@ -54,10 +54,6 @@ export type ThreadViewportContextValue = {
   useThreadViewport: UseBoundStore<ReadonlyStore<ThreadViewportState>>;
 };
 
-// (options?: {
-//   optional?: boolean | undefined;
-// } | undefined) => ThreadViewportContextValue | null
-
 export const ThreadViewportContext =
   createContext<ThreadViewportContextValue | null>(null);
 

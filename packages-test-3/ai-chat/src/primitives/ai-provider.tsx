@@ -1,6 +1,6 @@
 'use client';
 
-import { Tool, type UIMessage } from "ai";
+import { Tool} from "ai";
 // import { useChat } from "@ai-sdk/react";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { ThreadAdapter, AttachmentAdapter, DictationAdapter } from "../types/adapters";

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useContext, useMemo, useRef } from "react";
-import { Part, PartStatus } from "../../types/entities";
+import { PartState } from "../../types/entities";
 import { useMessage } from "../message/message-by-index-provider";
 import { useThread } from "../thread/thread-root";
 
@@ -18,7 +18,7 @@ type PartMethods = {
     resumeToolCall(payload: unknown): void;
 };
 
-type PartCtxType = Part & PartMethods;
+type PartCtxType = PartState & PartMethods;
 
 const PartCtx = React.createContext<PartCtxType | null>(null);
 
@@ -30,20 +30,20 @@ export const usePart = (): PartCtxType => {
     return ctx;
 };
 
-const _COMPLETE_STATUS: PartStatus = Object.freeze({
+const _COMPLETE_STATUS: PartState['status'] = Object.freeze({
     type: "complete" as const,
 });
 
-const _RUNNING_STATUS: PartStatus = Object.freeze({
+const _RUNNING_STATUS: PartState['status'] = Object.freeze({
     type: "running" as const,
 });
 
 function _derivePartStatus(
-    part: Part['type'] extends string ? Part : never,
+    part: PartState['type'] extends string ? PartState : never,
     partIndex: number,
     totalParts: number,
     messageStatus: { type: string },
-): PartStatus {
+): PartState['status'] {
     // Text parts: check the streaming state
     if (part.type === "text" && 'state' in part && part.state === "streaming") {
         return _RUNNING_STATUS;

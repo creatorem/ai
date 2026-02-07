@@ -1,5 +1,5 @@
-// import { ReadonlyJSONObject } from "@creatorem/stream/utils";
-// import type { ThreadMessage } from "./assistant-types";
+import { ReadonlyJSONObject } from "@creatorem/stream/utils";
+import { Thread } from "./entities";
 
 export type TextMessagePart = {
   readonly type: "text";
@@ -7,20 +7,20 @@ export type TextMessagePart = {
   readonly parentId?: string;
 };
 
-// export type ReasoningMessagePart = {
-//   readonly type: "reasoning";
-//   readonly text: string;
-//   readonly parentId?: string;
-// };
+export type ReasoningMessagePart = {
+  readonly type: "reasoning";
+  readonly text: string;
+  readonly parentId?: string;
+};
 
-// export type SourceMessagePart = {
-//   readonly type: "source";
-//   readonly sourceType: "url";
-//   readonly id: string;
-//   readonly url: string;
-//   readonly title?: string;
-//   readonly parentId?: string;
-// };
+export type SourceMessagePart = {
+  readonly type: "source";
+  readonly sourceType: "url";
+  readonly id: string;
+  readonly url: string;
+  readonly title?: string;
+  readonly parentId?: string;
+};
 
 export type ImageMessagePart = {
   readonly type: "image";
@@ -43,28 +43,28 @@ export type Unstable_AudioMessagePart = {
   };
 };
 
-// export type DataMessagePart<T = any> = {
-//   readonly type: "data";
-//   readonly name: string;
-//   readonly data: T;
-// };
+export type DataMessagePart<T = any> = {
+  readonly type: "data";
+  readonly name: string;
+  readonly data: T;
+};
 
-// export type ToolCallMessagePart<
-//   TArgs = ReadonlyJSONObject,
-//   TResult = unknown,
-// > = {
-//   readonly type: "tool-call";
-//   readonly toolCallId: string;
-//   readonly toolName: string;
-//   readonly args: TArgs;
-//   readonly result?: TResult | undefined;
-//   readonly isError?: boolean | undefined;
-//   readonly argsText: string;
-//   readonly artifact?: unknown;
-//   readonly interrupt?: { type: "human"; payload: unknown };
-//   readonly parentId?: string;
-//   readonly messages?: readonly ThreadMessage[];
-// };
+export type ToolCallMessagePart<
+  TArgs = ReadonlyJSONObject,
+  TResult = unknown,
+> = {
+  readonly type: "tool-call";
+  readonly toolCallId: string;
+  readonly toolName: string;
+  readonly args: TArgs;
+  readonly result?: TResult | undefined;
+  readonly isError?: boolean | undefined;
+  readonly argsText: string;
+  readonly artifact?: unknown;
+  readonly interrupt?: { type: "human"; payload: unknown };
+  readonly parentId?: string;
+  readonly messages?: readonly Thread['messages'][0][];
+};
 
 export type ThreadUserMessagePart =
   | TextMessagePart
@@ -72,11 +72,11 @@ export type ThreadUserMessagePart =
   | FileMessagePart
   | Unstable_AudioMessagePart;
 
-// export type ThreadAssistantMessagePart =
-//   | TextMessagePart
-//   | ReasoningMessagePart
-//   | ToolCallMessagePart
-//   | SourceMessagePart
-//   | FileMessagePart
-//   | ImageMessagePart
-//   | DataMessagePart;
+export type ThreadAssistantMessagePart =
+  | TextMessagePart
+  | ReasoningMessagePart
+  | ToolCallMessagePart
+  | SourceMessagePart
+  | FileMessagePart
+  | ImageMessagePart
+  | DataMessagePart;

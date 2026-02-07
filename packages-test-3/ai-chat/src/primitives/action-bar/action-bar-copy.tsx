@@ -38,7 +38,7 @@ const useActionBarPrimitiveCopy = ({
   copiedDuration?: number | undefined;
 } = {}) => {
   const message = useMessage();
-  const composer = useComposer();
+  const composer = useComposer({optional: true});
 
   const hasCopyableContent = useMemo(() => {
     return (
@@ -48,7 +48,7 @@ const useActionBarPrimitiveCopy = ({
   }, [message.role, message.status, message.parts]);
 
   const callback = useCallback(() => {
-    const valueToCopy = composer.isEditing ? composer.text : message.getCopyText();
+    const valueToCopy = composer?.isEditing ? composer.text : message.getCopyText();
 
     if (!valueToCopy) return;
 
@@ -56,7 +56,7 @@ const useActionBarPrimitiveCopy = ({
       message.setIsCopied(true);
       setTimeout(() => message.setIsCopied(false), copiedDuration);
     });
-  }, [message, composer.isEditing, composer.text, copiedDuration]);
+  }, [message, composer?.isEditing, composer?.text, copiedDuration]);
 
   if (!hasCopyableContent) return null;
   return callback;

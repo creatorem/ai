@@ -1,7 +1,7 @@
 "use client";
 
 import { type ComponentType, type FC, memo, useMemo } from "react";
-import { useAuiState } from "@creatorem/ai-assistant-store";
+import { useAui, useAuiState } from "@creatorem/ai-assistant-store";
 import { MessageByIndexProvider } from "../../context/providers";
 import { ThreadMessage as ThreadMessageType } from "../../types";
 
@@ -130,7 +130,9 @@ const ThreadMessageComponent: FC<ThreadMessageComponentProps> = ({
   components,
 }) => {
   const role = useAuiState(({ message }) => message.role);
-  const isEditing = useAuiState(({ message }) => message.composer.isEditing);
+  const isEditing = useAuiState(({ message }) => {
+    console.warn( {threadMessageComposerText: message.composer.text} )
+    return message.composer.isEditing});
   const Component = getComponent(components, role, isEditing);
 
   return <Component />;

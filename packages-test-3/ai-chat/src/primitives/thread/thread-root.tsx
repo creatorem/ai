@@ -1,36 +1,44 @@
 'use client';
 
 import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport, generateId, type UIMessage } from "ai";
-// import { useChat } from "@ai-sdk/react";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import { DataUIPart, DefaultChatTransport, generateId } from "ai";
+import React, { useContext, useEffect, useState } from "react";
 import { Thread, ThreadCapabilities } from '../../types/entities';
 import { useAiContext, useThreads } from "../ai-provider";
+import { createContextHook } from "../../utils/create-context-hook";
 
+export type CustomUIDataTypes = {
+    textDelta: string;
+    imageDelta: string;
+    sheetDelta: string;
+    codeDelta: string;
+    // suggestion: Suggestion;
+    appendMessage: string;
+    id: string;
+    title: string;
+    // kind: ArtifactKind;
+    clear: null;
+    finish: null;
+    "chat-title": string;
+};
 
 export type ThreadMethods = {
-  };
+};
 
-type ThreadCtxType = Thread & Omit<ReturnType<typeof useChat<UIMessage>>, 'status' | 'setMessages'> & {
-    chatStatus: ReturnType<typeof useChat<UIMessage>>['status']
+type ThreadCtxType = Thread & Omit<ReturnType<typeof useChat<Thread['messages'][0]>>, 'status' | 'setMessages'> & {
+    dataStream: DataUIPart<CustomUIDataTypes>[];
+    setDataStream: React.Dispatch<
+        React.SetStateAction<DataUIPart<CustomUIDataTypes>[]>
+    >;
+    chatStatus: ReturnType<typeof useChat<Thread['messages'][0]>>['status']
 }
 
 const ThreadCtx = React.createContext<ThreadCtxType | null>(null);
 
-export const useThread = (): ThreadCtxType => {
-    const ctx = useContext(ThreadCtx);
-    if (!ctx) {
-        throw new Error('useThread must be used within a ThreadPrimitiveRoot.');
-    }
-    return ctx;
-};
-
-
-// function CallChatSdk() {
-
-
-//     return null
-// };
+export const useThread = createContextHook(
+    ThreadCtx,
+    "ThreadCtx.Provider",
+);
 
 export function ThreadPrimitiveRoot({ children, ...value }: { children: React.ReactNode }) {
     const { adapters, chatOptions } = useAiContext();
@@ -52,6 +60,9 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
         attachments: false,
         feedback: false,
     })
+    const [dataStream, setDataStream] = useState<DataUIPart<CustomUIDataTypes>[]>(
+        []
+    );
 
     const {
         id,
@@ -59,74 +70,71 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
         setMessages,
         status: chatStatus,
         ...other
-    } = useChat<UIMessage>({
+    } = useChat<Thread['messages'][0]>({
         generateId: generateId,
-        sendAutomaticallyWhen: ({ messages: currentMessages }) => {
-            const lastMessage = currentMessages.at(-1);
-            const shouldContinue =
-                lastMessage?.parts?.some(
-                    (part) =>
-                        "state" in part &&
-                        part.state === "approval-responded" &&
-                        "approval" in part &&
-                        (part.approval as { approved?: boolean })?.approved === true
-                ) ?? false;
-            return shouldContinue;
-        },
-        transport: new DefaultChatTransport({
-            api: "/api/chat",
-            // fetch: fetchWithErrorHandlers,
-            prepareSendMessagesRequest(request) {
-                const lastMessage = request.messages.at(-1);
-                const isToolApprovalContinuation =
-                    lastMessage?.role !== "user" ||
-                    request.messages.some((msg) =>
-                        msg.parts?.some((part) => {
-                            const state = (part as { state?: string }).state;
-                            return (
-                                state === "approval-responded" || state === "output-denied"
-                            );
-                        })
-                    );
+        // sendAutomaticallyWhen: ({ messages: currentMessages }) => {
+        //     const lastMessage = currentMessages.at(-1);
+        //     const shouldContinue =
+        //         lastMessage?.parts?.some(
+        //             (part) =>
+        //                 "state" in part &&
+        //                 part.state === "approval-responded" &&
+        //                 "approval" in part &&
+        //                 (part.approval as { approved?: boolean })?.approved === true
+        //         ) ?? false;
+        //     return shouldContinue;
+        // },
+        // transport: new DefaultChatTransport({
+        //     api: "/api/chat",
+        //     // fetch: fetchWithErrorHandlers,
+        //     prepareSendMessagesRequest(request) {
+        //         const lastMessage = request.messages.at(-1);
+        //         const isToolApprovalContinuation =
+        //             lastMessage?.role !== "user" ||
+        //             request.messages.some((msg) =>
+        //                 msg.parts?.some((part) => {
+        //                     const state = (part as { state?: string }).state;
+        //                     return (
+        //                         state === "approval-responded" || state === "output-denied"
+        //                     );
+        //                 })
+        //             );
 
-                return {
-                    body: {
-                        id: request.id,
-                        ...(isToolApprovalContinuation
-                            ? { messages: request.messages }
-                            : { message: lastMessage }),
-                        // selectedChatModel: currentModelIdRef.current,
-                        // selectedVisibilityType: visibilityType,
-                        ...request.body,
-                    },
-                };
-            },
-        }),
+        //         return {
+        //             body: {
+        //                 id: request.id,
+        //                 ...(isToolApprovalContinuation
+        //                     ? { messages: request.messages }
+        //                     : { message: lastMessage }),
+        //                 // selectedChatModel: currentModelIdRef.current,
+        //                 // selectedVisibilityType: visibilityType,
+        //                 ...request.body,
+        //             },
+        //         };
+        //     },
+        // }),
         ...chatOptions,
-        id: activeThreadId || undefined,
+        onData: (dataPart) => {
+            setDataStream((ds) => (ds ? [...ds, dataPart] : []));
+        },
+        // id: activeThreadId || undefined,
     });
-
-    // const {} = other
-    // other['']
 
     useEffect(() => {
         (async function () {
-            console.log( 'use effect' )
             if (adapters?.thread && activeThreadId) {
-                console.log( 'use adapter' )
                 const thread = await adapters.thread.fetch(activeThreadId);
                 setTitle(thread.title)
                 setStatus(thread.status)
                 setMessages(thread.messages)
                 setIsLoading(false)
             }
-            // setIsInitialized(true)
         })()
     }, [adapters, id])
 
     return <ThreadCtx.Provider value={{
         id,
-        isEmpty: false,
+        isEmpty: messages.length === 0,
         isDisabled,
         isLoading,
         isRunning,
@@ -135,9 +143,10 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
         messages,
         capabilities,
         chatStatus,
+        dataStream,
+        setDataStream,
         ...other
     }}>
-        {/* {isInitialized && <CallChatSdk />} */}
         {children}
     </ThreadCtx.Provider>;
 };

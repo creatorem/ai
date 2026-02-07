@@ -131,8 +131,9 @@ const ThreadMessageComponent: FC<ThreadMessageComponentProps> = ({
   components,
 }) => {
   const {role} = useMessage();
-  const {isEditing} = useComposer();// refers to the message composer instance
-  const Component = getComponent(components, role, isEditing);
+  const composer = useComposer({optional:true});// refers to the message composer instance
+  // const Component = getComponent(components, role, composer?.isEditing);
+  const Component = getComponent(components, role, false);
 
   return <Component />;
 };
@@ -198,6 +199,8 @@ export const ThreadPrimitiveMessagesImpl: FC<ThreadPrimitiveMessages.Props> = ({
   components,
 }) => {
   const {messages} = useThread()
+
+  console.warn( {messages} )
 
   const messageElements = useMemo(() => {
     if (messages.length === 0) return null;

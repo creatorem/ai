@@ -5,7 +5,7 @@ import {
   ActionButtonProps,
   createActionButton,
 } from "../../utils/create-action-button";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { useComposer } from "../composer/composer-root";
 
 /**
@@ -30,15 +30,16 @@ import { useComposer } from "../composer/composer-root";
  * ```
  */
 const useActionBarEdit = () => {
-  const {isEditing, beginEdit} = useComposer();
-  const disabled = isEditing;
+  const composer = useComposer({optional:true});
+  const disabled = composer?.isEditing;
 
   const callback = useCallback(() => {
-    beginEdit();
-  }, [beginEdit]);
+    composer?.beginEdit();
+  }, [composer?.beginEdit]);
 
   if (disabled) return null;
   return callback;
+  return null;
 };
 
 export namespace ActionBarPrimitiveEdit {

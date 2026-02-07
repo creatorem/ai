@@ -1,6 +1,9 @@
 import { UIMessage } from "ai";
 import { Attachment } from "./attachment-types";
 import type { DictationState } from "./adapters";
+import { ThreadAssistantMessagePart, ThreadUserMessagePart } from "./message-part-types";
+import { MessagePartStatus, ToolCallMessagePartStatus } from "./assistant-types";
+import { CustomUIDataTypes } from '../primitives/thread/thread-root';
 
 export type Threads = {
     isLoading: boolean;
@@ -52,12 +55,12 @@ export type Thread = {
     /**
      * The messages in the currently selected branch of the thread.
      */
-    messages: UIMessage[];
+    messages: UIMessage<unknown, CustomUIDataTypes>[];
 };
 
 export type Composer = {
     text: string;
-    role: UIMessage['role'];
+    role: UIMessage<unknown, CustomUIDataTypes>['role'];
     attachments: readonly Attachment[];
     isEditing: boolean;
     canCancel: boolean;
@@ -81,18 +84,21 @@ export type SpeechState = {
     readonly messageId: string;
 };
 
-export type PartStatus =
-    | { readonly type: "running" }
-    | { readonly type: "complete" }
-    | { readonly type: "requires-action"; readonly reason: "tool-calls" | "interrupt" };
+// export type PartStatus =
+//     | { readonly type: "running" }
+//     | { readonly type: "complete" }
+//     | { readonly type: "requires-action"; readonly reason: "tool-calls" | "interrupt" };
 
-export type Part = UIMessage['parts'][number] & {
-    status: PartStatus;
-    /** The position of this part in the message */
-    index: number;
-}
+// export type Part = UIMessage['parts'][number] & {
+//     status: PartStatus;
+//     /** The position of this part in the message */
+//     index: number;
+// }
+export type PartState = (ThreadUserMessagePart | ThreadAssistantMessagePart) & {
+    readonly status: MessagePartStatus | ToolCallMessagePartStatus;
+  };
 
-export type Message = Omit<UIMessage, 'metadata'> & {
+export type Message = Omit<UIMessage<unknown, CustomUIDataTypes>, 'metadata'> & {
     metadata: {
         submittedFeedback?: { readonly type: "positive" | "negative" };
         custom?: Record<string, unknown>;
