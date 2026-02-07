@@ -81,6 +81,17 @@ export type SpeechState = {
     readonly messageId: string;
 };
 
+export type PartStatus =
+    | { readonly type: "running" }
+    | { readonly type: "complete" }
+    | { readonly type: "requires-action"; readonly reason: "tool-calls" | "interrupt" };
+
+export type Part = UIMessage['parts'][number] & {
+    status: PartStatus;
+    /** The position of this part in the message */
+    index: number;
+}
+
 export type Message = Omit<UIMessage, 'metadata'> & {
     metadata: {
         submittedFeedback?: { readonly type: "positive" | "negative" };

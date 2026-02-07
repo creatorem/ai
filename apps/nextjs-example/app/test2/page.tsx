@@ -16,6 +16,10 @@ import { ThreadPrimitiveIf } from '@creatorem/ai-chat/primitives/thread/thread-i
 import { MessagePrimitiveRoot } from '@creatorem/ai-chat/primitives/message/message-root'
 import { MessagePrimitiveIf } from '@creatorem/ai-chat/primitives/message/message-if'
 import { MessagePrimitiveError } from '@creatorem/ai-chat/primitives/message/message-error'
+import { ErrorPrimitiveRoot } from '@creatorem/ai-chat/primitives/error/error-root'
+import { ErrorPrimitiveMessage } from '@creatorem/ai-chat/primitives/error/error-message'
+import * as ActionBarPrimitive from '@creatorem/ai-chat/primitives/action-bar/index'
+import * as BranchPickerPrimitive from '@creatorem/ai-chat/primitives/branch-picker/index'
 import { Button } from '@/components/ui/button';
 import { ArrowUpIcon, CheckIcon, ChevronLeftIcon, ChevronRightIcon, CopyIcon, DownloadIcon, MoreHorizontalIcon, PencilIcon, RefreshCwIcon, SquareIcon } from 'lucide-react';
 import { TooltipIconButton } from '@/components/ai-chat/tooltip-icon-button';
@@ -198,7 +202,7 @@ const ComposerAction: FC = () => {
 
 //   return (
 //     <Tooltip>
-//       <AttachmentPrimitive.Root
+//       <AttachmentPrimitiveRoot
 //         className={cn(
 //           "aui-attachment-root relative",
 //           isImage &&
@@ -207,6 +211,7 @@ const ComposerAction: FC = () => {
 //       >
 //         <AttachmentPreviewDialog>
 //           <TooltipTrigger asChild>
+
 //             <div
 //               className={cn(
 //                 "aui-attachment-tile size-14 cursor-pointer overflow-hidden rounded-[14px] border bg-muted transition-opacity hover:opacity-75",
@@ -222,7 +227,7 @@ const ComposerAction: FC = () => {
 //           </TooltipTrigger>
 //         </AttachmentPreviewDialog>
 //         {isComposer && <AttachmentRemove />}
-//       </AttachmentPrimitive.Root>
+//       </AttachmentPrimitiveRoot>
 //       <TooltipContent side="top">
 //         <AttachmentPrimitive.Name />
 //       </TooltipContent>
@@ -233,9 +238,9 @@ const ComposerAction: FC = () => {
 const MessageError: FC = () => {
   return (
     <MessagePrimitiveError>
-      <ErrorPrimitive.Root className="aui-message-error-root mt-2 rounded-md border border-destructive bg-destructive/10 p-3 text-destructive text-sm dark:bg-destructive/5 dark:text-red-200">
-        <ErrorPrimitive.Message className="aui-message-error-message line-clamp-2" />
-      </ErrorPrimitive.Root>
+      <ErrorPrimitiveRoot className="aui-message-error-root mt-2 rounded-md border border-destructive bg-destructive/10 p-3 text-destructive text-sm dark:bg-destructive/5 dark:text-red-200">
+        <ErrorPrimitiveMessage className="aui-message-error-message line-clamp-2" />
+      </ErrorPrimitiveRoot>
     </MessagePrimitiveError>
   );
 };
@@ -248,7 +253,7 @@ const AssistantMessage: FC = () => {
       data-role="assistant"
     >
       <div className="aui-assistant-message-content wrap-break-word px-2 text-foreground leading-relaxed">
-        <MessagePrimitive.Parts
+        <MessagePrimitiveParts
           components={{
             Text: MarkdownText,
             Reasoning,
@@ -326,7 +331,7 @@ const UserMessage: FC = () => {
 
       <div className="aui-user-message-content-wrapper relative col-start-2 min-w-0">
         <div className="aui-user-message-content wrap-break-word rounded-2xl bg-muted px-4 py-2.5 text-foreground">
-          <MessagePrimitive.Parts />
+          <MessagePrimitiveParts />
         </div>
         <div className="aui-user-action-bar-wrapper absolute top-1/2 left-0 -translate-x-full -translate-y-1/2 pr-2">
           <UserActionBar />
