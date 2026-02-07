@@ -13,8 +13,6 @@ const useThreadSuggestion = ({
   prompt,
   send,
   clearComposer = true,
-  autoSend,
-  method: _method,
 }: {
   /** The suggestion prompt. */
   prompt: string;
@@ -33,21 +31,12 @@ const useThreadSuggestion = ({
    * @default true
    */
   clearComposer?: boolean | undefined;
-
-  /** @deprecated Use `send` instead. */
-  autoSend?: boolean | undefined;
-
-  /** @deprecated Use `clearComposer` instead. */
-  method?: "replace";
 }) => {
   // const aui = useAui();
   // const disabled = useAuiState(({ thread }) => thread.isDisabled);
   const { isDisabled: disabled, isRunning, composerText, setComposerText, send: sendThread } = useThread();
 
-  // ========== Deprecation Mapping ==========
-  const resolvedSend = send ?? autoSend ?? false;
-  // ==========================================
-
+  const resolvedSend = send ?? false;
 
   const callback = useCallback(() => {
     // const isRunning = aui.thread().getState().isRunning;
@@ -76,5 +65,5 @@ export namespace ThreadPrimitiveSuggestion {
 export const ThreadPrimitiveSuggestion = createActionButton(
   "ThreadPrimitive.Suggestion",
   useThreadSuggestion,
-  ["prompt", "send", "clearComposer", "autoSend", "method"],
+  ["prompt", "send", "clearComposer"],
 );
