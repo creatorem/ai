@@ -10,13 +10,13 @@ import { useThread } from "../thread/thread-root";
 import { useComposer } from "./composer-root";
 
 export const useComposerSend = () => {
-  const { isEditing, isEmpty } = useComposer();
-  const { isRunning, sendMessage } = useThread()
+  const { isEditing, isEmpty, send } = useComposer();
+  const { isRunning } = useThread()
   const disabled = useMemo(() => isRunning || !isEditing || isEmpty, [isRunning, isEditing, isEmpty])
 
   const callback = useCallback(() => {
-    sendMessage();
-  }, [sendMessage]);
+    send();
+  }, [send]);
 
   if (disabled) return null;
   return callback;

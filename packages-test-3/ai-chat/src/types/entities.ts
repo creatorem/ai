@@ -1,5 +1,6 @@
 import { UIMessage } from "ai";
 import { Attachment } from "./attachment-types";
+import type { DictationState } from "./adapters";
 
 export type Threads = {
     isLoading: boolean;
@@ -63,4 +64,5 @@ export type Composer = {
     attachmentAccept: string;
     isEmpty: boolean;
     type: "thread" | "edit";
+    dictation?: DictationState;
 }

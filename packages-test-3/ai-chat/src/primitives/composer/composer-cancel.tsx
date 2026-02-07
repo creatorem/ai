@@ -1,20 +1,13 @@
 "use client";
 
-import { useCallback } from "react";
 import { ActionButtonElement, ActionButtonProps, createActionButton } from "../../utils/create-action-button";
 import { useComposer } from "./composer-root";
-import { useThread } from "../thread/thread-root";
 
 const useComposerCancel = () => {
-  const {stop} = useThread()
-  const { canCancel } = useComposer()
-
-  const callback = useCallback(() => {
-    stop();
-  }, [canCancel, stop]);
+  const { canCancel, cancel } = useComposer()
 
   if (!canCancel) return null;
-  return callback;
+  return cancel;
 };
 
 export namespace ComposerPrimitiveCancel {

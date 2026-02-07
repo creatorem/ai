@@ -15,33 +15,12 @@ type ThreadCtxType = Thread & Omit<ReturnType<typeof useChat<UIMessage>>, 'statu
     chatStatus: ReturnType<typeof useChat<UIMessage>>['status']
 }
 
-const ThreadCtx = React.createContext<ThreadCtxType>({
-    id: '',
-    title: '',
-    status: 'regular',
-    isEmpty: true,
-    isDisabled: false,
-    isLoading: false,
-    isRunning: false,
-    messages: [],
-    capabilities: {
-        switchToBranch: false,
-        switchBranchDuringRun: false,
-        edit: false,
-        reload: false,
-        cancel: false,
-        unstable_copy: false,
-        speech: false,
-        dictation: false,
-        attachments: false,
-        feedback: false,
-    }
-});
+const ThreadCtx = React.createContext<ThreadCtxType | null>(null);
 
 export const useThread = (): ThreadCtxType => {
     const ctx = useContext(ThreadCtx);
     if (!ctx) {
-        throw new Error('ThreadCtxType context not found.');
+        throw new Error('useThread must be used within a ThreadPrimitiveRoot.');
     }
     return ctx;
 };

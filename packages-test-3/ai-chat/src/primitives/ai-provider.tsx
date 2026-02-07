@@ -3,12 +3,10 @@
 import { Tool, type UIMessage } from "ai";
 // import { useChat } from "@ai-sdk/react";
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import { ThreadAdapter } from "../types/adapters";
+import { ThreadAdapter, AttachmentAdapter, DictationAdapter } from "../types/adapters";
 import { Threads } from "../types/entities";
 import { useChat } from "@ai-sdk/react";
 import { AiChatEventHandler, AiChatEvents } from "./events";
-
-interface AttachmentAdapter { }
 
 type LanguageModelV1CallSettings = {
     maxTokens?: number;
@@ -29,7 +27,8 @@ type LanguageModelConfig = {
 export type AiContextType = {
     adapters?: {
         attachment?: AttachmentAdapter;
-        thread?: ThreadAdapter
+        thread?: ThreadAdapter;
+        dictation?: DictationAdapter;
     }
     priority?: number | undefined;
     system?: string | undefined;

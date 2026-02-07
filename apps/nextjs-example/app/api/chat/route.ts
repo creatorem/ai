@@ -9,12 +9,14 @@ const groq = createOpenAI({
 
 
 export async function POST(req: Request) {
-  const { messages }: { messages: UIMessage[] } = await req.json();
+  const { messages, message, id } = await req.json();
+
+  const resolvedMessages: UIMessage[] = messages ?? [message];
 
   const result = streamText({
     // model: openai.responses("gpt-5-nano"),
     model: groq('llama-3.3-70b-versatile'),
-    messages: await convertToModelMessages(messages),
+    messages: await convertToModelMessages(resolvedMessages),
     providerOptions: {
       openai: {
         reasoningEffort: "low",
