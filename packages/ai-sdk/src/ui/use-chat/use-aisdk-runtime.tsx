@@ -157,7 +157,8 @@ export const useAISDKRuntime = <UI_MESSAGE extends UIMessage = UIMessage>(
     setMessages: (messages) =>
       chatHelpers.setMessages(
         messages
-          .map(getVercelAIMessages<UI_MESSAGE>)
+          .map(getVerce
+            lAIMessages<UI_MESSAGE>)
           .filter(Boolean)
           .flat(),
       ),
