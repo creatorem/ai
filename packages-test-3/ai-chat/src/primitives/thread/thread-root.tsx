@@ -2,7 +2,7 @@
 
 import { useChat } from "@ai-sdk/react";
 import { DataUIPart, DefaultChatTransport, generateId } from "ai";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Thread, ThreadCapabilities } from '../../types/entities';
 import { useAiContext, useThreads } from "../ai-provider";
 import { createContextHook } from "../../utils/create-context-hook";
@@ -25,12 +25,15 @@ export type CustomUIDataTypes = {
 export type ThreadMethods = {
 };
 
-type ThreadCtxType = Thread & Omit<ReturnType<typeof useChat<Thread['messages'][0]>>, 'status' | 'setMessages'> & {
+type ThreadCtxType = Thread & Omit<ReturnType<typeof useChat<Thread['messages'][0]>>, 'status' | 'setMessages' | 'sendMessage'> & {
     dataStream: DataUIPart<CustomUIDataTypes>[];
     setDataStream: React.Dispatch<
         React.SetStateAction<DataUIPart<CustomUIDataTypes>[]>
     >;
     chatStatus: ReturnType<typeof useChat<Thread['messages'][0]>>['status']
+    composerText: string,
+    setComposerText: (v: string) => void,
+    send: (o: { clearText?: boolean, prompt?: string }) => void
 }
 
 const ThreadCtx = React.createContext<ThreadCtxType | null>(null);
@@ -63,12 +66,14 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
     const [dataStream, setDataStream] = useState<DataUIPart<CustomUIDataTypes>[]>(
         []
     );
+    const [composerText, setComposerText] = useState<string>('')
 
     const {
         id,
         messages,
         setMessages,
         status: chatStatus,
+        sendMessage,
         ...other
     } = useChat<Thread['messages'][0]>({
         generateId: generateId,
@@ -120,6 +125,13 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
         // id: activeThreadId || undefined,
     });
 
+    const send = useCallback(({ clearText = true, prompt }: { clearText?: boolean, prompt?: string }) => {
+        sendMessage({ text: prompt ?? composerText })
+        if (clearText) {
+            setComposerText('')
+        }
+    }, [sendMessage, composerText])
+
     useEffect(() => {
         (async function () {
             if (adapters?.thread && activeThreadId) {
@@ -145,6 +157,9 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
         chatStatus,
         dataStream,
         setDataStream,
+        composerText,
+        setComposerText,
+        send,
         ...other
     }}>
         {children}

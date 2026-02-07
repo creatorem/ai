@@ -192,9 +192,9 @@ export function ComposerPrimitiveRoot({ children }: { children: React.ReactNode 
             _cleanupDictation();
         }
 
-        const currentText = _textRef.current;
-        console.log('currentText')
-        console.log(currentText)
+        // const currentText = _textRef.current;
+        // console.log('currentText')
+        // console.log(currentText)
         const currentRole = _roleRef.current;
         const currentAttachments = _attachmentsRef.current;
         const adapter = _adaptersRef.current?.attachment;
@@ -216,12 +216,7 @@ export function ComposerPrimitiveRoot({ children }: { children: React.ReactNode 
                     )
                     : [];
 
-            console.log('currentText before sendMessage')
-            console.log(currentText)
-            _threadRef.current.sendMessage({
-                text: currentText,
-                // TODO: pass processedAttachments when supported
-            });
+            _threadRef.current.send();
         })();
     }, [_cleanupDictation]);
 

@@ -42,29 +42,25 @@ const useThreadSuggestion = ({
 }) => {
   // const aui = useAui();
   // const disabled = useAuiState(({ thread }) => thread.isDisabled);
-  const {isDisabled:disabled, isRunning} = useThread()
+  const { isDisabled: disabled, isRunning, composerText, setComposerText, send: sendThread } = useThread();
 
   // ========== Deprecation Mapping ==========
   const resolvedSend = send ?? autoSend ?? false;
   // ==========================================
 
+
   const callback = useCallback(() => {
     // const isRunning = aui.thread().getState().isRunning;
 
     if (resolvedSend && !isRunning) {
-      // aui.thread().append(prompt);
-      // if (clearComposer) {
-      //   aui.composer().setText("");
-      // }
+      sendThread({ clearText: clearComposer, prompt })
     } else {
-      // if (clearComposer) {
-      //   aui.composer().setText(prompt);
-      // } else {
-      //   const currentText = aui.composer().getState().text;
-      //   aui
-      //     .composer()
-      //     .setText(currentText.trim() ? `${currentText} ${prompt}` : prompt);
-      // }
+      if (clearComposer) {
+        setComposerText(prompt);
+      } else {
+        const currentText = composerText;
+        setComposerText(currentText.trim() ? `${currentText} ${prompt}` : prompt);
+      }
     }
   }, [isRunning, resolvedSend, clearComposer, prompt]);
 
