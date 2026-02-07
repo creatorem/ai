@@ -66,3 +66,35 @@ export type Composer = {
     type: "thread" | "edit";
     dictation?: DictationState;
 }
+
+export type MessageStatus =
+    | { readonly type: "running" }
+    | { readonly type: "requires-action"; readonly reason: "tool-calls" | "interrupt" }
+    | { readonly type: "complete"; readonly reason: "stop" | "unknown" }
+    | {
+        readonly type: "incomplete";
+        readonly reason: "cancelled" | "tool-calls" | "length" | "content-filter" | "other" | "error";
+        readonly error?: unknown;
+    };
+
+export type SpeechState = {
+    readonly messageId: string;
+};
+
+export type Message = Omit<UIMessage, 'metadata'> & {
+    metadata: {
+        submittedFeedback?: { readonly type: "positive" | "negative" };
+        custom?: Record<string, unknown>;
+    };
+    status: MessageStatus;
+    attachments: readonly Attachment[];
+    speech: SpeechState | undefined;
+    parentId: string | null;
+    isLast: boolean;
+    branchNumber: number;
+    branchCount: number;
+    isCopied: boolean;
+    isHovering: boolean;
+    /** The position of this message in the thread (0 for first message) */
+    index: number;
+}
