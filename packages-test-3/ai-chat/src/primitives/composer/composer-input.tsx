@@ -103,7 +103,7 @@ export const ComposerPrimitiveInput = forwardRef<
     },
     forwardedRef,
   ) => {
-    const {eventHandler} = useAiContext();
+    const eventHandler = useAiContext(s => s.eventHandler);
     const isEditing = useComposer(s => s.isEditing);
     const text = useComposer(s => s.text);
     const composerType = useComposer(s => s.type);

@@ -121,7 +121,7 @@ export const useThreadViewportAutoScroll = <TElement extends HTMLElement>({
     scrollToBottom(behavior);
   });
 
-  const { eventHandler } = useAiContext()
+  const eventHandler = useAiContext(s => s.eventHandler);
 
   // autoscroll on run start
   useAiEvent("thread.runStart", () => {

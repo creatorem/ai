@@ -77,7 +77,7 @@ const _isAttachmentComplete = (a: Attachment): a is CompleteAttachment =>
     a.status.type === "complete";
 
 export function ComposerPrimitiveRoot({ children }: { children: React.ReactNode }) {
-    const { adapters } = useAiContext();
+    const adapters = useAiContext(s => s.adapters);
     const threadStore = useThreadStore();
 
     // Core state

@@ -2,7 +2,8 @@
 
 import { Tool} from "ai";
 // import { useChat } from "@ai-sdk/react";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { createStore, useStore, type StoreApi } from 'zustand';
 import { ThreadAdapter, AttachmentAdapter, DictationAdapter } from "../types/adapters";
 import { Threads } from "../types/entities";
 import { useChat } from "@ai-sdk/react";
@@ -39,21 +40,24 @@ export type AiContextType = {
     eventHandler: AiChatEventHandler
 };
 
-const AiContext = React.createContext<AiContextType>({
-    adapters: {},
-    eventHandler: new AiChatEventHandler()
-});
+const AiContextStoreCtx = React.createContext<StoreApi<AiContextType> | null>(null);
 
-export const useAiContext = (): AiContextType => {
-    const ctx = useContext(AiContext);
-    if (!ctx) {
-        throw new Error('AiContextType context not found.');
-    }
-    return ctx;
-};
+export function useAiContext(): AiContextType;
+export function useAiContext<T>(selector: (state: AiContextType) => T): T;
+export function useAiContext<T>(selector?: (state: AiContextType) => T) {
+    const store = React.useContext(AiContextStoreCtx);
+    if (!store) throw new Error('This component must be used within AiProvider.');
+    return useStore(store, selector as any);
+}
+
+export function useAiContextStore(): StoreApi<AiContextType> {
+    const store = React.useContext(AiContextStoreCtx);
+    if (!store) throw new Error('This component must be used within AiProvider.');
+    return store;
+}
 
 export const useTriggerAiEvent = <TEvent extends keyof AiChatEvents>(name: TEvent, p: AiChatEvents[TEvent]) => {
-    const { eventHandler } = useAiContext()
+    const eventHandler = useAiContext(s => s.eventHandler);
 
     useEffect(() => {
         eventHandler.trigger(name, p)
@@ -61,7 +65,7 @@ export const useTriggerAiEvent = <TEvent extends keyof AiChatEvents>(name: TEven
 };
 
 export const useAiEvent = <TEvent extends keyof AiChatEvents>(name: TEvent, p: (p: AiChatEvents[TEvent]) => void) => {
-    const { eventHandler } = useAiContext()
+    const eventHandler = useAiContext(s => s.eventHandler);
 
     useEffect(() => {
         eventHandler.on(name, p)
@@ -71,11 +75,20 @@ export const useAiEvent = <TEvent extends keyof AiChatEvents>(name: TEvent, p: (
 export function AiProvider({ children, ...value }: { children: React.ReactNode } & Omit<AiContextType, 'eventHandler'>) {
     const eventHandler = useMemo(() => new AiChatEventHandler(), []);
 
-    return <AiContext.Provider value={{ ...value, eventHandler }}>
+    // Create store once
+    const storeRef = useRef<StoreApi<AiContextType> | null>(null);
+    if (storeRef.current === null) {
+        storeRef.current = createStore<AiContextType>(() => ({ ...value, eventHandler }));
+    }
+
+    // Sync state during render (safe: zustand store is external to React)
+    storeRef.current.setState({ ...value, eventHandler });
+
+    return <AiContextStoreCtx.Provider value={storeRef.current}>
         <ThreadsProvider>
             {children}
         </ThreadsProvider>
-    </AiContext.Provider>;
+    </AiContextStoreCtx.Provider>;
 };
 
 type ThreadsCtx = Threads & {
@@ -84,27 +97,25 @@ type ThreadsCtx = Threads & {
     setArchivedThreadIds: React.Dispatch<React.SetStateAction<Threads['archivedThreadIds']>>
 }
 
-const ThreadsContext = React.createContext<ThreadsCtx>({
-    activeThreadId: null,
-    setActiveThreadId: () => { },
-    isLoading: true,
-    threadIds: [],
-    setThreadIds: () => { },
-    archivedThreadIds: [],
-    setArchivedThreadIds: () => { },
-});
+const ThreadsStoreCtx = React.createContext<StoreApi<ThreadsCtx> | null>(null);
 
-export const useThreads = (): Threads => {
-    const ctx = useContext(ThreadsContext);
-    if (!ctx) {
-        throw new Error('AiContextType context not found.');
-    }
-    return ctx;
-};
+export function useThreads(): Threads;
+export function useThreads<T>(selector: (state: ThreadsCtx) => T): T;
+export function useThreads<T>(selector?: (state: ThreadsCtx) => T) {
+    const store = React.useContext(ThreadsStoreCtx);
+    if (!store) throw new Error('This component must be used within AiProvider.');
+    return useStore(store, selector as any);
+}
+
+export function useThreadsStore(): StoreApi<ThreadsCtx> {
+    const store = React.useContext(ThreadsStoreCtx);
+    if (!store) throw new Error('This component must be used within AiProvider.');
+    return store;
+}
 
 
 function ThreadsProvider({ children }: { children: React.ReactNode }) {
-    const { adapters } = useAiContext();
+    const adapters = useAiContext(s => s.adapters);
     const [activeThreadId, setActiveThreadId] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [threadIds, setThreadIds] = useState<string[]>([])
@@ -121,10 +132,10 @@ function ThreadsProvider({ children }: { children: React.ReactNode }) {
         })()
     }, [adapters])
 
-
-
-    return (
-        <ThreadsContext.Provider value={{
+    // Create store once
+    const storeRef = useRef<StoreApi<ThreadsCtx> | null>(null);
+    if (storeRef.current === null) {
+        storeRef.current = createStore<ThreadsCtx>(() => ({
             activeThreadId,
             setActiveThreadId,
             isLoading,
@@ -132,8 +143,23 @@ function ThreadsProvider({ children }: { children: React.ReactNode }) {
             setThreadIds,
             archivedThreadIds,
             setArchivedThreadIds,
-        }}>
+        }));
+    }
+
+    // Sync state during render
+    storeRef.current.setState({
+        activeThreadId,
+        setActiveThreadId,
+        isLoading,
+        threadIds,
+        setThreadIds,
+        archivedThreadIds,
+        setArchivedThreadIds,
+    });
+
+    return (
+        <ThreadsStoreCtx.Provider value={storeRef.current}>
             {children}
-        </ThreadsContext.Provider>
+        </ThreadsStoreCtx.Provider>
     )
 };

@@ -53,8 +53,9 @@ export function useThreadStore(): StoreApi<ThreadCtxType> {
 }
 
 export function ThreadPrimitiveRoot({ children, ...value }: { children: React.ReactNode }) {
-    const { adapters, chatOptions } = useAiContext();
-    const { activeThreadId } = useThreads();
+    const adapters = useAiContext(s => s.adapters);
+    const chatOptions = useAiContext(s => s.chatOptions);
+    const activeThreadId = useThreads(s => s.activeThreadId);
     const [title, setTitle] = useState('New thread');
     const [status, setStatus] = useState<Thread['status']>('regular');
     const [isLoading, setIsLoading] = useState(true);
