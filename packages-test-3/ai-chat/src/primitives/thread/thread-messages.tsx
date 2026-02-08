@@ -2,7 +2,7 @@
 
 import { type ComponentType, type FC, memo, useMemo } from "react";
 import { useThread } from "./thread-root";
-import { useComposer } from "../composer/composer-root";
+import { useComposer } from "../composer/composer-provider";
 import { Message } from "../../types/entities";
 import { MessageByIndexProvider, useMessage } from "../message/message-by-index-provider";
 

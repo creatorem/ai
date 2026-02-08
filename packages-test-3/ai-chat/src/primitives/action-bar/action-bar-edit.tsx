@@ -6,7 +6,7 @@ import {
   createActionButton,
 } from "../../utils/create-action-button";
 import { useCallback } from "react";
-import { useComposer } from "../composer/composer-root";
+import { useComposer } from "../composer/composer-provider";
 
 /**
  * Hook that provides edit functionality for action bar buttons.

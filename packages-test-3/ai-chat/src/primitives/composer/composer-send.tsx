@@ -7,7 +7,7 @@ import {
 } from "../../utils/create-action-button";
 import { useCallback, useMemo } from "react";
 import { useThread } from "../thread/thread-root";
-import { useComposer, useComposerStore } from "./composer-root";
+import { useComposer, useComposerStore } from "./composer-provider";
 
 export const useComposerSend = () => {
   const isEditing = useComposer(s => s.isEditing);

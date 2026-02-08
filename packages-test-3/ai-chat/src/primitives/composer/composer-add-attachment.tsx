@@ -6,7 +6,7 @@ import {
   ActionButtonProps,
   createActionButton,
 } from "../../utils/create-action-button";
-import { useComposer, useComposerStore } from "./composer-root";
+import { useComposer, useComposerStore } from "./composer-provider";
 
 const useComposerAddAttachment = ({
   multiple = true,

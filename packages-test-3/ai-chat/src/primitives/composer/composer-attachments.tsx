@@ -2,7 +2,7 @@
 
 import { ComponentType, type FC, memo, useMemo } from "react";
 import type { Attachment } from "../../types/attachment-types";
-import { useComposer } from "./composer-root";
+import { useComposer } from "./composer-provider";
 import {
   AttachmentsProvider,
   AttachmentByIndexProvider,

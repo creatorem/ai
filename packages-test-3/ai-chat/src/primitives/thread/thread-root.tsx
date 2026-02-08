@@ -30,7 +30,7 @@ type ThreadCtxType = Thread & Omit<ReturnType<typeof useChat<Thread['messages'][
     setDataStream: React.Dispatch<
         React.SetStateAction<DataUIPart<CustomUIDataTypes>[]>
     >;
-    chatStatus: ReturnType<typeof useChat<Thread['messages'][0]>>['status']
+    // chatStatus: ReturnType<typeof useChat<Thread['messages'][0]>>['status']
     composerText: string,
     setComposerText: (v: string) => void,
     send: (o: { clearText?: boolean, prompt?: string }) => void
@@ -60,7 +60,7 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
     const [status, setStatus] = useState<Thread['status']>('regular');
     const [isLoading, setIsLoading] = useState(true);
     const [isDisabled, setIsDisabled] = useState(false);
-    const [isRunning, setIsRunning] = useState(false);
+    // const [isRunning, setIsRunning] = useState(false);
     const [capabilities, setCapabilities] = useState<ThreadCapabilities>({
         switchToBranch: false,
         switchBranchDuringRun: false,
@@ -136,11 +136,16 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
     });
 
     const send = useCallback(({ clearText = true, prompt }: { clearText?: boolean, prompt?: string }) => {
-        sendMessage({ text: prompt ?? composerText })
+        const text = storeRef.current!.getState().composerText
+        console.log( {text} )
+        console.log( {prompt} )
+        const res = prompt ?? text
+        console.log( {res} )
+        sendMessage({ text: res })
         if (clearText) {
             setComposerText('')
         }
-    }, [sendMessage, composerText])
+    }, [sendMessage])
 
     useEffect(() => {
         (async function () {
@@ -162,7 +167,7 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
             isEmpty: messages.length === 0,
             isDisabled,
             isLoading,
-            isRunning,
+            isRunning: chatStatus === 'streaming',
             title,
             status,
             messages,
@@ -184,12 +189,11 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
             isEmpty: messages.length === 0,
             isDisabled,
             isLoading,
-            isRunning,
+            isRunning: chatStatus === 'streaming',
             title,
             status,
             messages,
             capabilities,
-            chatStatus,
             dataStream,
             setDataStream,
             composerText,

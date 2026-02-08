@@ -9,11 +9,13 @@ import { ThreadPrimitiveViewportFooter } from '@creatorem/ai-chat/primitives/thr
 import { ThreadPrimitiveMessages } from '@creatorem/ai-chat/primitives/thread/thread-messages'
 import { ThreadPrimitiveSuggestion } from '@creatorem/ai-chat/primitives/thread/thread-suggestion'
 import { ThreadPrimitiveScrollToBottom } from '@creatorem/ai-chat/primitives/thread/thread-scroll-to-bottom'
-import { ComposerPrimitiveRoot } from '@creatorem/ai-chat/primitives/composer/composer-root'
-import { ComposerPrimitiveInput } from '@creatorem/ai-chat/primitives/composer/composer-input'
-import { ComposerPrimitiveAttachmentDropzone } from '@creatorem/ai-chat/primitives/composer/composer-attachment-dropzone'
-import { ComposerPrimitiveSend } from '@creatorem/ai-chat/primitives/composer/composer-send'
-import { ComposerPrimitiveCancel } from '@creatorem/ai-chat/primitives/composer/composer-cancel'
+
+import * as ComposerPrimitive from '@creatorem/ai-chat/primitives/composer/index'
+// import { ComposerPrimitiveRoot } from '@creatorem/ai-chat/primitives/composer/composer-root'
+// import { ComposerPrimitiveInput } from '@creatorem/ai-chat/primitives/composer/composer-input'
+// import { ComposerPrimitiveAttachmentDropzone } from '@creatorem/ai-chat/primitives/composer/composer-attachment-dropzone'
+// import { ComposerPrimitiveSend } from '@creatorem/ai-chat/primitives/composer/composer-send'
+// import { ComposerPrimitiveCancel } from '@creatorem/ai-chat/primitives/composer/composer-cancel'
 import { ThreadPrimitiveIf } from '@creatorem/ai-chat/primitives/thread/thread-if'
 import { MessagePrimitiveRoot } from '@creatorem/ai-chat/primitives/message/message-root'
 import { MessagePrimitiveParts } from '@creatorem/ai-chat/primitives/message/message-parts'
@@ -39,8 +41,39 @@ import { ToolFallback } from './tool-fallback';
 import { MarkdownText } from './markdown-text';
 
 export default function Chat() {
-
+  // const [input, setInput] = useState('');
+  // const { messages, sendMessage, ...opts } = useChat();
+  // console.log( {messages} )
+  // console.log( opts )
   return (
+    //   <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
+    //   {messages.map(message => (
+    //     <div key={message.id} className="whitespace-pre-wrap">
+    //       {message.role === 'user' ? 'User: ' : 'AI: '}
+    //       {message.parts.map((part, i) => {
+    //         switch (part.type) {
+    //           case 'text':
+    //             return <div key={`${message.id}-${i}`}>{part.text}</div>;
+    //         }
+    //       })}
+    //     </div>
+    //   ))}
+
+    //   <form
+    //     onSubmit={e => {
+    //       e.preventDefault();
+    //       sendMessage({ text: input });
+    //       setInput('');
+    //     }}
+    //   >
+    //     <input
+    //       className="fixed dark:bg-zinc-900 bottom-0 w-full max-w-md p-2 mb-8 border border-zinc-300 dark:border-zinc-800 rounded shadow-xl"
+    //       value={input}
+    //       placeholder="Say something..."
+    //       onChange={e => setInput(e.currentTarget.value)}
+    //     />
+    //   </form>
+    // </div>
     <AiProvider>
       <SidebarProvider>
         <div className="flex h-dvh w-full pr-0.5">
@@ -190,21 +223,19 @@ const ThreadSuggestions: FC = () => {
 
 const Composer: React.FC = () => {
   return (
-    <ComposerPrimitiveRoot>
-      <div className="aui-composer-root relative flex w-full flex-col">
-        <ComposerPrimitiveAttachmentDropzone className="aui-composer-attachment-dropzone flex w-full flex-col rounded-2xl border border-input bg-background px-1 pt-2 outline-none transition-shadow has-[textarea:focus-visible]:border-ring has-[textarea:focus-visible]:ring-2 has-[textarea:focus-visible]:ring-ring/20 data-[dragging=true]:border-ring data-[dragging=true]:border-dashed data-[dragging=true]:bg-accent/50">
-          <ComposerAttachments />
-          <ComposerPrimitiveInput
-            placeholder="Send a message..."
-            className="aui-composer-input mb-1 max-h-32 min-h-14 w-full resize-none bg-transparent px-4 pt-2 pb-3 text-sm outline-none placeholder:text-muted-foreground focus-visible:ring-0"
-            rows={1}
-            autoFocus
-            aria-label="Message input"
-          />
-          <ComposerAction />
-        </ComposerPrimitiveAttachmentDropzone>
-      </div>
-    </ComposerPrimitiveRoot>
+    <ComposerPrimitive.Root className="aui-composer-root relative flex w-full flex-col">
+      <ComposerPrimitive.AttachmentDropzone className="aui-composer-attachment-dropzone flex w-full flex-col rounded-2xl border border-input bg-background px-1 pt-2 outline-none transition-shadow has-[textarea:focus-visible]:border-ring has-[textarea:focus-visible]:ring-2 has-[textarea:focus-visible]:ring-ring/20 data-[dragging=true]:border-ring data-[dragging=true]:border-dashed data-[dragging=true]:bg-accent/50">
+        <ComposerAttachments />
+        <ComposerPrimitive.Input
+          placeholder="Send a message..."
+          className="aui-composer-input mb-1 max-h-32 min-h-14 w-full resize-none bg-transparent px-4 pt-2 pb-3 text-sm outline-none placeholder:text-muted-foreground focus-visible:ring-0"
+          rows={1}
+          autoFocus
+          aria-label="Message input"
+        />
+        <ComposerAction />
+      </ComposerPrimitive.AttachmentDropzone>
+    </ComposerPrimitive.Root>
   );
 };
 
@@ -214,7 +245,7 @@ const ComposerAction: FC = () => {
       <ComposerAddAttachment />
 
       <ThreadPrimitiveIf running={false}>
-        <ComposerPrimitiveSend asChild>
+        <ComposerPrimitive.Send asChild>
           <TooltipIconButton
             tooltip="Send message"
             side="bottom"
@@ -226,11 +257,11 @@ const ComposerAction: FC = () => {
           >
             <ArrowUpIcon className="aui-composer-send-icon size-4" />
           </TooltipIconButton>
-        </ComposerPrimitiveSend>
+        </ComposerPrimitive.Send>
       </ThreadPrimitiveIf>
 
       <ThreadPrimitiveIf running={true}>
-        <ComposerPrimitiveCancel asChild>
+        <ComposerPrimitive.Cancel asChild>
           <Button
             type="button"
             variant="default"
@@ -240,7 +271,7 @@ const ComposerAction: FC = () => {
           >
             <SquareIcon className="aui-composer-cancel-icon size-3 fill-current" />
           </Button>
-        </ComposerPrimitiveCancel>
+        </ComposerPrimitive.Cancel>
       </ThreadPrimitiveIf>
     </div>
   );
@@ -374,24 +405,24 @@ const UserActionBar: FC = () => {
 const EditComposer: FC = () => {
   return (
     <MessagePrimitiveRoot className="aui-edit-composer-wrapper mx-auto flex w-full max-w-(--thread-max-width) flex-col px-2 py-3">
-      <ComposerPrimitiveRoot>
+      <ComposerPrimitive.Root>
         <div className="aui-edit-composer-root ml-auto flex w-full max-w-[85%] flex-col rounded-2xl bg-muted">
-          <ComposerPrimitiveInput
+          <ComposerPrimitive.Input
             className="aui-edit-composer-input min-h-14 w-full resize-none bg-transparent p-4 text-foreground text-sm outline-none"
             autoFocus
           />
           <div className="aui-edit-composer-footer mx-3 mb-3 flex items-center gap-2 self-end">
-            <ComposerPrimitiveCancel asChild>
+            <ComposerPrimitive.Cancel asChild>
               <Button variant="ghost" size="sm">
                 Cancel
               </Button>
-            </ComposerPrimitiveCancel>
-            <ComposerPrimitiveSend asChild>
+            </ComposerPrimitive.Cancel>
+            <ComposerPrimitive.Send asChild>
               <Button size="sm">Update</Button>
-            </ComposerPrimitiveSend>
+            </ComposerPrimitive.Send>
           </div>
         </div>
-      </ComposerPrimitiveRoot>
+      </ComposerPrimitive.Root>
     </MessagePrimitiveRoot >
   );
 };

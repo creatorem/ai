@@ -6,7 +6,7 @@ import { composeEventHandlers } from "@radix-ui/primitive";
 import { Primitive } from "@radix-ui/react-primitive";
 import { useCallback } from "react";
 import { useMessage, useMessageStore } from "../message/message-by-index-provider";
-import { useComposer } from "../composer/composer-root";
+import { useComposer } from "../composer/composer-provider";
 
 /**
  * Hook that provides copy functionality for action bar buttons.

@@ -1,7 +1,7 @@
 "use client";
 
 import { ActionButtonElement, ActionButtonProps, createActionButton } from "../../utils/create-action-button";
-import { useComposer } from "./composer-root";
+import { useComposer } from "./composer-provider";
 
 const useComposerCancel = () => {
   const canCancel = useComposer(s => s.canCancel);
