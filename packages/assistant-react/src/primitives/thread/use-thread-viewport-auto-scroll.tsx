@@ -66,6 +66,9 @@ export const useThreadViewportAutoScroll = <TElement extends HTMLElement>({
     const div = divRef.current;
     if (!div) return;
 
+    console.log({ div })
+
+    console.log({ top: div.scrollHeight })
     scrollingToBottomBehaviorRef.current = behavior;
     div.scrollTo({ top: div.scrollHeight, behavior });
   }, []);

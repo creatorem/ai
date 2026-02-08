@@ -2,12 +2,12 @@
 
 import React, { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { createStore, useStore, type StoreApi } from 'zustand';
-import { Composer } from "../../types/entities";
+import { Composer } from '../../types/entities';
 import type { Attachment, CompleteAttachment, PendingAttachment } from "../../types/attachment-types";
 import type { DictationAdapter, DictationState } from "../../types/adapters";
 import type { Unsubscribe } from "../../types/unsuscribe";
 import { useAiContext } from "../ai-provider";
-import { useThreadStore } from "../thread/thread-root";
+import { useThread, useThreadStore } from "../thread/thread-root";
 
 type ComposerMethods = {
     setText(text: string): void;
@@ -79,13 +79,13 @@ const _isAttachmentComplete = (a: Attachment): a is CompleteAttachment =>
 export function ComposerProvider({ children }: { children: React.ReactNode }) {
     const adapters = useAiContext(s => s.adapters);
     const threadStore = useThreadStore();
+    const capabilities = useThread((s) => s.capabilities)
 
     // Core state
     const [text, setTextState] = useState<string>('');
     const [role, setRoleState] = useState<Composer['role']>('user');
     const [attachments, setAttachments] = useState<Composer['attachments']>([]);
     const [isEditing, setIsEditing] = useState<Composer['isEditing']>(true);
-    const [canCancel, setCanCancel] = useState<Composer['canCancel']>(false);
     const [attachmentAccept, setAttachmentAccept] = useState<Composer['attachmentAccept']>('*');
     const [type, setType] = useState<Composer['type']>('thread');
     const [dictation, setDictation] = useState<DictationState | undefined>(undefined);
@@ -384,7 +384,7 @@ export function ComposerProvider({ children }: { children: React.ReactNode }) {
             role,
             attachments,
             isEditing,
-            canCancel,
+            canCancel: capabilities.cancel,
             attachmentAccept,
             isEmpty: !text.trim() && !attachments.length,
             type,
@@ -410,7 +410,7 @@ export function ComposerProvider({ children }: { children: React.ReactNode }) {
             role,
             attachments,
             isEditing,
-            canCancel,
+            canCancel: capabilities.cancel,
             attachmentAccept,
             isEmpty: !text.trim() && !attachments.length,
             type,

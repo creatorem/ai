@@ -63,6 +63,31 @@ const groq = createOpenAI({
 //   });
 // }
 
+function throttleStream(stream: ReadableStream, delay = 50) {
+  const reader = stream.getReader();
+
+  return new ReadableStream({
+    async start(controller) {
+      async function push() {
+        const { done, value } = await reader.read();
+
+        if (done) {
+          controller.close();
+          return;
+        }
+
+        // Artificial delay per chunk
+        await new Promise((r) => setTimeout(r, delay));
+
+        controller.enqueue(value);
+        push();
+      }
+
+      push();
+    },
+  });
+}
+
 export async function POST(req: Request) {
   const { messages }: { messages: UIMessage[] } = await req.json();
 
@@ -85,6 +110,17 @@ export async function POST(req: Request) {
       }),
     },
   });
+
+  // const slowStream = throttleStream(
+  //   result.toUIMessageStreamResponse().body!,
+  //   20 // ms per chunk — tweak this
+  // );
+
+  // return new Response(slowStream, {
+  //   headers: {
+  //     "Content-Type": "text/plain; charset=utf-8",
+  //   },
+  // });
 
   return result.toUIMessageStreamResponse();
 }

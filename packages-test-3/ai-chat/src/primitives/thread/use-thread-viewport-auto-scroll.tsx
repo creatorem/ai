@@ -66,6 +66,9 @@ export const useThreadViewportAutoScroll = <TElement extends HTMLElement>({
     const div = divRef.current;
     if (!div) return;
 
+    console.log( {div} )
+
+    console.log({ top: div.scrollHeight })
     scrollingToBottomBehaviorRef.current = behavior;
     div.scrollTo({ top: div.scrollHeight, behavior });
   }, []);
@@ -121,10 +124,11 @@ export const useThreadViewportAutoScroll = <TElement extends HTMLElement>({
     scrollToBottom(behavior);
   });
 
-  const eventHandler = useAiContext(s => s.eventHandler);
+  // const eventHandler = useAiContext(s => s.eventHandler);
 
   // autoscroll on run start
   useAiEvent("thread.runStart", () => {
+    console.warn('thread.runStart called')
     if (!scrollToBottomOnRunStart) return;
     scrollingToBottomBehaviorRef.current = "auto";
     requestAnimationFrame(() => {

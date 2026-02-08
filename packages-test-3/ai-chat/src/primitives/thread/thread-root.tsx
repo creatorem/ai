@@ -56,6 +56,7 @@ export function useThreadStore(): StoreApi<ThreadCtxType> {
 }
 
 export function ThreadPrimitiveRoot({ children, ...value }: { children: React.ReactNode }) {
+    const eventHandler = useAiContext(s => s.eventHandler);
     const adapters = useAiContext(s => s.adapters);
     const chatOptions = useAiContext(s => s.chatOptions);
     const activeThreadId = useThreads(s => s.activeThreadId);
@@ -63,23 +64,31 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
     const [status, setStatus] = useState<Thread['status']>('regular');
     const [isLoading, setIsLoading] = useState(true);
     const [isDisabled, setIsDisabled] = useState(false);
-    // const [isRunning, setIsRunning] = useState(false);
     const [capabilities, setCapabilities] = useState<ThreadCapabilities>({
-        switchToBranch: false,
-        switchBranchDuringRun: false,
-        edit: false,
-        reload: false,
-        cancel: false,
-        unstable_copy: false,
-        speech: false,
-        dictation: false,
-        attachments: false,
-        feedback: false,
+        // switchToBranch: false,
+        // switchBranchDuringRun: false,
+        // edit: false,
+        // reload: false,
+        // cancel: false,
+        // unstable_copy: false,
+        // speech: false,
+        // dictation: false,
+        // attachments: false,
+        // feedback: false,
+        switchToBranch: true,
+        switchBranchDuringRun: true,
+        edit: true,
+        reload: true,
+        cancel: true,
+        unstable_copy: true,
+        speech: true,
+        dictation: true,
+        attachments: true,
+        feedback: true,
     })
     const [dataStream, setDataStream] = useState<DataUIPart<CustomUIDataTypes>[]>(
         []
     );
-    const [composerText, setComposerText] = useState<string>('')
 
     const {
         id,
@@ -146,11 +155,15 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
         if (!finalPrompt) {
             throw new Error('No prompt passed.')
         }
+        // console.warn( 'thread.runStart' )
+        // eventHandler.trigger('thread.runStart', { 'threadId': id })
         sendMessage({ text: finalPrompt })
         if (clearText) {
             storeRef.current!.getState().composerStore!.getState()!.setText('')
         }
     }, [sendMessage])
+
+    // console.log({ messages })
 
     useEffect(() => {
         (async function () {
@@ -160,9 +173,22 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
                 setStatus(thread.status)
                 setMessages(thread.messages)
                 setIsLoading(false)
+                eventHandler.trigger('thread.initialize', { 'threadId': id })
             }
         })()
-    }, [adapters, id])
+    }, [adapters, id, eventHandler])
+
+    const isRunningRef = useRef(false);
+    useEffect(() => {
+        if (chatStatus === 'streaming') {
+            isRunningRef.current = true;
+            console.warn( 'thread.runStart' )
+            eventHandler.trigger('thread.runStart', { 'threadId': id })
+        } else if (isRunningRef.current && chatStatus === 'ready') {
+            isRunningRef.current = false;
+            eventHandler.trigger('thread.runEnd', { 'threadId': id })
+        }
+    }, [eventHandler, id, chatStatus])
 
     // Create store once
     const storeRef = useRef<StoreApi<ThreadCtxType> | null>(null);

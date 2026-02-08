@@ -131,7 +131,6 @@ const ThreadMessageComponent: FC<ThreadMessageComponentProps> = ({
 }) => {
   const role = useAuiState(({ message }) => message.role);
   const isEditing = useAuiState(({ message }) => {
-    console.warn( {threadMessageComposerText: message.composer.text} )
     return message.composer.isEditing});
   const Component = getComponent(components, role, isEditing);
 

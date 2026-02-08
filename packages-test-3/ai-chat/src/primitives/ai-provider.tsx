@@ -56,14 +56,6 @@ export function useAiContextStore(): StoreApi<AiContextType> {
     return store;
 }
 
-export const useTriggerAiEvent = <TEvent extends keyof AiChatEvents>(name: TEvent, p: AiChatEvents[TEvent]) => {
-    const eventHandler = useAiContext(s => s.eventHandler);
-
-    useEffect(() => {
-        eventHandler.trigger(name, p)
-    }, [eventHandler, name, p])
-};
-
 export const useAiEvent = <TEvent extends keyof AiChatEvents>(name: TEvent, p: (p: AiChatEvents[TEvent]) => void) => {
     const eventHandler = useAiContext(s => s.eventHandler);
 

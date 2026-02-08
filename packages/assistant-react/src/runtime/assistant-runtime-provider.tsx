@@ -81,7 +81,7 @@ export const AssistantRuntimeProviderImpl: FC<
 
   return (
     <AuiProvider value={aui}>
-      <Test />
+      {/* <Test /> */}
       {RenderComponent && <RenderComponent />}
 
       {/* TODO temporarily allow accessing viewport state from outside the viewport */}
