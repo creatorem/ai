@@ -80,23 +80,19 @@ MessagePrimitiveAttachmentByIndex.displayName =
   export const MessagePrimitiveAttachments: FC<
   MessagePrimitiveAttachments.Props
 > = ({ components }) => {
-    const message = useMessage();
-  if (message.role !== "user") return null;
-
-  // const attachmentsCount = useAuiState(({ message }) => {
-  //   if (message.role !== "user") return 0;
-  //   return message.attachments.length;
-  // });
+    const role = useMessage(s => s.role);
+    const attachments = useMessage(s => s.attachments);
+  if (role !== "user") return null;
 
   const attachmentElements = useMemo(() => {
-    return Array.from({ length: message.attachments.length }, (_, index) => (
+    return Array.from({ length: attachments.length }, (_, index) => (
       <MessagePrimitiveAttachmentByIndex
         key={index}
         index={index}
         components={components}
       />
     ));
-  }, [message.attachments.length, components]);
+  }, [attachments.length, components]);
 
   return attachmentElements;
 };

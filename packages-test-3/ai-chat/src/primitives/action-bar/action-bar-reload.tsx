@@ -7,7 +7,7 @@ import {
 } from "../../utils/create-action-button";
 import { useCallback, useMemo } from "react";
 import { useThread } from "../thread/thread-root";
-import { useMessage } from "../message/message-by-index-provider";
+import { useMessage, useMessageStore } from "../message/message-by-index-provider";
 
 /**
  * Hook that provides reload functionality for action bar buttons.
@@ -33,7 +33,8 @@ import { useMessage } from "../message/message-by-index-provider";
 const useActionBarReload = () => {
   const isRunning = useThread(s => s.isRunning);
   const isDisabled = useThread(s => s.isDisabled);
-  const {role: messageRole, reload:reloadMessage} = useMessage();
+  const messageRole = useMessage(s => s.role);
+  const messageStore = useMessageStore();
 
   const disabled = useMemo(
     () =>
@@ -42,13 +43,13 @@ const useActionBarReload = () => {
       messageRole !== "assistant",
   [
     isRunning,
-isDisabled,
-messageRole,
+    isDisabled,
+    messageRole,
   ]);
 
   const callback = useCallback(() => {
-    reloadMessage();
-  }, [reloadMessage]);
+    messageStore.getState().reload();
+  }, [messageStore]);
 
   if (disabled) return null;
   return callback;

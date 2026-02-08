@@ -103,7 +103,7 @@ const groupMessageParts = (
 };
 
 const useMessagePartsGroups = (): MessagePartRange[] => {
-  const { parts: messageParts } = useMessage()
+  const messageParts = useMessage(s => s.parts);
   const messageTypes = useMemo(
     () => messageParts.map((c: any) => c.type),
     [messageParts]);
@@ -421,10 +421,10 @@ const COMPLETE_STATUS: MessagePartStatus = Object.freeze({
 });
 
 const EmptyPartsImpl: FC<MessagePartComponentProps> = ({ components }) => {
-  const message = useMessage()
+  const messageStatus = useMessage(s => s.status);
   const status = useMemo(
-    () => (message.status ?? COMPLETE_STATUS) as MessagePartStatus,
-    [message]
+    () => (messageStatus ?? COMPLETE_STATUS) as MessagePartStatus,
+    [messageStatus]
   );
 
   if (components?.Empty) return <components.Empty status={status} />;
@@ -448,14 +448,14 @@ const ConditionalEmptyImpl: FC<{
   components: MessagePrimitiveParts.Props["components"];
   enabled: boolean;
 }> = ({ components, enabled }) => {
-  const message = useMessage();
+  const parts = useMessage(s => s.parts);
   const shouldShowEmpty = useMemo(() => {
     if (!enabled) return false;
-    if (message.parts.length === 0) return false;
+    if (parts.length === 0) return false;
 
-    const lastPart = message.parts[message.parts.length - 1];
+    const lastPart = parts[parts.length - 1];
     return lastPart?.type !== "text" && lastPart?.type !== "reasoning";
-  }, [message]);
+  }, [parts, enabled]);
 
   if (!shouldShowEmpty) return null;
   return <EmptyParts components={components} />;
@@ -497,7 +497,7 @@ export const MessagePrimitiveParts: FC<MessagePrimitiveParts.Props> = ({
   components,
   unstable_showEmptyOnNonTextEnd = true,
 }) => {
-  const { parts } = useMessage()
+  const parts = useMessage(s => s.parts);
   const messageRanges = useMessagePartsGroups();
 
   const partsElements = useMemo(() => {

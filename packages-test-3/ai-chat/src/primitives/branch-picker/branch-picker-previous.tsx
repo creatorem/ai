@@ -7,7 +7,7 @@ import {
 } from "../../utils/create-action-button";
 import { useCallback, useMemo } from "react";
 import { useThread } from "../thread/thread-root";
-import { useMessage } from "../message/message-by-index-provider";
+import { useMessage, useMessageStore } from "../message/message-by-index-provider";
 // import { useAuiState, useAui } from "@creatorem/ai-assistant-store";
 
 /**
@@ -34,10 +34,12 @@ import { useMessage } from "../message/message-by-index-provider";
 const useBranchPickerPrevious = () => {
   const isRunning = useThread(s => s.isRunning);
   const switchBranchDuringRun = useThread(s => s.capabilities.switchBranchDuringRun);
-  const message = useMessage();
+  const branchNumber = useMessage(s => s.branchNumber);
+  const messageStore = useMessageStore();
+
   const disabled = useMemo(() => {
     // Disabled if no previous branch
-    if (message.branchNumber <= 1) return true;
+    if (branchNumber <= 1) return true;
 
     // Disabled if running and capability not supported
     if (isRunning && !switchBranchDuringRun) {
@@ -45,11 +47,11 @@ const useBranchPickerPrevious = () => {
     }
 
     return false;
-  }, [isRunning, switchBranchDuringRun, message.branchNumber]);
+  }, [isRunning, switchBranchDuringRun, branchNumber]);
 
   const callback = useCallback(() => {
-    message.switchToBranch({ position: "previous" });
-  }, [message.switchToBranch]);
+    messageStore.getState().switchToBranch({ position: "previous" });
+  }, [messageStore]);
 
   if (disabled) return null;
   return callback;

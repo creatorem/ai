@@ -4,8 +4,7 @@ import type { FC } from "react";
 import { useMessage } from "../message/message-by-index-provider";
 
 const useBranchPickerCount = () => {
-  const {branchCount} = useMessage()
-  return branchCount;
+  return useMessage(s => s.branchCount);
 };
 
 export namespace BranchPickerPrimitiveCount {

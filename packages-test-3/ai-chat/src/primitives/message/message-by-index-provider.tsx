@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useCallback, useContext, useMemo, useRef, useState } from "react";
+import React, { useRef } from "react";
 import type { UIMessage } from "ai";
+import { createStore, useStore, type StoreApi } from 'zustand';
 import { Message, MessageStatus } from "../../types/entities";
 import { useThread, useThreadStore } from "../thread/thread-root";
 
@@ -18,15 +19,21 @@ type MessageMethods = {
 
 type MessageCtxType = Message & MessageMethods;
 
-const MessageCtx = React.createContext<MessageCtxType | null>(null);
+const MessageStoreCtx = React.createContext<StoreApi<MessageCtxType> | null>(null);
 
-export const useMessage = (): MessageCtxType => {
-  const ctx = useContext(MessageCtx);
-  if (!ctx) {
-      throw new Error('useMessage must be used within a MessagePrimitiveRoot.');
-  }
-  return ctx;
-};
+export function useMessage(): MessageCtxType;
+export function useMessage<T>(selector: (state: MessageCtxType) => T): T;
+export function useMessage<T>(selector?: (state: MessageCtxType) => T) {
+    const store = React.useContext(MessageStoreCtx);
+    if (!store) throw new Error('useMessage must be used within a MessagePrimitiveRoot.');
+    return useStore(store, selector as any);
+}
+
+export function useMessageStore(): StoreApi<MessageCtxType> {
+    const store = React.useContext(MessageStoreCtx);
+    if (!store) throw new Error('useMessage must be used within a MessagePrimitiveRoot.');
+    return store;
+}
 
 function _getMessageText(message: UIMessage): string {
   return message.parts
@@ -69,14 +76,6 @@ export function MessageByIndexProvider({
   const isLast = useThread(s => index === s.messages.length - 1);
   const threadStore = useThreadStore();
 
-  // UI state
-  const [isCopied, setIsCopiedState] = useState(false);
-  const [isHovering, setIsHoveringState] = useState(false);
-
-  // Refs to avoid stale closures
-  const _messageRef = useRef(message);
-  _messageRef.current = message;
-
   // Derived state
   const status = _deriveMessageStatus(message, isLast, chatStatus);
   const metadata = {
@@ -86,45 +85,57 @@ export function MessageByIndexProvider({
       custom: (message.metadata as Record<string, unknown> | undefined) ?? {},
   };
 
-  // Methods
+  const storeRef = useRef<StoreApi<MessageCtxType> | null>(null);
+  if (storeRef.current === null) {
+      storeRef.current = createStore<MessageCtxType>(() => ({
+          id: message.id,
+          role: message.role,
+          parts: message.parts,
+          metadata,
+          status,
+          attachments: [],
+          speech: undefined,
+          parentId,
+          isLast,
+          branchNumber: 1,
+          branchCount: 1,
+          isCopied: false,
+          isHovering: false,
+          index,
+          reload: () => {
+              const state = storeRef.current!.getState();
+              if (state.role !== "assistant") {
+                  throw new Error("Can only reload assistant messages");
+              }
+              threadStore.getState().regenerate({ messageId: state.id });
+          },
+          speak: () => {
+              // TODO: requires SpeechSynthesisAdapter
+          },
+          stopSpeaking: () => {
+              // TODO: requires SpeechSynthesisAdapter
+          },
+          submitFeedback: (_feedback: { type: "positive" | "negative" }) => {
+              // TODO: requires feedback adapter
+          },
+          switchToBranch: (_options: { position?: "previous" | "next"; branchId?: string }) => {
+              // TODO: requires branch support
+          },
+          getCopyText: () => {
+              const state = storeRef.current!.getState();
+              return _getMessageText(state as unknown as UIMessage);
+          },
+          setIsCopied: (value: boolean) => {
+              storeRef.current!.setState({ isCopied: value });
+          },
+          setIsHovering: (value: boolean) => {
+              storeRef.current!.setState({ isHovering: value });
+          },
+      }));
+  }
 
-  const reload = useCallback((): void => {
-      if (_messageRef.current.role !== "assistant") {
-          throw new Error("Can only reload assistant messages");
-      }
-      threadStore.getState().regenerate({ messageId: _messageRef.current.id });
-  }, []);
-
-  const speak = useCallback((): void => {
-      // TODO: requires SpeechSynthesisAdapter
-  }, []);
-
-  const stopSpeaking = useCallback((): void => {
-      // TODO: requires SpeechSynthesisAdapter
-  }, []);
-
-  const submitFeedback = useCallback((_feedback: { type: "positive" | "negative" }): void => {
-      // TODO: requires feedback adapter
-  }, []);
-
-  const switchToBranch = useCallback((_options: { position?: "previous" | "next"; branchId?: string }): void => {
-      // TODO: requires branch support
-  }, []);
-
-  const getCopyText = useCallback((): string => {
-      return _getMessageText(_messageRef.current);
-  }, []);
-
-  const setIsCopied = useCallback((value: boolean): void => {
-      setIsCopiedState(value);
-  }, []);
-
-  const setIsHovering = useCallback((value: boolean): void => {
-      setIsHoveringState(value);
-  }, []);
-
-  // Memoize context value to avoid unnecessary re-renders
-  const contextValue = useMemo<MessageCtxType>(() => ({
+  // Sync React-derived state (isCopied/isHovering are store-internal, not synced)
+  storeRef.current.setState({
       id: message.id,
       role: message.role,
       parts: message.parts,
@@ -136,24 +147,10 @@ export function MessageByIndexProvider({
       isLast,
       branchNumber: 1,
       branchCount: 1,
-      isCopied,
-      isHovering,
       index,
-      reload,
-      speak,
-      stopSpeaking,
-      submitFeedback,
-      switchToBranch,
-      getCopyText,
-      setIsCopied,
-      setIsHovering,
-  }), [
-      message, parentId, isLast, status, isCopied, isHovering, index, metadata,
-      reload, speak, stopSpeaking, submitFeedback, switchToBranch,
-      getCopyText, setIsCopied, setIsHovering,
-  ]);
+  });
 
-  return <MessageCtx.Provider value={contextValue}>
+  return <MessageStoreCtx.Provider value={storeRef.current}>
       {children}
-  </MessageCtx.Provider>;
+  </MessageStoreCtx.Provider>;
 };

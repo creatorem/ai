@@ -4,7 +4,7 @@ import { forwardRef, useCallback, useMemo } from "react";
 import { ActionButtonProps } from "../../utils/create-action-button";
 import { composeEventHandlers } from "@radix-ui/primitive";
 import { Primitive } from "@radix-ui/react-primitive";
-import { useMessage } from "../message/message-by-index-provider";
+import { useMessage, useMessageStore } from "../message/message-by-index-provider";
 
 const useActionBarExportMarkdown = ({
   filename,
@@ -13,7 +13,11 @@ const useActionBarExportMarkdown = ({
   filename?: string | undefined;
   onExport?: ((content: string) => void | Promise<void>) | undefined;
 } = {}) => {
-  const {status, parts,getCopyText, role} = useMessage();
+  const status = useMessage(s => s.status);
+  const parts = useMessage(s => s.parts);
+  const role = useMessage(s => s.role);
+  const messageStore = useMessageStore();
+
   const hasExportableContent = useMemo(() => {
     return (
       (role !== "assistant" || status?.type !== "running") &&
@@ -22,7 +26,7 @@ const useActionBarExportMarkdown = ({
   }, [status, parts, role]);
 
   const callback = useCallback(async () => {
-    const content = getCopyText();
+    const content = messageStore.getState().getCopyText();
     if (!content) return;
 
     if (onExport) {
@@ -37,7 +41,7 @@ const useActionBarExportMarkdown = ({
     a.download = filename ?? `message-${Date.now()}.md`;
     a.click();
     URL.revokeObjectURL(url);
-  }, [getCopyText, filename, onExport]);
+  }, [messageStore, filename, onExport]);
 
   if (!hasExportableContent) return null;
   return callback;

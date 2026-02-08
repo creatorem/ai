@@ -4,8 +4,7 @@ import type { FC } from "react";
 import { useMessage } from "../message/message-by-index-provider";
 
 const useBranchPickerNumber = () => {
-  const {branchNumber} = useMessage();
-  return branchNumber;
+  return useMessage(s => s.branchNumber);
 };
 
 export namespace BranchPickerPrimitiveNumber {

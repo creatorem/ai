@@ -22,27 +22,29 @@ export const useActionBarFloatStatus = ({
   autohideFloat,
 }: UseActionBarFloatStatusProps) => {
   const isRunning = useThread(s => s.isRunning);
-  const message = useMessage();
+  const isLast = useMessage(s => s.isLast);
+  const isHovering = useMessage(s => s.isHovering);
+  const branchCount = useMessage(s => s.branchCount);
 
   return useMemo(() => {
     if (hideWhenRunning && isRunning) return HideAndFloatStatus.Hidden;
 
     const autohideEnabled =
-      autohide === "always" || (autohide === "not-last" && !message.isLast);
+      autohide === "always" || (autohide === "not-last" && !isLast);
 
     // normal status
     if (!autohideEnabled) return HideAndFloatStatus.Normal;
 
     // hidden status
-    if (!message.isHovering) return HideAndFloatStatus.Hidden;
+    if (!isHovering) return HideAndFloatStatus.Hidden;
 
     // floating status
     if (
       autohideFloat === "always" ||
-      (autohideFloat === "single-branch" && message.branchCount <= 1)
+      (autohideFloat === "single-branch" && branchCount <= 1)
     )
       return HideAndFloatStatus.Floating;
 
     return HideAndFloatStatus.Normal;
-  }, [isRunning, message, hideWhenRunning, autohide, autohideFloat]);
+  }, [isRunning, isLast, isHovering, branchCount, hideWhenRunning, autohide, autohideFloat]);
 };

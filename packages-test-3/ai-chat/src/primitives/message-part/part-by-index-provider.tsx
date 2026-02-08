@@ -2,7 +2,7 @@
 
 import React, { useCallback, useContext, useMemo, useRef } from "react";
 import { PartState } from "../../types/entities";
-import { useMessage } from "../message/message-by-index-provider";
+import { useMessage, useMessageStore } from "../message/message-by-index-provider";
 import { useThreadStore } from "../thread/thread-root";
 
 type PartMethods = {
@@ -74,33 +74,31 @@ function _derivePartStatus(
 export const PartByIndexProvider: React.FC<
     React.PropsWithChildren<{ index: number }>
 > = ({ index, children }) => {
-    const message = useMessage();
+    const parts = useMessage(s => s.parts);
+    const messageStatus = useMessage(s => s.status);
+    const messageStore = useMessageStore();
     const threadStore = useThreadStore();
-    const part = message.parts[index]!;
-
-    // Refs to avoid stale closures
-    const _messageRef = useRef(message);
-    _messageRef.current = message;
+    const part = parts[index]!;
 
     // Derived status
     const status = _derivePartStatus(
         part as any,
         index,
-        message.parts.length,
-        message.status,
+        parts.length,
+        messageStatus,
     );
 
     // Methods
 
     const addToolResult = useCallback((result: unknown): void => {
-        const currentPart = _messageRef.current.parts[index];
+        const currentPart = messageStore.getState().parts[index];
         if (!currentPart || currentPart.type !== "tool-invocation") {
             throw new Error("Tried to add tool result to non-tool message part");
         }
 
         const toolCallId = (currentPart as { toolInvocation: { toolCallId: string } }).toolInvocation.toolCallId;
         threadStore.getState().addToolResult({ toolCallId, result });
-    }, [index]);
+    }, [index, messageStore, threadStore]);
 
     const resumeToolCall = useCallback((_payload: unknown): void => {
         // TODO: requires thread runtime support for resuming tool calls

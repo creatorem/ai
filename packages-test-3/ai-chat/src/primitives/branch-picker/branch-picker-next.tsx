@@ -7,15 +7,18 @@ import {
 } from "../../utils/create-action-button";
 import { useCallback, useMemo } from "react";
 import { useThread } from "../thread/thread-root";
-import { useMessage } from "../message/message-by-index-provider";
+import { useMessage, useMessageStore } from "../message/message-by-index-provider";
 
 const useBranchPickerNext = () => {
   const isRunning = useThread(s => s.isRunning);
   const switchBranchDuringRun = useThread(s => s.capabilities.switchBranchDuringRun);
-  const message = useMessage();
+  const branchNumber = useMessage(s => s.branchNumber);
+  const branchCount = useMessage(s => s.branchCount);
+  const messageStore = useMessageStore();
+
   const disabled = useMemo(() => {
     // Disabled if no next branch
-    if (message.branchNumber >= message.branchCount) return true;
+    if (branchNumber >= branchCount) return true;
 
     // Disabled if running and capability not supported
     if (isRunning && !switchBranchDuringRun) {
@@ -23,11 +26,11 @@ const useBranchPickerNext = () => {
     }
 
     return false;
-  }, [isRunning, switchBranchDuringRun, message.branchNumber, message.branchCount]);
+  }, [isRunning, switchBranchDuringRun, branchNumber, branchCount]);
 
   const callback = useCallback(() => {
-    message.switchToBranch({ position: "next" });
-  }, [message.switchToBranch]);
+    messageStore.getState().switchToBranch({ position: "next" });
+  }, [messageStore]);
 
   if (disabled) return null;
   return callback;

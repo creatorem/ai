@@ -7,21 +7,21 @@ import { useManagedRef } from "../../hooks/use-managed-ref";
 import { useThreadViewport } from "../thread/thread-viewport-context";
 import { useSizeHandle } from "../../hooks/use-size-handle";
 import { useComposedRefs } from "@radix-ui/react-compose-refs";
-import { useMessage } from "./message-by-index-provider";
+import { useMessage, useMessageStore } from "./message-by-index-provider";
 import { ThreadPrimitiveViewportSlack } from "../thread/thread-viewport-slack";
-export { useMessage } from "./message-by-index-provider";
+export { useMessage, useMessageStore } from "./message-by-index-provider";
 
 
 const useIsHoveringRef = () => {
-    const message = useMessage();
+    const messageStore = useMessageStore();
 
     const callbackRef = useCallback(
         (el: HTMLElement) => {
             const handleMouseEnter = () => {
-                message.setIsHovering(true);
+                messageStore.getState().setIsHovering(true);
             };
             const handleMouseLeave = () => {
-                message.setIsHovering(false);
+                messageStore.getState().setIsHovering(false);
             };
 
             el.addEventListener("mouseenter", handleMouseEnter);
@@ -29,16 +29,16 @@ const useIsHoveringRef = () => {
 
             if (el.matches(":hover")) {
                 // TODO this is needed for SSR to work, figure out why
-                queueMicrotask(() => message.setIsHovering(true));
+                queueMicrotask(() => messageStore.getState().setIsHovering(true));
             }
 
             return () => {
                 el.removeEventListener("mouseenter", handleMouseEnter);
                 el.removeEventListener("mouseleave", handleMouseLeave);
-                message.setIsHovering(false);
+                messageStore.getState().setIsHovering(false);
             };
         },
-        [message],
+        [messageStore],
     );
 
     return useManagedRef(callbackRef);
@@ -54,7 +54,8 @@ const useMessageViewportRef = () => {
         (s) => s.registerUserMessageHeight,
     );
 
-    const message = useMessage()
+    const messageRole = useMessage(s => s.role);
+    const messageIndex = useMessage(s => s.index);
     const messagesLength = useThread(s => s.messages.length);
     const lastMessageRole = useThread(s => s.messages.at(-1)?.role);
 
@@ -63,10 +64,10 @@ const useMessageViewportRef = () => {
     const shouldRegisterAsInset = useMemo(
         () =>
             turnAnchor === "top" &&
-            message.role === "user" &&
-            message.index === messagesLength - 2 &&
+            messageRole === "user" &&
+            messageIndex === messagesLength - 2 &&
             lastMessageRole === "assistant",
-        [turnAnchor, message.role, message.index, messagesLength, lastMessageRole]
+        [turnAnchor, messageRole, messageIndex, messagesLength, lastMessageRole]
     );
 
     const getHeight = useCallback((el: HTMLElement) => el.offsetHeight, []);

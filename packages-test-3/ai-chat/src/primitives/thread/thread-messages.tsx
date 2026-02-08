@@ -130,7 +130,7 @@ type ThreadMessageComponentProps = {
 const ThreadMessageComponent: FC<ThreadMessageComponentProps> = ({
   components,
 }) => {
-  const {role} = useMessage();
+  const role = useMessage(s => s.role);
   const composer = useComposer({optional:true});// refers to the message composer instance
   // const Component = getComponent(components, role, composer?.isEditing);
   const Component = getComponent(components, role, false);

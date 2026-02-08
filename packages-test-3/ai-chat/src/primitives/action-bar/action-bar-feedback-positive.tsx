@@ -4,14 +4,14 @@ import { forwardRef, useCallback, useMemo } from "react";
 import { ActionButtonProps } from "../../utils/create-action-button";
 import { composeEventHandlers } from "@radix-ui/primitive";
 import { Primitive } from "@radix-ui/react-primitive";
-import { useMessage } from "../message/message-by-index-provider";
+import { useMessage, useMessageStore } from "../message/message-by-index-provider";
 
 const useActionBarFeedbackPositive = () => {
-  const { submitFeedback } = useMessage();
+  const messageStore = useMessageStore();
 
   const callback = useCallback(() => {
-    submitFeedback({ type: "positive" });
-  }, [submitFeedback]);
+    messageStore.getState().submitFeedback({ type: "positive" });
+  }, [messageStore]);
 
   return callback;
 };
@@ -25,7 +25,7 @@ export const ActionBarPrimitiveFeedbackPositive = forwardRef<
   ActionBarPrimitiveFeedbackPositive.Element,
   ActionBarPrimitiveFeedbackPositive.Props
 >(({ onClick, disabled, ...props }, forwardedRef) => {
-  const { metadata } = useMessage()
+  const metadata = useMessage(s => s.metadata);
   const isSubmitted = useMemo(
     () => metadata.submittedFeedback?.type === "positive",
     [metadata]);

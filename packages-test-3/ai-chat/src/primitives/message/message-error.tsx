@@ -4,7 +4,7 @@ import { FC, PropsWithChildren, useMemo } from "react";
 import { useMessage } from './message-root';
 
 export const MessagePrimitiveError: FC<PropsWithChildren> = ({ children }) => {
-  const { status } = useMessage()
+  const status = useMessage(s => s.status);
 
   const hasError = useMemo(
     () =>

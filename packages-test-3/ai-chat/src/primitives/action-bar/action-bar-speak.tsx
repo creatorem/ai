@@ -6,13 +6,17 @@ import {
   ActionButtonProps,
   createActionButton,
 } from "../../utils/create-action-button";
-import { useMessage } from "../message/message-by-index-provider";
+import { useMessage, useMessageStore } from "../message/message-by-index-provider";
 
 const useActionBarSpeak = () => {
-  const { speak, status, role, parts } = useMessage()
+  const status = useMessage(s => s.status);
+  const role = useMessage(s => s.role);
+  const parts = useMessage(s => s.parts);
+  const messageStore = useMessageStore();
+
   const callback = useCallback(async () => {
-    speak();
-  }, [speak]);
+    messageStore.getState().speak();
+  }, [messageStore]);
 
   const hasSpeakableContent = useMemo(() => {
     return (

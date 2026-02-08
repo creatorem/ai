@@ -13,7 +13,7 @@ export const ErrorPrimitiveMessage = forwardRef<
   ErrorPrimitiveMessage.Element,
   ErrorPrimitiveMessage.Props
 >(({ children, ...props }, forwardRef) => {
-  const {status} = useMessage()
+  const status = useMessage(s => s.status);
   
   const error = useMemo(() => {
     return status?.type === "incomplete" &&

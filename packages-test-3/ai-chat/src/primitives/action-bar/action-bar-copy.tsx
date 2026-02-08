@@ -5,7 +5,7 @@ import { ActionButtonProps } from "../../utils/create-action-button";
 import { composeEventHandlers } from "@radix-ui/primitive";
 import { Primitive } from "@radix-ui/react-primitive";
 import { useCallback } from "react";
-import { useMessage } from "../message/message-by-index-provider";
+import { useMessage, useMessageStore } from "../message/message-by-index-provider";
 import { useComposer } from "../composer/composer-root";
 
 /**
@@ -37,26 +37,30 @@ const useActionBarPrimitiveCopy = ({
 }: {
   copiedDuration?: number | undefined;
 } = {}) => {
-  const message = useMessage();
+  const messageRole = useMessage(s => s.role);
+  const messageStatus = useMessage(s => s.status);
+  const messageParts = useMessage(s => s.parts);
+  const messageStore = useMessageStore();
   const composer = useComposer({optional: true});
 
   const hasCopyableContent = useMemo(() => {
     return (
-      (message.role !== "assistant" || message.status?.type !== "running") &&
-      message.parts.some((c) => c.type === "text" && c.text.length > 0)
+      (messageRole !== "assistant" || messageStatus?.type !== "running") &&
+      messageParts.some((c) => c.type === "text" && c.text.length > 0)
     );
-  }, [message.role, message.status, message.parts]);
+  }, [messageRole, messageStatus, messageParts]);
 
   const callback = useCallback(() => {
-    const valueToCopy = composer?.isEditing ? composer.text : message.getCopyText();
+    const msg = messageStore.getState();
+    const valueToCopy = composer?.isEditing ? composer.text : msg.getCopyText();
 
     if (!valueToCopy) return;
 
     navigator.clipboard.writeText(valueToCopy).then(() => {
-      message.setIsCopied(true);
-      setTimeout(() => message.setIsCopied(false), copiedDuration);
+      msg.setIsCopied(true);
+      setTimeout(() => messageStore.getState().setIsCopied(false), copiedDuration);
     });
-  }, [message, composer?.isEditing, composer?.text, copiedDuration]);
+  }, [messageStore, composer?.isEditing, composer?.text, copiedDuration]);
 
   if (!hasCopyableContent) return null;
   return callback;
@@ -89,7 +93,7 @@ export const ActionBarPrimitiveCopy = forwardRef<
   ActionBarPrimitiveCopy.Element,
   ActionBarPrimitiveCopy.Props
 >(({ copiedDuration, onClick, disabled, ...props }, forwardedRef) => {
-  const { isCopied } = useMessage();
+  const isCopied = useMessage(s => s.isCopied);
   const callback = useActionBarPrimitiveCopy({ copiedDuration });
   return (
     <Primitive.button

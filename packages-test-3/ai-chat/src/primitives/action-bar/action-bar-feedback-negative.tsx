@@ -5,14 +5,14 @@ import { ActionButtonProps } from "../../utils/create-action-button";
 import { composeEventHandlers } from "@radix-ui/primitive";
 import { Primitive } from "@radix-ui/react-primitive";
 import { useCallback } from "react";
-import { useMessage } from "../message/message-by-index-provider";
+import { useMessage, useMessageStore } from "../message/message-by-index-provider";
 
 const useActionBarFeedbackNegative = () => {
-  const { submitFeedback } = useMessage();
+  const messageStore = useMessageStore();
 
   const callback = useCallback(() => {
-    submitFeedback({ type: "negative" });
-  }, [submitFeedback]);
+    messageStore.getState().submitFeedback({ type: "negative" });
+  }, [messageStore]);
 
   return callback;
 };
@@ -26,7 +26,7 @@ export const ActionBarPrimitiveFeedbackNegative = forwardRef<
   ActionBarPrimitiveFeedbackNegative.Element,
   ActionBarPrimitiveFeedbackNegative.Props
 >(({ onClick, disabled, ...props }, forwardedRef) => {
-  const { metadata } = useMessage()
+  const metadata = useMessage(s => s.metadata);
   const isSubmitted = useMemo(
     () => metadata.submittedFeedback?.type === "negative",
     [metadata]);
