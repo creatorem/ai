@@ -33,7 +33,7 @@ type ComposerMethods = {
     stopDictation(): void;
 };
 
-type ComposerCtxType = Composer & ComposerMethods
+export type ComposerCtxType = Composer & ComposerMethods
 
 const ComposerStoreCtx = React.createContext<StoreApi<ComposerCtxType> | null>(null);
 
@@ -428,6 +428,20 @@ export function ComposerProvider({ children }: { children: React.ReactNode }) {
             stopDictation,
         });
     });
+
+    // Register this composer store with the thread (first mounted wins)
+    useLayoutEffect(() => {
+        const currentComposer = threadStore.getState().composerStore;
+        if (currentComposer === null && storeRef.current) {
+            threadStore.setState({ composerStore: storeRef.current });
+        }
+        const myStore = storeRef.current;
+        return () => {
+            if (threadStore.getState().composerStore === myStore) {
+                threadStore.setState({ composerStore: null });
+            }
+        };
+    }, [threadStore]);
 
     return <ComposerStoreCtx.Provider value={storeRef.current}>
         {children}

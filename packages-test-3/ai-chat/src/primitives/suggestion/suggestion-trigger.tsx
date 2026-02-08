@@ -36,16 +36,16 @@ const useSuggestionTrigger = ({
   const resolvedSend = send ?? false;
 
   const callback = useCallback(() => {
-    const { isRunning, composerText, setComposerText, send: sendThread } = threadStore.getState();
+    const { isRunning, composerStore, send: sendThread } = threadStore.getState();
+    const composerText = composerStore!.getState().text
 
     if (resolvedSend && !isRunning) {
-      setComposerText(prompt);
-      sendThread({ clearText: clearComposer })
+      sendThread({ clearText: clearComposer, prompt })
     } else {
       if (clearComposer) {
-        setComposerText(prompt);
+        composerStore!.getState().setText(prompt);
       } else {
-        setComposerText(composerText.trim() ? `${composerText} ${prompt}` : prompt);
+        composerStore!.getState().setText(composerText.trim() ? `${composerText} ${prompt}` : prompt);
       }
     }
   }, [threadStore, resolvedSend, clearComposer, prompt]);

@@ -32,23 +32,22 @@ const useThreadSuggestion = ({
    */
   clearComposer?: boolean | undefined;
 }) => {
-  // const aui = useAui();
-  // const disabled = useAuiState(({ thread }) => thread.isDisabled);
   const disabled = useThread(s => s.isDisabled);
   const threadStore = useThreadStore();
 
   const resolvedSend = send ?? false;
 
   const callback = useCallback(() => {
-    const { isRunning, composerText, setComposerText, send: sendThread } = threadStore.getState();
+    const { isRunning, composerStore, send: sendThread } = threadStore.getState();
+    const composerText = composerStore!.getState().text
 
     if (resolvedSend && !isRunning) {
       sendThread({ clearText: clearComposer, prompt })
     } else {
       if (clearComposer) {
-        setComposerText(prompt);
+        composerStore!.getState().setText(prompt);
       } else {
-        setComposerText(composerText.trim() ? `${composerText} ${prompt}` : prompt);
+        composerStore!.getState().setText(composerText.trim() ? `${composerText} ${prompt}` : prompt);
       }
     }
   }, [threadStore, resolvedSend, clearComposer, prompt]);

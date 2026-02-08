@@ -20,9 +20,6 @@ import { useComposer, useComposerStore } from "./composer-provider";
 import { useThread } from "../thread/thread-root";
 import { useAiContext } from "../ai-provider";
 import { useOnScrollToBottom } from "../../hooks/use-on-scroll-to-bottom";
-// import { useOnScrollToBottom } from "../../utils/hooks/use-on-scroll-to-bottom";
-// import { useAuiState, useAui } from "@creatorem/ai-assistant-store";
-// import { flushResourcesSync } from "@creatorem/ai-tap";
 
 export namespace ComposerPrimitiveInput {
   export type Element = HTMLTextAreaElement;

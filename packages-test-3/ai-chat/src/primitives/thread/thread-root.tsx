@@ -6,6 +6,7 @@ import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from
 import { createStore, useStore, type StoreApi } from 'zustand';
 import { Thread, ThreadCapabilities } from '../../types/entities';
 import { useAiContext, useThreads } from "../ai-provider";
+import { ComposerCtxType } from "../composer/composer-provider";
 
 export type CustomUIDataTypes = {
     textDelta: string;
@@ -31,9 +32,11 @@ type ThreadCtxType = Thread & Omit<ReturnType<typeof useChat<Thread['messages'][
         React.SetStateAction<DataUIPart<CustomUIDataTypes>[]>
     >;
     // chatStatus: ReturnType<typeof useChat<Thread['messages'][0]>>['status']
-    composerText: string,
-    setComposerText: (v: string) => void,
-    send: (o: { clearText?: boolean, prompt?: string }) => void
+    // composerText: string,
+    // setComposerText: (v: string) => void,
+    send: (o: { clearText?: boolean, prompt?: string }) => void,
+    /** The StoreApi of the first composer mounted within this thread. */
+    composerStore: StoreApi<ComposerCtxType> | null,
 }
 
 const ThreadStoreCtx = React.createContext<StoreApi<ThreadCtxType> | null>(null);
@@ -136,14 +139,16 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
     });
 
     const send = useCallback(({ clearText = true, prompt }: { clearText?: boolean, prompt?: string }) => {
-        const text = storeRef.current!.getState().composerText
-        console.log( {text} )
-        console.log( {prompt} )
-        const res = prompt ?? text
-        console.log( {res} )
-        sendMessage({ text: res })
+        const text = storeRef.current!.getState().composerStore!.getState().text
+        console.log({ text })
+        console.log({ prompt })
+        const finalPrompt = prompt ?? text
+        if (!finalPrompt) {
+            throw new Error('No prompt passed.')
+        }
+        sendMessage({ text: finalPrompt })
         if (clearText) {
-            setComposerText('')
+            storeRef.current!.getState().composerStore!.getState()!.setText('')
         }
     }, [sendMessage])
 
@@ -175,9 +180,10 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
             chatStatus,
             dataStream,
             setDataStream,
-            composerText,
-            setComposerText,
+            // composerText,
+            // setComposerText,
             send,
+            composerStore: null,
             ...other
         }));
     }
@@ -196,8 +202,8 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
             capabilities,
             dataStream,
             setDataStream,
-            composerText,
-            setComposerText,
+            // composerText,
+            // setComposerText,
             send,
             ...other
         });
