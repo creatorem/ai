@@ -21,6 +21,7 @@ import { MessagePrimitiveIf } from '@creatorem/ai-chat/primitives/message/messag
 import { MessagePrimitiveError } from '@creatorem/ai-chat/primitives/message/message-error'
 import { ErrorPrimitiveRoot } from '@creatorem/ai-chat/primitives/error/error-root'
 import { ErrorPrimitiveMessage } from '@creatorem/ai-chat/primitives/error/error-message'
+
 import * as ActionBarPrimitive from '@creatorem/ai-chat/primitives/action-bar/index'
 import * as BranchPickerPrimitive from '@creatorem/ai-chat/primitives/branch-picker/index'
 import * as ActionBarMorePrimitive from '@creatorem/ai-chat/primitives/action-bar-more/index'
@@ -31,8 +32,11 @@ import { cn } from '@/lib/utils';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { Separator } from '@/components/ui/separator';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
-import { MarkdownText } from '@/components/creatorem-ai/markdown-text';
-import { ToolFallback } from '@/components/creatorem-ai/tool-fallback';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { ComposerAddAttachment, ComposerAttachments, UserMessageAttachments } from './attachment';
+import { Reasoning, ReasoningGroup } from './reasoning';
+import { ToolFallback } from './tool-fallback';
+import { MarkdownText } from './markdown-text';
 
 export default function Chat() {
 
@@ -189,7 +193,7 @@ const Composer: React.FC = () => {
     <ComposerPrimitiveRoot>
       <div className="aui-composer-root relative flex w-full flex-col">
         <ComposerPrimitiveAttachmentDropzone className="aui-composer-attachment-dropzone flex w-full flex-col rounded-2xl border border-input bg-background px-1 pt-2 outline-none transition-shadow has-[textarea:focus-visible]:border-ring has-[textarea:focus-visible]:ring-2 has-[textarea:focus-visible]:ring-ring/20 data-[dragging=true]:border-ring data-[dragging=true]:border-dashed data-[dragging=true]:bg-accent/50">
-          {/* <ComposerAttachments /> */}
+          <ComposerAttachments />
           <ComposerPrimitiveInput
             placeholder="Send a message..."
             className="aui-composer-input mb-1 max-h-32 min-h-14 w-full resize-none bg-transparent px-4 pt-2 pb-3 text-sm outline-none placeholder:text-muted-foreground focus-visible:ring-0"
@@ -207,7 +211,7 @@ const Composer: React.FC = () => {
 const ComposerAction: FC = () => {
   return (
     <div className="aui-composer-action-wrapper relative mx-2 mb-2 flex items-center justify-between">
-      {/* <ComposerAddAttachment /> */}
+      <ComposerAddAttachment />
 
       <ThreadPrimitiveIf running={false}>
         <ComposerPrimitiveSend asChild>
@@ -242,73 +246,6 @@ const ComposerAction: FC = () => {
   );
 };
 
-// export const ComposerAttachments: FC = () => {
-//   return (
-//     <div className="aui-composer-attachments mb-2 flex w-full flex-row items-center gap-2 overflow-x-auto px-1.5 pt-0.5 pb-1 empty:hidden">
-//       <ComposerPrimitive.Attachments
-//         components={{ Attachment: AttachmentUI }}
-//       />
-//     </div>
-//   );
-// };
-
-
-// const AttachmentUI: FC = () => {
-//   const api = useAssistantApi();
-//   const isComposer = api.attachment.source === "composer";
-
-//   const isImage = useAssistantState(
-//     ({ attachment }) => attachment.type === "image",
-//   );
-//   const typeLabel = useAssistantState(({ attachment }) => {
-//     const type = attachment.type;
-//     switch (type) {
-//       case "image":
-//         return "Image";
-//       case "document":
-//         return "Document";
-//       case "file":
-//         return "File";
-//       default:
-//         const _exhaustiveCheck: never = type;
-//         throw new Error(`Unknown attachment type: ${_exhaustiveCheck}`);
-//     }
-//   });
-
-//   return (
-//     <Tooltip>
-//       <AttachmentPrimitiveRoot
-//         className={cn(
-//           "aui-attachment-root relative",
-//           isImage &&
-//           "aui-attachment-root-composer only:[&>#attachment-tile]:size-24",
-//         )}
-//       >
-//         <AttachmentPreviewDialog>
-//           <TooltipTrigger asChild>
-
-//             <div
-//               className={cn(
-//                 "aui-attachment-tile size-14 cursor-pointer overflow-hidden rounded-[14px] border bg-muted transition-opacity hover:opacity-75",
-//                 isComposer &&
-//                 "aui-attachment-tile-composer border-foreground/20",
-//               )}
-//               role="button"
-//               id="attachment-tile"
-//               aria-label={`${typeLabel} attachment`}
-//             >
-//               <AttachmentThumb />
-//             </div>
-//           </TooltipTrigger>
-//         </AttachmentPreviewDialog>
-//         {isComposer && <AttachmentRemove />}
-//       </AttachmentPrimitiveRoot>
-//       <TooltipContent side="top">
-//         <AttachmentPrimitive.Name />
-//       </TooltipContent>
-//     </Tooltip>
-//   );
-// };
 
 const MessageError: FC = () => {
   return (
@@ -330,10 +267,10 @@ const AssistantMessage: FC = () => {
       <div className="aui-assistant-message-content wrap-break-word px-2 text-foreground leading-relaxed">
         <MessagePrimitiveParts
           components={{
-            // Text: MarkdownText,
-            // Reasoning,
-            // ReasoningGroup,
-            // tools: { Fallback: ToolFallback },
+            Text: MarkdownText,
+            Reasoning,
+            ReasoningGroup,
+            tools: { Fallback: ToolFallback },
           }}
         />
         <MessageError />
@@ -402,7 +339,7 @@ const UserMessage: FC = () => {
       className="aui-user-message-root fade-in slide-in-from-bottom-1 mx-auto grid w-full max-w-(--thread-max-width) animate-in auto-rows-auto grid-cols-[minmax(72px,1fr)_auto] content-start gap-y-2 px-2 py-3 duration-150 [&:where(>*)]:col-start-2"
       data-role="user"
     >
-      {/* <UserMessageAttachments /> */}
+      <UserMessageAttachments />
 
       <div className="aui-user-message-content-wrapper relative col-start-2 min-w-0">
         <div className="aui-user-message-content wrap-break-word rounded-2xl bg-muted px-4 py-2.5 text-foreground">

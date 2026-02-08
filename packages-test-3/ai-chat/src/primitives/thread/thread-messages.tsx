@@ -200,8 +200,6 @@ export const ThreadPrimitiveMessagesImpl: FC<ThreadPrimitiveMessages.Props> = ({
 }) => {
   const {messages} = useThread()
 
-  console.warn( {messages} )
-
   const messageElements = useMemo(() => {
     if (messages.length === 0) return null;
     return Array.from({ length: messages.length }, (_, index) => (

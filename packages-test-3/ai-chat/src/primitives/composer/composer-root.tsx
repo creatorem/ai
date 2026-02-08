@@ -13,6 +13,7 @@ type ComposerMethods = {
     setText(text: string): void;
     setRole(role: Composer['role']): void;
     addAttachment(file: File): Promise<void>;
+    removeAttachment(index: number): Promise<void>;
     clearAttachments(): Promise<void>;
     // attachment(selector: { index: number } | { id: string }): AttachmentMethods;
     reset(): Promise<void>;
@@ -158,6 +159,17 @@ export function ComposerPrimitiveRoot({ children }: { children: React.ReactNode 
         }
     }, []);
 
+    const removeAttachment = useCallback(async (index: number): Promise<void> => {
+        const attachment = _attachmentsRef.current[index];
+        if (!attachment) return;
+
+        const adapter = _adaptersRef.current?.attachment;
+        if (adapter) {
+            await adapter.remove(attachment);
+        }
+        setAttachments(prev => prev.filter(a => a.id !== attachment.id));
+    }, []);
+
     const clearAttachments = useCallback(async (): Promise<void> => {
         const adapter = _adaptersRef.current?.attachment;
         if (adapter) {
@@ -216,7 +228,7 @@ export function ComposerPrimitiveRoot({ children }: { children: React.ReactNode 
                     )
                     : [];
 
-            _threadRef.current.send();
+            _threadRef.current.send({});
         })();
     }, [_cleanupDictation]);
 
@@ -349,6 +361,7 @@ export function ComposerPrimitiveRoot({ children }: { children: React.ReactNode 
         setText,
         setRole,
         addAttachment,
+        removeAttachment,
         clearAttachments,
         reset,
         send,
@@ -358,7 +371,7 @@ export function ComposerPrimitiveRoot({ children }: { children: React.ReactNode 
         stopDictation,
     }), [
         text, role, attachments, isEditing, canCancel, attachmentAccept, type, dictation,
-        setText, setRole, addAttachment, clearAttachments, reset, send, cancel, beginEdit,
+        setText, setRole, addAttachment, removeAttachment, clearAttachments, reset, send, cancel, beginEdit,
         startDictation, stopDictation,
     ]);
 

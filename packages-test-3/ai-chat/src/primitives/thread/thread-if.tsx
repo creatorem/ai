@@ -14,7 +14,6 @@ type UseThreadIfProps = RequireAtLeastOne<ThreadIfFilters>;
 
 const useThreadIf = (props: UseThreadIfProps) => {
   const {isRunning, isDisabled, isEmpty} = useThread()
-  console.warn( {isEmpty} )
 
   return useMemo(() => {
     if (props.empty === true && !isEmpty) return false;

@@ -15,15 +15,6 @@ export class AssistantChatTransport<
       ...initOptions,
       prepareSendMessagesRequest: async (options) => {
         const context = this.runtime?.thread.getModelContext();
-        console.warn({ context })
-        console.warn({
-          bodyCtx: {
-            callSettings: context?.callSettings,
-            system: context?.system,
-            config: context?.config,
-            tools: toToolsJSONSchema(context?.tools ?? {}),
-          }
-        })
 
         const id =
           (await this.runtime?.threads.mainItem.initialize())?.remoteId ??

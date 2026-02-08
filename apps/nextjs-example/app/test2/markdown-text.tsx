@@ -2,18 +2,18 @@
 
 import "@creatorem/ai-assistant-react-markdown/styles/dot.css";
 
+import remarkGfm from "remark-gfm";
+import { type FC, memo, useState } from "react";
+import { CheckIcon, CopyIcon } from "lucide-react";
+
+import { TooltipIconButton } from "@/components/ai-chat/tooltip-icon-button";
+import { cn } from "@/lib/utils";
 import {
   type CodeHeaderProps,
   MarkdownTextPrimitive,
   unstable_memoizeMarkdownComponents as memoizeMarkdownComponents,
   useIsMarkdownCodeBlock,
-} from "@creatorem/ai-assistant-react-markdown";
-import remarkGfm from "remark-gfm";
-import { type FC, memo, useState } from "react";
-import { CheckIcon, CopyIcon } from "lucide-react";
-
-import { TooltipIconButton } from "@/components/assistant-ui/tooltip-icon-button";
-import { cn } from "@/lib/utils";
+} from '../../../../packages-test-3/ai-chat/src/markdown/index';
 
 const MarkdownTextImpl = () => {
   return (
@@ -217,7 +217,7 @@ const defaultComponents = memoizeMarkdownComponents({
       <code
         className={cn(
           !isCodeBlock &&
-            "aui-md-inline-code rounded border bg-muted font-semibold",
+          "aui-md-inline-code rounded border bg-muted font-semibold",
           className,
         )}
         {...props}

@@ -1,4 +1,4 @@
 {
   "extends": "@tooling/tsconfig/base.json",
-  "include": ["src"]
+  "include": ["src", "../../packages-test-3/ai-chat/src/markdown"]
 }

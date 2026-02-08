@@ -33,7 +33,10 @@
     "@radix-ui/react-use-callback-ref": "^1.1.1",
     "@radix-ui/react-use-escape-keydown": "^1.1.1",
     "ai": "^6.0.50",
+    "classnames": "^2.5.1",
+    "hast": "^1.0.0",
     "nanoid": "^5.1.6",
+    "react-markdown": "^10.1.0",
     "react-textarea-autosize": "^8.5.9",
     "zod": "^4.3.6",
     "zustand": "^5.0.11"

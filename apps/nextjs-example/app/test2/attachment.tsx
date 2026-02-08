@@ -3,14 +3,6 @@
 import { PropsWithChildren, useEffect, useState, type FC } from "react";
 import { XIcon, PlusIcon, FileText } from "lucide-react";
 import {
-  AttachmentPrimitive,
-  ComposerPrimitive,
-  MessagePrimitive,
-  useAiChatShallow,
-  // useAssistantState,
-  // useAssistantApi,
-} from "@creatorem/ai-react";
-import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -24,6 +16,10 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { TooltipIconButton } from "@/components/assistant-ui/tooltip-icon-button";
 import { cn } from "@/lib/utils";
+import * as AttachmentPrimitive from '@creatorem/ai-chat/primitives/attachment/index'
+import { useAttachment } from '@creatorem/ai-chat/primitives/attachment/attachment-by-index-provider'
+import * as ComposerPrimitive from '@creatorem/ai-chat/primitives/composer/index'
+import * as MessagePrimitive from '@creatorem/ai-chat/primitives/message/index'
 
 const useFileSrc = (file: File | undefined) => {
   const [src, setSrc] = useState<string | undefined>(undefined);
@@ -46,17 +42,18 @@ const useFileSrc = (file: File | undefined) => {
 };
 
 const useAttachmentSrc = () => {
-  const { file, src } = useAiChatShallow((({ attachment }) => {
-      if (attachment.state?.type !== "image") return {};
-      if (attachment.state.file) return { file: attachment.state.file };
-      const src = attachment.state.content?.filter((c) => c.type === "image")[0]
-        ?.image;
-      if (!src) return {};
-      return { src };
-    }),
-  );
+  const attachment = useAttachment();
+  const isImage = attachment.type === "image";
 
-  return useFileSrc(file) ?? src;
+  const file = isImage ? attachment.file : undefined;
+  const fileSrc = useFileSrc(file);
+
+  if (!isImage) return undefined;
+
+  const contentSrc = attachment.content?.filter((c) => c.type === "image")[0]
+    ?.image;
+
+  return fileSrc ?? contentSrc;
 };
 
 type AttachmentPreviewProps = {
@@ -106,9 +103,8 @@ const AttachmentPreviewDialog: FC<PropsWithChildren> = ({ children }) => {
 };
 
 const AttachmentThumb: FC = () => {
-  const isImage = useAiChatShallow(
-    ({ attachment }) => attachment.state?.type === "image",
-  );
+  const attachment = useAttachment();
+  const isImage = attachment.type === "image";
   const src = useAttachmentSrc();
 
   return (
@@ -126,15 +122,12 @@ const AttachmentThumb: FC = () => {
 };
 
 const AttachmentUI: FC = () => {
-  // const api = useAssistantApi();
-  const isComposer = useAiChatShallow(({attachment}) => attachment.state.type === 'composer')
-  // const isComposer = api.attachment.source === "composer";
+  const attachment = useAttachment();
+  const isComposer = attachment.status.type !== "complete";
+  const isImage = attachment.type === "image";
 
-  const isImage = useAiChatShallow(
-    ({ attachment }) => attachment.state?.type === "image",
-  );
-  const typeLabel = useAiChatShallow(({ attachment }) => {
-    const type = attachment.state?.type;
+  const typeLabel = (() => {
+    const type = attachment.type;
     switch (type) {
       case "image":
         return "Image";
@@ -146,7 +139,7 @@ const AttachmentUI: FC = () => {
         const _exhaustiveCheck: never = type;
         throw new Error(`Unknown attachment type: ${_exhaustiveCheck}`);
     }
-  });
+  })();
 
   return (
     <Tooltip>
