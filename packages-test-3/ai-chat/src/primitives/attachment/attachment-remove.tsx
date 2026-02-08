@@ -6,14 +6,14 @@ import {
   createActionButton,
 } from "../../utils/create-action-button";
 import { useCallback } from "react";
-import { useAttachment } from "./attachment-by-index-provider";
+import { useAttachmentStore } from "./attachment-by-index-provider";
 
 const useAttachmentRemove = () => {
-  const attachment = useAttachment();
+  const attachmentStore = useAttachmentStore();
 
   const handleRemoveAttachment = useCallback(() => {
-    attachment.remove();
-  }, [attachment]);
+    attachmentStore.getState().remove();
+  }, [attachmentStore]);
 
   return handleRemoveAttachment;
 };

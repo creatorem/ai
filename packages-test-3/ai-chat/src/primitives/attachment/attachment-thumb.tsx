@@ -15,7 +15,7 @@ export const AttachmentPrimitiveThumb = forwardRef<
   AttachmentPrimitiveThumb.Element,
   AttachmentPrimitiveThumb.Props
 >((props, ref) => {
-  const { name } = useAttachment();
+  const name = useAttachment(s => s.name);
   const ext = useMemo(() => {
     const parts = name.split(".");
     return parts.length > 1 ? parts.pop()! : "";

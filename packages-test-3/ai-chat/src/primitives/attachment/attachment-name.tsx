@@ -10,7 +10,7 @@ export namespace AttachmentPrimitiveName {
 export const AttachmentPrimitiveName: FC<
   AttachmentPrimitiveName.Props
 > = () => {
-  const { name } = useAttachment();
+  const name = useAttachment(s => s.name);
   return <>{name}</>;
 };
 

@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useCallback, useContext, useMemo, useRef } from "react";
+import React, { useCallback, useRef } from "react";
+import { createStore, useStore, type StoreApi } from 'zustand';
 import type { Attachment } from "../../types/attachment-types";
 
 // -- Attachments (array) context --
@@ -10,15 +11,21 @@ type AttachmentsCtxType = {
     removeAttachment(index: number): void;
 };
 
-const AttachmentsCtx = React.createContext<AttachmentsCtxType | null>(null);
+const AttachmentsStoreCtx = React.createContext<StoreApi<AttachmentsCtxType> | null>(null);
 
-export const useAttachments = (): AttachmentsCtxType => {
-    const ctx = useContext(AttachmentsCtx);
-    if (!ctx) {
-        throw new Error("useAttachments must be used within an AttachmentsProvider.");
-    }
-    return ctx;
-};
+export function useAttachments(): AttachmentsCtxType;
+export function useAttachments<T>(selector: (state: AttachmentsCtxType) => T): T;
+export function useAttachments<T>(selector?: (state: AttachmentsCtxType) => T) {
+    const store = React.useContext(AttachmentsStoreCtx);
+    if (!store) throw new Error('useAttachments must be used within an AttachmentsProvider.');
+    return useStore(store, selector as any);
+}
+
+export function useAttachmentsStore(): StoreApi<AttachmentsCtxType> {
+    const store = React.useContext(AttachmentsStoreCtx);
+    if (!store) throw new Error('useAttachments must be used within an AttachmentsProvider.');
+    return store;
+}
 
 export const AttachmentsProvider: React.FC<
     React.PropsWithChildren<{
@@ -26,15 +33,20 @@ export const AttachmentsProvider: React.FC<
         removeAttachment: (index: number) => void;
     }>
 > = ({ attachments, removeAttachment, children }) => {
-    const contextValue = useMemo<AttachmentsCtxType>(
-        () => ({ attachments, removeAttachment }),
-        [attachments, removeAttachment],
-    );
+    const storeRef = useRef<StoreApi<AttachmentsCtxType> | null>(null);
+    if (storeRef.current === null) {
+        storeRef.current = createStore<AttachmentsCtxType>(() => ({
+            attachments,
+            removeAttachment,
+        }));
+    }
+
+    storeRef.current.setState({ attachments, removeAttachment });
 
     return (
-        <AttachmentsCtx.Provider value={contextValue}>
+        <AttachmentsStoreCtx.Provider value={storeRef.current}>
             {children}
-        </AttachmentsCtx.Provider>
+        </AttachmentsStoreCtx.Provider>
     );
 };
 
@@ -46,20 +58,27 @@ type AttachmentMethods = {
 
 type AttachmentCtxType = Attachment & AttachmentMethods;
 
-const AttachmentCtx = React.createContext<AttachmentCtxType | null>(null);
+const AttachmentStoreCtx = React.createContext<StoreApi<AttachmentCtxType> | null>(null);
 
-export const useAttachment = (): AttachmentCtxType => {
-    const ctx = useContext(AttachmentCtx);
-    if (!ctx) {
-        throw new Error("useAttachment must be used within an AttachmentByIndexProvider.");
-    }
-    return ctx;
-};
+export function useAttachment(): AttachmentCtxType;
+export function useAttachment<T>(selector: (state: AttachmentCtxType) => T): T;
+export function useAttachment<T>(selector?: (state: AttachmentCtxType) => T) {
+    const store = React.useContext(AttachmentStoreCtx);
+    if (!store) throw new Error('useAttachment must be used within an AttachmentByIndexProvider.');
+    return useStore(store, selector as any);
+}
+
+export function useAttachmentStore(): StoreApi<AttachmentCtxType> {
+    const store = React.useContext(AttachmentStoreCtx);
+    if (!store) throw new Error('useAttachment must be used within an AttachmentByIndexProvider.');
+    return store;
+}
 
 export const AttachmentByIndexProvider: React.FC<
     React.PropsWithChildren<{ index: number }>
 > = ({ index, children }) => {
-    const { attachments, removeAttachment } = useAttachments();
+    const attachments = useAttachments(s => s.attachments);
+    const removeAttachment = useAttachments(s => s.removeAttachment);
     const attachment = attachments[index]!;
 
     const _indexRef = useRef(index);
@@ -69,14 +88,19 @@ export const AttachmentByIndexProvider: React.FC<
         removeAttachment(_indexRef.current);
     }, [removeAttachment]);
 
-    const contextValue = useMemo<AttachmentCtxType>(
-        () => ({ ...attachment, remove }),
-        [attachment, remove],
-    );
+    const storeRef = useRef<StoreApi<AttachmentCtxType> | null>(null);
+    if (storeRef.current === null) {
+        storeRef.current = createStore<AttachmentCtxType>(() => ({
+            ...attachment,
+            remove,
+        }));
+    }
+
+    storeRef.current.setState({ ...attachment, remove });
 
     return (
-        <AttachmentCtx.Provider value={contextValue}>
+        <AttachmentStoreCtx.Provider value={storeRef.current}>
             {children}
-        </AttachmentCtx.Provider>
+        </AttachmentStoreCtx.Provider>
     );
 };
