@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useContext, useMemo } from "react";
+import React, { useRef } from "react";
+import { createStore, useStore, type StoreApi } from 'zustand';
 
 export type SuggestionState = {
     title: string;
@@ -14,57 +15,72 @@ type SuggestionsCtxType = {
     suggestions: SuggestionState[];
 };
 
-const SuggestionsCtx = React.createContext<SuggestionsCtxType | null>(null);
+const SuggestionsStoreCtx = React.createContext<StoreApi<SuggestionsCtxType> | null>(null);
 
-export const useSuggestions = (): SuggestionsCtxType => {
-    const ctx = useContext(SuggestionsCtx);
-    if (!ctx) {
-        throw new Error("useSuggestions must be used within a SuggestionsProvider.");
-    }
-    return ctx;
-};
+export function useSuggestions(): SuggestionsCtxType;
+export function useSuggestions<T>(selector: (state: SuggestionsCtxType) => T): T;
+export function useSuggestions<T>(selector?: (state: SuggestionsCtxType) => T) {
+    const store = React.useContext(SuggestionsStoreCtx);
+    if (!store) throw new Error("useSuggestions must be used within a SuggestionsProvider.");
+    return useStore(store, selector as any);
+}
+
+export function useSuggestionsStore(): StoreApi<SuggestionsCtxType> {
+    const store = React.useContext(SuggestionsStoreCtx);
+    if (!store) throw new Error("useSuggestions must be used within a SuggestionsProvider.");
+    return store;
+}
 
 export const SuggestionsProvider: React.FC<
     React.PropsWithChildren<{ suggestions: SuggestionState[] }>
 > = ({ suggestions, children }) => {
-    const contextValue = useMemo<SuggestionsCtxType>(
-        () => ({ suggestions }),
-        [suggestions],
-    );
+    const storeRef = useRef<StoreApi<SuggestionsCtxType> | null>(null);
+    if (storeRef.current === null) {
+        storeRef.current = createStore<SuggestionsCtxType>(() => ({ suggestions }));
+    }
+
+    storeRef.current.setState({ suggestions });
 
     return (
-        <SuggestionsCtx.Provider value={contextValue}>
+        <SuggestionsStoreCtx.Provider value={storeRef.current}>
             {children}
-        </SuggestionsCtx.Provider>
+        </SuggestionsStoreCtx.Provider>
     );
 };
 
 // -- Suggestion (single item) context --
 
-const SuggestionCtx = React.createContext<SuggestionState | null>(null);
+const SuggestionStoreCtx = React.createContext<StoreApi<SuggestionState> | null>(null);
 
-export const useSuggestion = (): SuggestionState => {
-    const ctx = useContext(SuggestionCtx);
-    if (!ctx) {
-        throw new Error("useSuggestion must be used within a SuggestionByIndexProvider.");
-    }
-    return ctx;
-};
+export function useSuggestion(): SuggestionState;
+export function useSuggestion<T>(selector: (state: SuggestionState) => T): T;
+export function useSuggestion<T>(selector?: (state: SuggestionState) => T) {
+    const store = React.useContext(SuggestionStoreCtx);
+    if (!store) throw new Error("useSuggestion must be used within a SuggestionByIndexProvider.");
+    return useStore(store, selector as any);
+}
+
+export function useSuggestionStore(): StoreApi<SuggestionState> {
+    const store = React.useContext(SuggestionStoreCtx);
+    if (!store) throw new Error("useSuggestion must be used within a SuggestionByIndexProvider.");
+    return store;
+}
 
 export const SuggestionByIndexProvider: React.FC<
     React.PropsWithChildren<{ index: number }>
 > = ({ index, children }) => {
-    const { suggestions } = useSuggestions();
-    const suggestion = suggestions[index]!;
+    const suggestion = useSuggestions(s => s.suggestions[index]!);
 
-    const contextValue = useMemo<SuggestionState>(
-        () => ({ ...suggestion }),
-        [suggestion],
-    );
+    const storeRef = useRef<StoreApi<SuggestionState> | null>(null);
+    if (storeRef.current === null) {
+        storeRef.current = createStore<SuggestionState>(() => ({ ...suggestion }));
+    }
+
+    storeRef.current.setState({ ...suggestion });
 
     return (
-        <SuggestionCtx.Provider value={contextValue}>
+        <SuggestionStoreCtx.Provider value={storeRef.current}>
             {children}
-        </SuggestionCtx.Provider>
+        </SuggestionStoreCtx.Provider>
     );
 };

@@ -21,7 +21,7 @@ export const SuggestionPrimitiveTitle = forwardRef<
   SuggestionPrimitiveTitle.Element,
   SuggestionPrimitiveTitle.Props
 >((props, ref) => {
-  const {title} = useSuggestion()
+  const title = useSuggestion(s => s.title);
 
   return (
     <Primitive.span {...props} ref={ref}>

@@ -31,7 +31,7 @@ const useSuggestionTrigger = ({
   // const aui = useAui();
   const disabled = useThread(s => s.isDisabled);
   const threadStore = useThreadStore();
-  const { prompt } = useSuggestion()
+  const prompt = useSuggestion(s => s.prompt);
 
   const resolvedSend = send ?? false;
 

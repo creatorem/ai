@@ -82,21 +82,18 @@ ThreadPrimitiveSuggestionByIndex.displayName =
 export const ThreadPrimitiveSuggestionsImpl: FC<
   ThreadPrimitiveSuggestions.Props
 > = ({ components }) => {
-  const { suggestions } = useSuggestions()
-  // const suggestionsLength = useAuiState(
-  //   ({ suggestions }) => suggestions.suggestions.length,
-  // );
+  const suggestionsLength = useSuggestions(s => s.suggestions.length);
 
   const suggestionElements = useMemo(() => {
-    if (suggestions.length === 0) return null;
-    return Array.from({ length: suggestions.length }, (_, index) => (
+    if (suggestionsLength === 0) return null;
+    return Array.from({ length: suggestionsLength }, (_, index) => (
       <ThreadPrimitiveSuggestionByIndex
         key={index}
         index={index}
         components={components}
       />
     ));
-  }, [suggestions.length, components]);
+  }, [suggestionsLength, components]);
 
   return suggestionElements;
 };
