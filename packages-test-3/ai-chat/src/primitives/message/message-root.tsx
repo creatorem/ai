@@ -55,7 +55,8 @@ const useMessageViewportRef = () => {
     );
 
     const message = useMessage()
-    const thread = useThread();
+    const messagesLength = useThread(s => s.messages.length);
+    const lastMessageRole = useThread(s => s.messages.at(-1)?.role);
 
     // inset rules:
     // - the previous user message before the last assistant message registers its full height
@@ -63,9 +64,9 @@ const useMessageViewportRef = () => {
         () =>
             turnAnchor === "top" &&
             message.role === "user" &&
-            message.index === thread.messages.length - 2 &&
-            thread.messages.at(-1)?.role === "assistant",
-        [thread, message]
+            message.index === messagesLength - 2 &&
+            lastMessageRole === "assistant",
+        [turnAnchor, message.role, message.index, messagesLength, lastMessageRole]
     );
 
     const getHeight = useCallback((el: HTMLElement) => el.offsetHeight, []);

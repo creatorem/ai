@@ -21,11 +21,11 @@ export const useActionBarFloatStatus = ({
   autohide,
   autohideFloat,
 }: UseActionBarFloatStatusProps) => {
-  const thread = useThread();
+  const isRunning = useThread(s => s.isRunning);
   const message = useMessage();
 
   return useMemo(() => {
-    if (hideWhenRunning && thread.isRunning) return HideAndFloatStatus.Hidden;
+    if (hideWhenRunning && isRunning) return HideAndFloatStatus.Hidden;
 
     const autohideEnabled =
       autohide === "always" || (autohide === "not-last" && !message.isLast);
@@ -44,5 +44,5 @@ export const useActionBarFloatStatus = ({
       return HideAndFloatStatus.Floating;
 
     return HideAndFloatStatus.Normal;
-  }, [thread, message]);
+  }, [isRunning, message, hideWhenRunning, autohide, autohideFloat]);
 };

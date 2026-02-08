@@ -59,8 +59,10 @@ export const ThreadPrimitiveViewportSlack: FC<ThreadViewportSlackProps> = ({
   fillClampThreshold = "10em",
   fillClampOffset = "6em",
 }) => {
-  const thread = useThread();
   const message = useMessage();
+  const prevMessageRole = useThread(s =>
+    message.index >= 1 ? s.messages.at(message.index - 1)?.role : undefined
+  );
 
   const shouldApplySlack = useMemo(
     // only add slack to the last assistant message following a user message (valid turn)
@@ -68,8 +70,8 @@ export const ThreadPrimitiveViewportSlack: FC<ThreadViewportSlackProps> = ({
       message.isLast &&
       message.role === "assistant" &&
       message.index >= 1 &&
-      thread.messages.at(message.index - 1)?.role === "user",
-    [thread, message]);
+      prevMessageRole === "user",
+    [message.isLast, message.role, message.index, prevMessageRole]);
     
   const threadViewportStore = useThreadViewportStore({ optional: true });
   const isNested = useContext(SlackNestingContext);

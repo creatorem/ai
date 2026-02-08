@@ -6,7 +6,7 @@ import type { Attachment, CompleteAttachment, PendingAttachment } from "../../ty
 import type { DictationAdapter, DictationState } from "../../types/adapters";
 import type { Unsubscribe } from "../../types/unsuscribe";
 import { useAiContext } from "../ai-provider";
-import { useThread } from "../thread/thread-root";
+import { useThreadStore } from "../thread/thread-root";
 import { createContextHook } from "../../utils/create-context-hook";
 
 type ComposerMethods = {
@@ -47,7 +47,7 @@ const _isAttachmentComplete = (a: Attachment): a is CompleteAttachment =>
 
 export function ComposerPrimitiveRoot({ children }: { children: React.ReactNode }) {
     const { adapters } = useAiContext();
-    const thread = useThread();
+    const threadStore = useThreadStore();
 
     // Core state
     const [text, setTextState] = useState<string>('');
@@ -77,8 +77,6 @@ export function ComposerPrimitiveRoot({ children }: { children: React.ReactNode 
     _attachmentsRef.current = attachments;
     const _dictationRef = useRef(dictation);
     _dictationRef.current = dictation;
-    const _threadRef = useRef(thread);
-    _threadRef.current = thread;
     const _adaptersRef = useRef(adapters);
     _adaptersRef.current = adapters;
 
@@ -228,13 +226,13 @@ export function ComposerPrimitiveRoot({ children }: { children: React.ReactNode 
                     )
                     : [];
 
-            _threadRef.current.send({});
+            threadStore.getState().send({});
         })();
     }, [_cleanupDictation]);
 
     const cancel = useCallback((): void => {
-        _threadRef.current.stop();
-    }, []);
+        threadStore.getState().stop();
+    }, [threadStore]);
 
     const beginEdit = useCallback((): void => {
         if (isEditing) return;

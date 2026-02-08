@@ -3,7 +3,7 @@
 import React, { useCallback, useContext, useMemo, useRef } from "react";
 import { PartState } from "../../types/entities";
 import { useMessage } from "../message/message-by-index-provider";
-import { useThread } from "../thread/thread-root";
+import { useThreadStore } from "../thread/thread-root";
 
 type PartMethods = {
     /**
@@ -75,12 +75,10 @@ export const PartByIndexProvider: React.FC<
     React.PropsWithChildren<{ index: number }>
 > = ({ index, children }) => {
     const message = useMessage();
-    const thread = useThread();
+    const threadStore = useThreadStore();
     const part = message.parts[index]!;
 
     // Refs to avoid stale closures
-    const _threadRef = useRef(thread);
-    _threadRef.current = thread;
     const _messageRef = useRef(message);
     _messageRef.current = message;
 
@@ -101,7 +99,7 @@ export const PartByIndexProvider: React.FC<
         }
 
         const toolCallId = (currentPart as { toolInvocation: { toolCallId: string } }).toolInvocation.toolCallId;
-        _threadRef.current.addToolResult({ toolCallId, result });
+        threadStore.getState().addToolResult({ toolCallId, result });
     }, [index]);
 
     const resumeToolCall = useCallback((_payload: unknown): void => {

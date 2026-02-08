@@ -105,7 +105,9 @@ export const ComposerPrimitiveInput = forwardRef<
   ) => {
     const {eventHandler} = useAiContext();
     const { isEditing, text, canCancel, cancel, addAttachment, type: composerType, setText } = useComposer()
-    const { isDisabled: isThreadDisabled, isRunning: isThreadRunning, capabilities: threadCapabilities } = useThread();
+    const isThreadDisabled = useThread(s => s.isDisabled);
+    const isThreadRunning = useThread(s => s.isRunning);
+    const threadCapabilities = useThread(s => s.capabilities);
 
     const value = useMemo(() => {
       if (!isEditing) return "";

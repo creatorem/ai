@@ -3,7 +3,7 @@
 import React, { useCallback, useContext, useMemo, useRef, useState } from "react";
 import type { UIMessage } from "ai";
 import { Message, MessageStatus } from "../../types/entities";
-import { useThread } from "../thread/thread-root";
+import { useThread, useThreadStore } from "../thread/thread-root";
 
 type MessageMethods = {
   reload(): void;
@@ -63,23 +63,22 @@ export function MessageByIndexProvider({
   children: React.ReactNode;
   index: number;
 }) {
-  const thread = useThread();
-  const message = thread.messages[index]!;
+  const message = useThread(s => s.messages[index]!);
+  const chatStatus = useThread(s => s.chatStatus);
+  const parentId = useThread(s => index > 0 ? s.messages[index - 1]?.id ?? null : null);
+  const isLast = useThread(s => index === s.messages.length - 1);
+  const threadStore = useThreadStore();
 
   // UI state
   const [isCopied, setIsCopiedState] = useState(false);
   const [isHovering, setIsHoveringState] = useState(false);
 
   // Refs to avoid stale closures
-  const _threadRef = useRef(thread);
-  _threadRef.current = thread;
   const _messageRef = useRef(message);
   _messageRef.current = message;
 
   // Derived state
-  const parentId = index > 0 ? thread.messages[index - 1]?.id ?? null : null;
-  const isLast = index === thread.messages.length - 1;
-  const status = _deriveMessageStatus(message, isLast, thread.chatStatus);
+  const status = _deriveMessageStatus(message, isLast, chatStatus);
   const metadata = {
       submittedFeedback: (message.metadata as Record<string, unknown> | undefined)?.submittedFeedback as
           | { readonly type: "positive" | "negative" }
@@ -93,7 +92,7 @@ export function MessageByIndexProvider({
       if (_messageRef.current.role !== "assistant") {
           throw new Error("Can only reload assistant messages");
       }
-      _threadRef.current.regenerate({ messageId: _messageRef.current.id });
+      threadStore.getState().regenerate({ messageId: _messageRef.current.id });
   }, []);
 
   const speak = useCallback((): void => {

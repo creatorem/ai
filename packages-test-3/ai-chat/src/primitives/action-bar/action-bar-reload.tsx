@@ -31,7 +31,8 @@ import { useMessage } from "../message/message-by-index-provider";
  * ```
  */
 const useActionBarReload = () => {
-  const {isRunning, isDisabled} = useThread()
+  const isRunning = useThread(s => s.isRunning);
+  const isDisabled = useThread(s => s.isDisabled);
   const {role: messageRole, reload:reloadMessage} = useMessage();
 
   const disabled = useMemo(

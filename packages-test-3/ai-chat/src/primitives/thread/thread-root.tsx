@@ -2,10 +2,10 @@
 
 import { useChat } from "@ai-sdk/react";
 import { DataUIPart, DefaultChatTransport, generateId } from "ai";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { createStore, useStore, type StoreApi } from 'zustand';
 import { Thread, ThreadCapabilities } from '../../types/entities';
 import { useAiContext, useThreads } from "../ai-provider";
-import { createContextHook } from "../../utils/create-context-hook";
 
 export type CustomUIDataTypes = {
     textDelta: string;
@@ -36,12 +36,21 @@ type ThreadCtxType = Thread & Omit<ReturnType<typeof useChat<Thread['messages'][
     send: (o: { clearText?: boolean, prompt?: string }) => void
 }
 
-const ThreadCtx = React.createContext<ThreadCtxType | null>(null);
+const ThreadStoreCtx = React.createContext<StoreApi<ThreadCtxType> | null>(null);
 
-export const useThread = createContextHook(
-    ThreadCtx,
-    "ThreadCtx.Provider",
-);
+export function useThread(): ThreadCtxType;
+export function useThread<T>(selector: (state: ThreadCtxType) => T): T;
+export function useThread<T>(selector?: (state: ThreadCtxType) => T) {
+    const store = React.useContext(ThreadStoreCtx);
+    if (!store) throw new Error('This component must be used within ThreadCtx.Provider.');
+    return useStore(store, selector as any);
+}
+
+export function useThreadStore(): StoreApi<ThreadCtxType> {
+    const store = React.useContext(ThreadStoreCtx);
+    if (!store) throw new Error('This component must be used within ThreadCtx.Provider.');
+    return store;
+}
 
 export function ThreadPrimitiveRoot({ children, ...value }: { children: React.ReactNode }) {
     const { adapters, chatOptions } = useAiContext();
@@ -144,7 +153,31 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
         })()
     }, [adapters, id])
 
-    return <ThreadCtx.Provider value={{
+    // Create store once
+    const storeRef = useRef<StoreApi<ThreadCtxType> | null>(null);
+    if (storeRef.current === null) {
+        storeRef.current = createStore<ThreadCtxType>(() => ({
+            id,
+            isEmpty: messages.length === 0,
+            isDisabled,
+            isLoading,
+            isRunning,
+            title,
+            status,
+            messages,
+            capabilities,
+            chatStatus,
+            dataStream,
+            setDataStream,
+            composerText,
+            setComposerText,
+            send,
+            ...other
+        }));
+    }
+
+    // Sync state during render (safe: zustand store is external to React)
+    storeRef.current.setState({
         id,
         isEmpty: messages.length === 0,
         isDisabled,
@@ -161,7 +194,9 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
         setComposerText,
         send,
         ...other
-    }}>
+    });
+
+    return <ThreadStoreCtx.Provider value={storeRef.current}>
         {children}
-    </ThreadCtx.Provider>;
+    </ThreadStoreCtx.Provider>;
 };

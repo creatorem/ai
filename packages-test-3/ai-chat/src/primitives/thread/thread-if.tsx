@@ -13,7 +13,9 @@ type ThreadIfFilters = {
 type UseThreadIfProps = RequireAtLeastOne<ThreadIfFilters>;
 
 const useThreadIf = (props: UseThreadIfProps) => {
-  const {isRunning, isDisabled, isEmpty} = useThread()
+  const isRunning = useThread(s => s.isRunning);
+  const isDisabled = useThread(s => s.isDisabled);
+  const isEmpty = useThread(s => s.isEmpty);
 
   return useMemo(() => {
     if (props.empty === true && !isEmpty) return false;
@@ -25,7 +27,7 @@ const useThreadIf = (props: UseThreadIfProps) => {
     if (props.disabled === false && isDisabled) return false;
 
     return true;
-  }, [isDisabled, isDisabled, isEmpty]);
+  }, [isRunning, isDisabled, isEmpty]);
 };
 
 export namespace ThreadPrimitiveIf {

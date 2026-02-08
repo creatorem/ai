@@ -7,7 +7,7 @@ import {
 } from "../../utils/create-action-button";
 import { useCallback } from "react";
 import { useSuggestion } from "./suggestion-by-index-provider";
-import { useThread } from "../thread/thread-root";
+import { useThread, useThreadStore } from "../thread/thread-root";
 
 const useSuggestionTrigger = ({
   send,
@@ -29,13 +29,14 @@ const useSuggestionTrigger = ({
   clearComposer?: boolean | undefined;
 }) => {
   // const aui = useAui();
-  const { isDisabled: disabled, isRunning, composerText, setComposerText, send: sendThread } = useThread();
+  const disabled = useThread(s => s.isDisabled);
+  const threadStore = useThreadStore();
   const { prompt } = useSuggestion()
 
   const resolvedSend = send ?? false;
 
   const callback = useCallback(() => {
-    // const isRunning = aui.thread().getState().isRunning;
+    const { isRunning, composerText, setComposerText, send: sendThread } = threadStore.getState();
 
     if (resolvedSend && !isRunning) {
       setComposerText(prompt);
@@ -44,11 +45,10 @@ const useSuggestionTrigger = ({
       if (clearComposer) {
         setComposerText(prompt);
       } else {
-        const currentText = composerText;
-        setComposerText(currentText.trim() ? `${currentText} ${prompt}` : prompt);
+        setComposerText(composerText.trim() ? `${composerText} ${prompt}` : prompt);
       }
     }
-  }, [isRunning, resolvedSend, clearComposer, prompt]);
+  }, [threadStore, resolvedSend, clearComposer, prompt]);
 
   if (disabled) return null;
   return callback;

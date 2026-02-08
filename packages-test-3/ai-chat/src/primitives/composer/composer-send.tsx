@@ -11,7 +11,7 @@ import { useComposer } from "./composer-root";
 
 export const useComposerSend = () => {
   const { isEditing, isEmpty, send } = useComposer();
-  const { isRunning } = useThread()
+  const isRunning = useThread(s => s.isRunning)
   const disabled = useMemo(() => isRunning || !isEditing || isEmpty, [isRunning, isEditing, isEmpty])
 
   const callback = useCallback(() => {

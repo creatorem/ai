@@ -6,7 +6,7 @@ import {
   createActionButton,
 } from "../../utils/create-action-button";
 import { useCallback } from "react";
-import { useThread } from "./thread-root";
+import { useThread, useThreadStore } from "./thread-root";
 // import { useAuiState, useAui } from "@creatorem/ai-assistant-store";
 
 const useThreadSuggestion = ({
@@ -34,12 +34,13 @@ const useThreadSuggestion = ({
 }) => {
   // const aui = useAui();
   // const disabled = useAuiState(({ thread }) => thread.isDisabled);
-  const { isDisabled: disabled, isRunning, composerText, setComposerText, send: sendThread } = useThread();
+  const disabled = useThread(s => s.isDisabled);
+  const threadStore = useThreadStore();
 
   const resolvedSend = send ?? false;
 
   const callback = useCallback(() => {
-    // const isRunning = aui.thread().getState().isRunning;
+    const { isRunning, composerText, setComposerText, send: sendThread } = threadStore.getState();
 
     if (resolvedSend && !isRunning) {
       sendThread({ clearText: clearComposer, prompt })
@@ -47,11 +48,10 @@ const useThreadSuggestion = ({
       if (clearComposer) {
         setComposerText(prompt);
       } else {
-        const currentText = composerText;
-        setComposerText(currentText.trim() ? `${currentText} ${prompt}` : prompt);
+        setComposerText(composerText.trim() ? `${composerText} ${prompt}` : prompt);
       }
     }
-  }, [isRunning, resolvedSend, clearComposer, prompt]);
+  }, [threadStore, resolvedSend, clearComposer, prompt]);
 
   if (disabled) return null;
   return callback;

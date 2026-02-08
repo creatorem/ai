@@ -32,19 +32,20 @@ import { useMessage } from "../message/message-by-index-provider";
  * ```
  */
 const useBranchPickerPrevious = () => {
-  const thread = useThread();
+  const isRunning = useThread(s => s.isRunning);
+  const switchBranchDuringRun = useThread(s => s.capabilities.switchBranchDuringRun);
   const message = useMessage();
   const disabled = useMemo(() => {
     // Disabled if no previous branch
     if (message.branchNumber <= 1) return true;
 
     // Disabled if running and capability not supported
-    if (thread.isRunning && !thread.capabilities.switchBranchDuringRun) {
+    if (isRunning && !switchBranchDuringRun) {
       return true;
     }
 
     return false;
-  }, [thread, message]);
+  }, [isRunning, switchBranchDuringRun, message.branchNumber]);
 
   const callback = useCallback(() => {
     message.switchToBranch({ position: "previous" });

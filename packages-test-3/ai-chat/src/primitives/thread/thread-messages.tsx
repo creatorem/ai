@@ -198,7 +198,7 @@ ThreadPrimitiveMessageByIndex.displayName = "ThreadPrimitive.MessageByIndex";
 export const ThreadPrimitiveMessagesImpl: FC<ThreadPrimitiveMessages.Props> = ({
   components,
 }) => {
-  const {messages} = useThread()
+  const messages = useThread(s => s.messages)
 
   const messageElements = useMemo(() => {
     if (messages.length === 0) return null;
