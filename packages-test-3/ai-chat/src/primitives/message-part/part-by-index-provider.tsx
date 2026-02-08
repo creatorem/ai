@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useCallback, useContext, useMemo, useRef } from "react";
+import React, { useRef } from "react";
+import { createStore, useStore, type StoreApi } from 'zustand';
 import { PartState } from "../../types/entities";
 import { useMessage, useMessageStore } from "../message/message-by-index-provider";
 import { useThreadStore } from "../thread/thread-root";
@@ -20,15 +21,21 @@ type PartMethods = {
 
 type PartCtxType = PartState & PartMethods;
 
-const PartCtx = React.createContext<PartCtxType | null>(null);
+const PartStoreCtx = React.createContext<StoreApi<PartCtxType> | null>(null);
 
-export const usePart = (): PartCtxType => {
-    const ctx = useContext(PartCtx);
-    if (!ctx) {
-        throw new Error('usePart must be used within a PartByIndexProvider.');
-    }
-    return ctx;
-};
+export function usePart(): PartCtxType;
+export function usePart<T>(selector: (state: PartCtxType) => T): T;
+export function usePart<T>(selector?: (state: PartCtxType) => T) {
+    const store = React.useContext(PartStoreCtx);
+    if (!store) throw new Error('usePart must be used within a PartByIndexProvider.');
+    return useStore(store, selector as any);
+}
+
+export function usePartStore(): StoreApi<PartCtxType> {
+    const store = React.useContext(PartStoreCtx);
+    if (!store) throw new Error('usePart must be used within a PartByIndexProvider.');
+    return store;
+}
 
 const _COMPLETE_STATUS: PartState['status'] = Object.freeze({
     type: "complete" as const,
@@ -88,32 +95,33 @@ export const PartByIndexProvider: React.FC<
         messageStatus,
     );
 
-    // Methods
+    const storeRef = useRef<StoreApi<PartCtxType> | null>(null);
+    if (storeRef.current === null) {
+        storeRef.current = createStore<PartCtxType>(() => ({
+            ...part,
+            status,
+            addToolResult: (result: unknown) => {
+                const currentPart = messageStore.getState().parts[index];
+                if (!currentPart || currentPart.type !== "tool-invocation") {
+                    throw new Error("Tried to add tool result to non-tool message part");
+                }
 
-    const addToolResult = useCallback((result: unknown): void => {
-        const currentPart = messageStore.getState().parts[index];
-        if (!currentPart || currentPart.type !== "tool-invocation") {
-            throw new Error("Tried to add tool result to non-tool message part");
-        }
+                const toolCallId = (currentPart as { toolInvocation: { toolCallId: string } }).toolInvocation.toolCallId;
+                threadStore.getState().addToolResult({ toolCallId, result });
+            },
+            resumeToolCall: (_payload: unknown) => {
+                // TODO: requires thread runtime support for resuming tool calls
+            },
+        }));
+    }
 
-        const toolCallId = (currentPart as { toolInvocation: { toolCallId: string } }).toolInvocation.toolCallId;
-        threadStore.getState().addToolResult({ toolCallId, result });
-    }, [index, messageStore, threadStore]);
-
-    const resumeToolCall = useCallback((_payload: unknown): void => {
-        // TODO: requires thread runtime support for resuming tool calls
-    }, []);
-
-    // Memoize context value
-    const contextValue = useMemo<PartCtxType>(() => ({
+    // Sync React-derived state
+    storeRef.current.setState({
         ...part,
         status,
-        index,
-        addToolResult,
-        resumeToolCall,
-    }), [part, status, index, addToolResult, resumeToolCall]);
+    });
 
-    return <PartCtx.Provider value={contextValue}>
+    return <PartStoreCtx.Provider value={storeRef.current}>
         {children}
-    </PartCtx.Provider>;
+    </PartStoreCtx.Provider>;
 };

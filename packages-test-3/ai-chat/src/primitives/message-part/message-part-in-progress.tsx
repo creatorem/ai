@@ -11,7 +11,7 @@ export namespace MessagePartPrimitiveInProgress {
 export const MessagePartPrimitiveInProgress: FC<
   MessagePartPrimitiveInProgress.Props
 > = ({ children }) => {
-  const { status } = usePart();
+  const status = usePart(s => s.status);
   const isInProgress = useMemo(
     () => status.type === "running",
     [status]
