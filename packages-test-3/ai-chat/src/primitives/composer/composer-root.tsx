@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { createStore, useStore, type StoreApi } from 'zustand';
 import { Composer } from "../../types/entities";
 import type { Attachment, CompleteAttachment, PendingAttachment } from "../../types/attachment-types";
@@ -403,28 +403,30 @@ export function ComposerPrimitiveRoot({ children }: { children: React.ReactNode 
         }));
     }
 
-    // Sync state during render (safe: zustand store is external to React)
-    storeRef.current.setState({
-        text,
-        role,
-        attachments,
-        isEditing,
-        canCancel,
-        attachmentAccept,
-        isEmpty: !text.trim() && !attachments.length,
-        type,
-        dictation,
-        setText,
-        setRole,
-        addAttachment,
-        removeAttachment,
-        clearAttachments,
-        reset,
-        send,
-        cancel,
-        beginEdit,
-        startDictation,
-        stopDictation,
+    // Sync state after render (avoids "setState during render" warning)
+    useLayoutEffect(() => {
+        storeRef.current!.setState({
+            text,
+            role,
+            attachments,
+            isEditing,
+            canCancel,
+            attachmentAccept,
+            isEmpty: !text.trim() && !attachments.length,
+            type,
+            dictation,
+            setText,
+            setRole,
+            addAttachment,
+            removeAttachment,
+            clearAttachments,
+            reset,
+            send,
+            cancel,
+            beginEdit,
+            startDictation,
+            stopDictation,
+        });
     });
 
     return <ComposerStoreCtx.Provider value={storeRef.current}>

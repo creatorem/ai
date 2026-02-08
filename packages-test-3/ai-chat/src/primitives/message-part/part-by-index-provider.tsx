@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import { createStore, useStore, type StoreApi } from 'zustand';
 import { PartState } from "../../types/entities";
 import { useMessage, useMessageStore } from "../message/message-by-index-provider";
@@ -115,10 +115,12 @@ export const PartByIndexProvider: React.FC<
         }));
     }
 
-    // Sync React-derived state
-    storeRef.current.setState({
-        ...part,
-        status,
+    // Sync React-derived state after render
+    useLayoutEffect(() => {
+        storeRef.current!.setState({
+            ...part,
+            status,
+        });
     });
 
     return <PartStoreCtx.Provider value={storeRef.current}>

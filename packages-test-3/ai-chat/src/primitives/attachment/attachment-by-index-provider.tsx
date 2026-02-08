@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useLayoutEffect, useRef } from "react";
 import { createStore, useStore, type StoreApi } from 'zustand';
 import type { Attachment } from "../../types/attachment-types";
 
@@ -41,7 +41,9 @@ export const AttachmentsProvider: React.FC<
         }));
     }
 
-    storeRef.current.setState({ attachments, removeAttachment });
+    useLayoutEffect(() => {
+        storeRef.current!.setState({ attachments, removeAttachment });
+    });
 
     return (
         <AttachmentsStoreCtx.Provider value={storeRef.current}>
@@ -96,7 +98,9 @@ export const AttachmentByIndexProvider: React.FC<
         }));
     }
 
-    storeRef.current.setState({ ...attachment, remove });
+    useLayoutEffect(() => {
+        storeRef.current!.setState({ ...attachment, remove });
+    });
 
     return (
         <AttachmentStoreCtx.Provider value={storeRef.current}>

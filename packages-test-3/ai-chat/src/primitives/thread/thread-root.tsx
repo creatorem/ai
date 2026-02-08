@@ -2,7 +2,7 @@
 
 import { useChat } from "@ai-sdk/react";
 import { DataUIPart, DefaultChatTransport, generateId } from "ai";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createStore, useStore, type StoreApi } from 'zustand';
 import { Thread, ThreadCapabilities } from '../../types/entities';
 import { useAiContext, useThreads } from "../ai-provider";
@@ -177,24 +177,26 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
         }));
     }
 
-    // Sync state during render (safe: zustand store is external to React)
-    storeRef.current.setState({
-        id,
-        isEmpty: messages.length === 0,
-        isDisabled,
-        isLoading,
-        isRunning,
-        title,
-        status,
-        messages,
-        capabilities,
-        chatStatus,
-        dataStream,
-        setDataStream,
-        composerText,
-        setComposerText,
-        send,
-        ...other
+    // Sync state after render (avoids "setState during render" warning)
+    useLayoutEffect(() => {
+        storeRef.current!.setState({
+            id,
+            isEmpty: messages.length === 0,
+            isDisabled,
+            isLoading,
+            isRunning,
+            title,
+            status,
+            messages,
+            capabilities,
+            chatStatus,
+            dataStream,
+            setDataStream,
+            composerText,
+            setComposerText,
+            send,
+            ...other
+        });
     });
 
     return <ThreadStoreCtx.Provider value={storeRef.current}>

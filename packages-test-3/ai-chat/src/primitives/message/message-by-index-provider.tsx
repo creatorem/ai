@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef } from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import type { UIMessage } from "ai";
 import { createStore, useStore, type StoreApi } from 'zustand';
 import { Message, MessageStatus } from "../../types/entities";
@@ -134,20 +134,22 @@ export function MessageByIndexProvider({
       }));
   }
 
-  // Sync React-derived state (isCopied/isHovering are store-internal, not synced)
-  storeRef.current.setState({
-      id: message.id,
-      role: message.role,
-      parts: message.parts,
-      metadata,
-      status,
-      attachments: [],
-      speech: undefined,
-      parentId,
-      isLast,
-      branchNumber: 1,
-      branchCount: 1,
-      index,
+  // Sync React-derived state after render (isCopied/isHovering are store-internal, not synced)
+  useLayoutEffect(() => {
+      storeRef.current!.setState({
+          id: message.id,
+          role: message.role,
+          parts: message.parts,
+          metadata,
+          status,
+          attachments: [],
+          speech: undefined,
+          parentId,
+          isLast,
+          branchNumber: 1,
+          branchCount: 1,
+          index,
+      });
   });
 
   return <MessageStoreCtx.Provider value={storeRef.current}>

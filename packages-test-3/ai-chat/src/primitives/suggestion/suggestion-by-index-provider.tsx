@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import { createStore, useStore, type StoreApi } from 'zustand';
 
 export type SuggestionState = {
@@ -39,7 +39,9 @@ export const SuggestionsProvider: React.FC<
         storeRef.current = createStore<SuggestionsCtxType>(() => ({ suggestions }));
     }
 
-    storeRef.current.setState({ suggestions });
+    useLayoutEffect(() => {
+        storeRef.current!.setState({ suggestions });
+    });
 
     return (
         <SuggestionsStoreCtx.Provider value={storeRef.current}>
@@ -76,7 +78,9 @@ export const SuggestionByIndexProvider: React.FC<
         storeRef.current = createStore<SuggestionState>(() => ({ ...suggestion }));
     }
 
-    storeRef.current.setState({ ...suggestion });
+    useLayoutEffect(() => {
+        storeRef.current!.setState({ ...suggestion });
+    });
 
     return (
         <SuggestionStoreCtx.Provider value={storeRef.current}>

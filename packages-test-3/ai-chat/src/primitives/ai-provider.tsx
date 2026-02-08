@@ -2,7 +2,7 @@
 
 import { Tool} from "ai";
 // import { useChat } from "@ai-sdk/react";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createStore, useStore, type StoreApi } from 'zustand';
 import { ThreadAdapter, AttachmentAdapter, DictationAdapter } from "../types/adapters";
 import { Threads } from "../types/entities";
@@ -81,8 +81,10 @@ export function AiProvider({ children, ...value }: { children: React.ReactNode }
         storeRef.current = createStore<AiContextType>(() => ({ ...value, eventHandler }));
     }
 
-    // Sync state during render (safe: zustand store is external to React)
-    storeRef.current.setState({ ...value, eventHandler });
+    // Sync state after render (avoids "setState during render" warning)
+    useLayoutEffect(() => {
+        storeRef.current!.setState({ ...value, eventHandler });
+    });
 
     return <AiContextStoreCtx.Provider value={storeRef.current}>
         <ThreadsProvider>
@@ -146,15 +148,17 @@ function ThreadsProvider({ children }: { children: React.ReactNode }) {
         }));
     }
 
-    // Sync state during render
-    storeRef.current.setState({
-        activeThreadId,
-        setActiveThreadId,
-        isLoading,
-        threadIds,
-        setThreadIds,
-        archivedThreadIds,
-        setArchivedThreadIds,
+    // Sync state after render
+    useLayoutEffect(() => {
+        storeRef.current!.setState({
+            activeThreadId,
+            setActiveThreadId,
+            isLoading,
+            threadIds,
+            setThreadIds,
+            archivedThreadIds,
+            setArchivedThreadIds,
+        });
     });
 
     return (
