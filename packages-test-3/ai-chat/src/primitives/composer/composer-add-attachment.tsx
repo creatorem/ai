@@ -6,7 +6,7 @@ import {
   ActionButtonProps,
   createActionButton,
 } from "../../utils/create-action-button";
-import { useComposer } from "./composer-root";
+import { useComposer, useComposerStore } from "./composer-root";
 
 const useComposerAddAttachment = ({
   multiple = true,
@@ -14,9 +14,11 @@ const useComposerAddAttachment = ({
   /** allow selecting multiple files */
   multiple?: boolean | undefined;
 } = {}) => {
-  const { isEditing, attachmentAccept, addAttachment } = useComposer();
+  const isEditing = useComposer(s => s.isEditing);
+  const composerStore = useComposerStore();
 
   const callback = useCallback(() => {
+    const { attachmentAccept, addAttachment } = composerStore.getState();
     const input = document.createElement("input");
     input.type = "file";
     input.multiple = multiple;
@@ -45,7 +47,7 @@ const useComposerAddAttachment = ({
     };
 
     input.click();
-  }, [attachmentAccept, addAttachment, multiple]);
+  }, [composerStore, multiple]);
 
   if (!isEditing) return null;
   return callback;

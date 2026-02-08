@@ -80,7 +80,8 @@ ComposerPrimitiveAttachmentByIndex.displayName =
 export const ComposerPrimitiveAttachments: FC<
   ComposerPrimitiveAttachments.Props
 > = ({ components }) => {
-  const { attachments, removeAttachment } = useComposer();
+  const attachments = useComposer(s => s.attachments);
+  const removeAttachment = useComposer(s => s.removeAttachment);
 
   return (
     <AttachmentsProvider attachments={attachments} removeAttachment={removeAttachment}>
@@ -92,7 +93,7 @@ export const ComposerPrimitiveAttachments: FC<
 const ComposerPrimitiveAttachmentsInner: FC<
   ComposerPrimitiveAttachments.Props
 > = ({ components }) => {
-  const { attachments } = useComposer();
+  const attachments = useComposer(s => s.attachments);
 
   const attachmentElements = useMemo(() => {
     return Array.from({ length: attachments.length }, (_, index) => (

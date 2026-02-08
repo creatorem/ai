@@ -16,7 +16,7 @@ import TextareaAutosize, {
   type TextareaAutosizeProps,
 } from "react-textarea-autosize";
 import { useEscapeKeydown } from "@radix-ui/react-use-escape-keydown";
-import { useComposer } from "./composer-root";
+import { useComposer, useComposerStore } from "./composer-root";
 import { useThread } from "../thread/thread-root";
 import { useAiContext } from "../ai-provider";
 import { useOnScrollToBottom } from "../../hooks/use-on-scroll-to-bottom";
@@ -104,7 +104,10 @@ export const ComposerPrimitiveInput = forwardRef<
     forwardedRef,
   ) => {
     const {eventHandler} = useAiContext();
-    const { isEditing, text, canCancel, cancel, addAttachment, type: composerType, setText } = useComposer()
+    const isEditing = useComposer(s => s.isEditing);
+    const text = useComposer(s => s.text);
+    const composerType = useComposer(s => s.type);
+    const composerStore = useComposerStore();
     const isThreadDisabled = useThread(s => s.isDisabled);
     const isThreadRunning = useThread(s => s.isRunning);
     const threadCapabilities = useThread(s => s.capabilities);
@@ -131,7 +134,7 @@ export const ComposerPrimitiveInput = forwardRef<
       // Only handle ESC if it originated from within this input
       if (!textareaRef.current?.contains(e.target as Node)) return;
 
-      // const composer = aui.composer();
+      const { canCancel, cancel } = composerStore.getState();
       if (canCancel) {
         cancel();
         e.preventDefault();
@@ -162,7 +165,7 @@ export const ComposerPrimitiveInput = forwardRef<
         try {
           e.preventDefault();
           await Promise.all(
-            files.map((file) => addAttachment(file)),
+            files.map((file) => composerStore.getState().addAttachment(file)),
           );
         } catch (error) {
           console.error("Error adding attachment:", error);
@@ -219,10 +222,8 @@ export const ComposerPrimitiveInput = forwardRef<
         ref={ref as React.ForwardedRef<HTMLTextAreaElement>}
         disabled={isDisabled}
         onChange={composeEventHandlers(onChange, (e) => {
-          // console.log( '!isEditing' )
-          // console.log( !isEditing )
           if (!isEditing) return;
-          setText(e.target.value);
+          composerStore.getState().setText(e.target.value);
         })}
         onKeyDown={composeEventHandlers(onKeyDown, handleKeyPress)}
         onPaste={composeEventHandlers(onPaste, handlePaste)}

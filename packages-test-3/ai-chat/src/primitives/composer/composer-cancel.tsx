@@ -4,7 +4,8 @@ import { ActionButtonElement, ActionButtonProps, createActionButton } from "../.
 import { useComposer } from "./composer-root";
 
 const useComposerCancel = () => {
-  const { canCancel, cancel } = useComposer()
+  const canCancel = useComposer(s => s.canCancel);
+  const cancel = useComposer(s => s.cancel);
 
   if (!canCancel) return null;
   return cancel;

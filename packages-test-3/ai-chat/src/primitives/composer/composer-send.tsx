@@ -7,16 +7,18 @@ import {
 } from "../../utils/create-action-button";
 import { useCallback, useMemo } from "react";
 import { useThread } from "../thread/thread-root";
-import { useComposer } from "./composer-root";
+import { useComposer, useComposerStore } from "./composer-root";
 
 export const useComposerSend = () => {
-  const { isEditing, isEmpty, send } = useComposer();
-  const isRunning = useThread(s => s.isRunning)
+  const isEditing = useComposer(s => s.isEditing);
+  const isEmpty = useComposer(s => s.isEmpty);
+  const isRunning = useThread(s => s.isRunning);
+  const composerStore = useComposerStore();
   const disabled = useMemo(() => isRunning || !isEditing || isEmpty, [isRunning, isEditing, isEmpty])
 
   const callback = useCallback(() => {
-    send();
-  }, [send]);
+    composerStore.getState().send();
+  }, [composerStore]);
 
   if (disabled) return null;
   return callback;

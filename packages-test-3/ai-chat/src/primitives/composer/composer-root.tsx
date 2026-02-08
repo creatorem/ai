@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useCallback, useContext, useMemo, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
+import { createStore, useStore, type StoreApi } from 'zustand';
 import { Composer } from "../../types/entities";
 import type { Attachment, CompleteAttachment, PendingAttachment } from "../../types/attachment-types";
 import type { DictationAdapter, DictationState } from "../../types/adapters";
 import type { Unsubscribe } from "../../types/unsuscribe";
 import { useAiContext } from "../ai-provider";
 import { useThreadStore } from "../thread/thread-root";
-import { createContextHook } from "../../utils/create-context-hook";
 
 type ComposerMethods = {
     setText(text: string): void;
@@ -35,12 +35,43 @@ type ComposerMethods = {
 
 type ComposerCtxType = Composer & ComposerMethods
 
-const ComposerCtx = React.createContext<ComposerCtxType | null>(null);
+const ComposerStoreCtx = React.createContext<StoreApi<ComposerCtxType> | null>(null);
 
-export const useComposer = createContextHook(
-    ComposerCtx,
-    "ComposerCtx.Provider",
-);
+// Fallback store for optional usage (avoids conditional hook calls)
+const _FALLBACK_STORE = createStore<ComposerCtxType>(() => ({} as ComposerCtxType));
+
+export function useComposer(): ComposerCtxType;
+export function useComposer<T>(selector: (state: ComposerCtxType) => T): T;
+export function useComposer(options: { optional: true }): ComposerCtxType | null;
+export function useComposer<T>(
+    selectorOrOptions?: ((state: ComposerCtxType) => T) | { optional?: boolean }
+) {
+    const store = React.useContext(ComposerStoreCtx);
+
+    const isSelector = typeof selectorOrOptions === 'function';
+    const isOptional = !isSelector && typeof selectorOrOptions === 'object' && selectorOrOptions?.optional;
+
+    if (!store && !isOptional) {
+        throw new Error('This component must be used within ComposerCtx.Provider.');
+    }
+
+    // Always call useStore exactly once (hooks rules) — use fallback when store is null
+    const value = useStore(
+        store ?? _FALLBACK_STORE,
+        isSelector ? (selectorOrOptions as (state: ComposerCtxType) => T) : undefined as any
+    );
+
+    // For optional: return null when no store
+    if (!store && isOptional) return null;
+
+    return value;
+}
+
+export function useComposerStore(): StoreApi<ComposerCtxType> {
+    const store = React.useContext(ComposerStoreCtx);
+    if (!store) throw new Error('This component must be used within ComposerCtx.Provider.');
+    return store;
+}
 
 const _isAttachmentComplete = (a: Attachment): a is CompleteAttachment =>
     a.status.type === "complete";
@@ -345,8 +376,35 @@ export function ComposerPrimitiveRoot({ children }: { children: React.ReactNode 
         });
     }, [_cleanupDictation]);
 
-    // Memoize context value to avoid unnecessary re-renders
-    const contextValue = useMemo<ComposerCtxType>(() => ({
+    // Create store once
+    const storeRef = useRef<StoreApi<ComposerCtxType> | null>(null);
+    if (storeRef.current === null) {
+        storeRef.current = createStore<ComposerCtxType>(() => ({
+            text,
+            role,
+            attachments,
+            isEditing,
+            canCancel,
+            attachmentAccept,
+            isEmpty: !text.trim() && !attachments.length,
+            type,
+            dictation,
+            setText,
+            setRole,
+            addAttachment,
+            removeAttachment,
+            clearAttachments,
+            reset,
+            send,
+            cancel,
+            beginEdit,
+            startDictation,
+            stopDictation,
+        }));
+    }
+
+    // Sync state during render (safe: zustand store is external to React)
+    storeRef.current.setState({
         text,
         role,
         attachments,
@@ -367,13 +425,9 @@ export function ComposerPrimitiveRoot({ children }: { children: React.ReactNode 
         beginEdit,
         startDictation,
         stopDictation,
-    }), [
-        text, role, attachments, isEditing, canCancel, attachmentAccept, type, dictation,
-        setText, setRole, addAttachment, removeAttachment, clearAttachments, reset, send, cancel, beginEdit,
-        startDictation, stopDictation,
-    ]);
+    });
 
-    return <ComposerCtx.Provider value={contextValue}>
+    return <ComposerStoreCtx.Provider value={storeRef.current}>
         {children}
-    </ComposerCtx.Provider>;
+    </ComposerStoreCtx.Provider>;
 };
