@@ -8,6 +8,7 @@ import type { DictationAdapter, DictationState } from "../../types/adapters";
 import type { Unsubscribe } from "../../types/unsuscribe";
 import { useAiContext } from "../ai-provider";
 import { useThread, useThreadStore } from "../thread/thread-root";
+import * as ComposerPrimitive from '@creatorem/ai-chat/primitives/composer/index';
 
 type ComposerMethods = {
     setText(text: string): void;
@@ -19,7 +20,7 @@ type ComposerMethods = {
     reset(): Promise<void>;
     send(): void;
     cancel(): void;
-    beginEdit(): void;
+    // beginEdit(): void;
 
     /**
      * Start dictation to convert voice to text input.
@@ -76,19 +77,22 @@ export function useComposerStore(): StoreApi<ComposerCtxType> {
 const _isAttachmentComplete = (a: Attachment): a is CompleteAttachment =>
     a.status.type === "complete";
 
-export function ComposerProvider({ children }: { children: React.ReactNode }) {
+export function ComposerPrimitiveRoot({ children, id, defaultText = "" }: { children: React.ReactNode } & { id?: number, defaultText?: string }) {
     const adapters = useAiContext(s => s.adapters);
     const threadStore = useThreadStore();
     const capabilities = useThread((s) => s.capabilities)
 
     // Core state
-    const [text, setTextState] = useState<string>('');
+    const [text, setTextState] = useState<string>(defaultText);
     const [role, setRoleState] = useState<Composer['role']>('user');
     const [attachments, setAttachments] = useState<Composer['attachments']>([]);
-    const [isEditing, setIsEditing] = useState<Composer['isEditing']>(true);
+    // const [isEditing, setIsEditing] = useState<Composer['isEditing']>(defaultIsEditing);
     const [attachmentAccept, setAttachmentAccept] = useState<Composer['attachmentAccept']>('*');
     const [type, setType] = useState<Composer['type']>('thread');
     const [dictation, setDictation] = useState<DictationState | undefined>(undefined);
+
+    console.log({ id })
+    console.log({ text, defaultText })
 
     // Dictation internal refs (mutable state that doesn't trigger re-renders)
     const _dictationSessionRef = useRef<DictationAdapter.Session | undefined>(undefined);
@@ -143,6 +147,9 @@ export function ComposerProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     const setText = useCallback((value: string): void => {
+        console.log({ defaultText })
+        console.log('setText')
+        console.log(value)
         if (_textRef.current === value) return;
 
         // When dictation is active and the user manually edits the composer text,
@@ -157,7 +164,7 @@ export function ComposerProvider({ children }: { children: React.ReactNode }) {
         } else {
             setTextState(value);
         }
-    }, []);
+    }, [defaultText]);
 
     const setRole = useCallback((newRole: Composer['role']): void => {
         if (_roleRef.current === newRole) return;
@@ -265,10 +272,10 @@ export function ComposerProvider({ children }: { children: React.ReactNode }) {
         threadStore.getState().stop();
     }, [threadStore]);
 
-    const beginEdit = useCallback((): void => {
-        if (isEditing) return;
-        setIsEditing(true);
-    }, [isEditing]);
+    // const beginEdit = useCallback((): void => {
+    //     if (isEditing) return;
+    //     setIsEditing(true);
+    // }, [isEditing]);
 
     const startDictation = useCallback((): void => {
         const adapter = _adaptersRef.current?.dictation;
@@ -383,7 +390,7 @@ export function ComposerProvider({ children }: { children: React.ReactNode }) {
             text,
             role,
             attachments,
-            isEditing,
+            // isEditing,
             canCancel: capabilities.cancel,
             attachmentAccept,
             isEmpty: !text.trim() && !attachments.length,
@@ -397,7 +404,7 @@ export function ComposerProvider({ children }: { children: React.ReactNode }) {
             reset,
             send,
             cancel,
-            beginEdit,
+            // beginEdit,
             startDictation,
             stopDictation,
         }));
@@ -409,7 +416,7 @@ export function ComposerProvider({ children }: { children: React.ReactNode }) {
             text,
             role,
             attachments,
-            isEditing,
+            // isEditing,
             canCancel: capabilities.cancel,
             attachmentAccept,
             isEmpty: !text.trim() && !attachments.length,
@@ -423,7 +430,7 @@ export function ComposerProvider({ children }: { children: React.ReactNode }) {
             reset,
             send,
             cancel,
-            beginEdit,
+            // beginEdit,
             startDictation,
             stopDictation,
         });

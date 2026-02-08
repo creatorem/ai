@@ -2,9 +2,9 @@
 
 import { type ComponentType, type FC, memo, useMemo } from "react";
 import { useThread } from "./thread-root";
-import { useComposer } from "../composer/composer-provider";
 import { Message } from "../../types/entities";
-import { MessageByIndexProvider, useMessage } from "../message/message-by-index-provider";
+import { MessageByIndexProvider, useMessage, useMessageStore } from "../message/message-by-index-provider";
+import { ComposerPrimitiveRoot } from "../composer/composer-provider";
 
 export namespace ThreadPrimitiveMessages {
   export type Props = {
@@ -19,42 +19,42 @@ export namespace ThreadPrimitiveMessages {
      * for different message types when users edit their messages.
      */
     components:
-      | {
-          /** Component used to render all message types */
-          Message: ComponentType;
-          /** Component used when editing any message type */
-          EditComposer?: ComponentType | undefined;
-          /** Component used when editing user messages specifically */
-          UserEditComposer?: ComponentType | undefined;
-          /** Component used when editing assistant messages specifically */
-          AssistantEditComposer?: ComponentType | undefined;
-          /** Component used when editing system messages specifically */
-          SystemEditComposer?: ComponentType | undefined;
-          /** Component used to render user messages specifically */
-          UserMessage?: ComponentType | undefined;
-          /** Component used to render assistant messages specifically */
-          AssistantMessage?: ComponentType | undefined;
-          /** Component used to render system messages specifically */
-          SystemMessage?: ComponentType | undefined;
-        }
-      | {
-          /** Component used to render all message types (fallback) */
-          Message?: ComponentType | undefined;
-          /** Component used when editing any message type */
-          EditComposer?: ComponentType | undefined;
-          /** Component used when editing user messages specifically */
-          UserEditComposer?: ComponentType | undefined;
-          /** Component used when editing assistant messages specifically */
-          AssistantEditComposer?: ComponentType | undefined;
-          /** Component used when editing system messages specifically */
-          SystemEditComposer?: ComponentType | undefined;
-          /** Component used to render user messages */
-          UserMessage: ComponentType;
-          /** Component used to render assistant messages */
-          AssistantMessage: ComponentType;
-          /** Component used to render system messages */
-          SystemMessage?: ComponentType | undefined;
-        };
+    | {
+      /** Component used to render all message types */
+      Message: ComponentType;
+      /** Component used when editing any message type */
+      EditComposer?: ComponentType | undefined;
+      /** Component used when editing user messages specifically */
+      UserEditComposer?: ComponentType | undefined;
+      /** Component used when editing assistant messages specifically */
+      AssistantEditComposer?: ComponentType | undefined;
+      /** Component used when editing system messages specifically */
+      SystemEditComposer?: ComponentType | undefined;
+      /** Component used to render user messages specifically */
+      UserMessage?: ComponentType | undefined;
+      /** Component used to render assistant messages specifically */
+      AssistantMessage?: ComponentType | undefined;
+      /** Component used to render system messages specifically */
+      SystemMessage?: ComponentType | undefined;
+    }
+    | {
+      /** Component used to render all message types (fallback) */
+      Message?: ComponentType | undefined;
+      /** Component used when editing any message type */
+      EditComposer?: ComponentType | undefined;
+      /** Component used when editing user messages specifically */
+      UserEditComposer?: ComponentType | undefined;
+      /** Component used when editing assistant messages specifically */
+      AssistantEditComposer?: ComponentType | undefined;
+      /** Component used when editing system messages specifically */
+      SystemEditComposer?: ComponentType | undefined;
+      /** Component used to render user messages */
+      UserMessage: ComponentType;
+      /** Component used to render assistant messages */
+      AssistantMessage: ComponentType;
+      /** Component used to render system messages */
+      SystemMessage?: ComponentType | undefined;
+    };
   };
 }
 
@@ -131,9 +131,11 @@ const ThreadMessageComponent: FC<ThreadMessageComponentProps> = ({
   components,
 }) => {
   const role = useMessage(s => s.role);
-  const composer = useComposer({optional:true});// refers to the message composer instance
-  // const Component = getComponent(components, role, composer?.isEditing);
-  const Component = getComponent(components, role, false);
+  const id = useMessage(s => s.id);
+  const editingComposers = useThread((s) => s.editingComposers)
+  const isEditing = useMemo(() => editingComposers.includes(id), [id, editingComposers])
+
+  const Component = getComponent(components, role, isEditing);
 
   return <Component />;
 };
@@ -143,6 +145,37 @@ export namespace ThreadPrimitiveMessageByIndex {
     components: ThreadPrimitiveMessages.Props["components"];
   };
 }
+
+const ComposerMessageProvider = ({
+  children,
+  index
+}: React.PropsWithChildren & { index: number }) => {
+  const messageStore = useMessageStore()
+  // const message = useMessage(s => s);
+  console.log({ message: messageStore.getState() })
+  console.log({ index })
+  // const parts = useMessage(s => s.parts);
+  // parts[0]?.type === ''
+
+  const initialText = useMemo(() => {
+    console.log({ index })
+    const part = messageStore.getState().parts[0]
+    console.log({ part })
+    console.log({ id: messageStore.getState().id })
+    if (part?.type === 'text') {
+      return part.text
+    }
+    return '';
+  }, [messageStore, index])
+
+  console.log({ initialText })
+
+  return (
+    <ComposerPrimitiveRoot id={index} defaultText={initialText}>
+      {children}
+    </ComposerPrimitiveRoot>
+  )
+};
 
 /**
  * Renders a single message at the specified index in the current thread.
@@ -166,7 +199,9 @@ export const ThreadPrimitiveMessageByIndex: FC<ThreadPrimitiveMessageByIndex.Pro
     ({ index, components }) => {
       return (
         <MessageByIndexProvider index={index}>
-          <ThreadMessageComponent components={components} />
+          <ComposerMessageProvider index={index}>
+            <ThreadMessageComponent components={components} />
+          </ComposerMessageProvider>
         </MessageByIndexProvider>
       );
     },

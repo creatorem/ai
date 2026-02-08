@@ -54,10 +54,10 @@ const _RUNNING_STATUS: MessageStatus = Object.freeze({
 function _deriveMessageStatus(
   message: UIMessage,
   isLast: boolean,
-  chatStatus: string,
+  isRunning: boolean,
 ): MessageStatus {
   if (message.role !== "assistant") return _COMPLETE_STATUS;
-  if (isLast && (chatStatus === "streaming" || chatStatus === "submitted")) {
+  if (isLast && isRunning) {
       return _RUNNING_STATUS;
   }
   return _COMPLETE_STATUS;
@@ -71,13 +71,13 @@ export function MessageByIndexProvider({
   index: number;
 }) {
   const message = useThread(s => s.messages[index]!);
-  const chatStatus = useThread(s => s.chatStatus);
+  const isRunning = useThread(s => s.isRunning);
   const parentId = useThread(s => index > 0 ? s.messages[index - 1]?.id ?? null : null);
   const isLast = useThread(s => index === s.messages.length - 1);
   const threadStore = useThreadStore();
 
   // Derived state
-  const status = _deriveMessageStatus(message, isLast, chatStatus);
+  const status = _deriveMessageStatus(message, isLast, isRunning);
   const metadata = {
       submittedFeedback: (message.metadata as Record<string, unknown> | undefined)?.submittedFeedback as
           | { readonly type: "positive" | "negative" }

@@ -141,7 +141,6 @@ const Thread: React.FC = () => {
             <Composer />
           </ThreadPrimitiveViewportFooter>
         </ThreadPrimitiveViewport>
-
       </div>
     </ThreadPrimitiveRoot>
   );
@@ -223,18 +222,20 @@ const ThreadSuggestions: FC = () => {
 
 const Composer: React.FC = () => {
   return (
-    <ComposerPrimitive.Root className="aui-composer-root relative flex w-full flex-col">
-      <ComposerPrimitive.AttachmentDropzone className="aui-composer-attachment-dropzone flex w-full flex-col rounded-2xl border border-input bg-background px-1 pt-2 outline-none transition-shadow has-[textarea:focus-visible]:border-ring has-[textarea:focus-visible]:ring-2 has-[textarea:focus-visible]:ring-ring/20 data-[dragging=true]:border-ring data-[dragging=true]:border-dashed data-[dragging=true]:bg-accent/50">
-        <ComposerAttachments />
-        <ComposerPrimitive.Input
-          placeholder="Send a message..."
-          className="aui-composer-input mb-1 max-h-32 min-h-14 w-full resize-none bg-transparent px-4 pt-2 pb-3 text-sm outline-none placeholder:text-muted-foreground focus-visible:ring-0"
-          rows={1}
-          autoFocus
-          aria-label="Message input"
-        />
-        <ComposerAction />
-      </ComposerPrimitive.AttachmentDropzone>
+    <ComposerPrimitive.Root >
+      <ComposerPrimitive.Form className="aui-composer-root relative flex w-full flex-col">
+        <ComposerPrimitive.AttachmentDropzone className="aui-composer-attachment-dropzone flex w-full flex-col rounded-2xl border border-input bg-background px-1 pt-2 outline-none transition-shadow has-[textarea:focus-visible]:border-ring has-[textarea:focus-visible]:ring-2 has-[textarea:focus-visible]:ring-ring/20 data-[dragging=true]:border-ring data-[dragging=true]:border-dashed data-[dragging=true]:bg-accent/50">
+          <ComposerAttachments />
+          <ComposerPrimitive.Input
+            placeholder="Send a message..."
+            className="aui-composer-input mb-1 max-h-32 min-h-14 w-full resize-none bg-transparent px-4 pt-2 pb-3 text-sm outline-none placeholder:text-muted-foreground focus-visible:ring-0"
+            rows={1}
+            autoFocus
+            aria-label="Message input"
+          />
+          <ComposerAction />
+        </ComposerPrimitive.AttachmentDropzone>
+      </ComposerPrimitive.Form>
     </ComposerPrimitive.Root>
   );
 };
@@ -405,24 +406,22 @@ const UserActionBar: FC = () => {
 const EditComposer: FC = () => {
   return (
     <MessagePrimitiveRoot className="aui-edit-composer-wrapper mx-auto flex w-full max-w-(--thread-max-width) flex-col px-2 py-3">
-      <ComposerPrimitive.Root>
-        <div className="aui-edit-composer-root ml-auto flex w-full max-w-[85%] flex-col rounded-2xl bg-muted">
-          <ComposerPrimitive.Input
-            className="aui-edit-composer-input min-h-14 w-full resize-none bg-transparent p-4 text-foreground text-sm outline-none"
-            autoFocus
-          />
-          <div className="aui-edit-composer-footer mx-3 mb-3 flex items-center gap-2 self-end">
-            <ComposerPrimitive.Cancel asChild>
-              <Button variant="ghost" size="sm">
-                Cancel
-              </Button>
-            </ComposerPrimitive.Cancel>
-            <ComposerPrimitive.Send asChild>
-              <Button size="sm">Update</Button>
-            </ComposerPrimitive.Send>
-          </div>
+      <ComposerPrimitive.Form className="aui-edit-composer-root ml-auto flex w-full max-w-[85%] flex-col rounded-2xl bg-muted">
+        <ComposerPrimitive.Input
+          className="aui-edit-composer-input min-h-14 w-full resize-none bg-transparent p-4 text-foreground text-sm outline-none"
+          autoFocus
+        />
+        <div className="aui-edit-composer-footer mx-3 mb-3 flex items-center gap-2 self-end">
+          <ComposerPrimitive.Cancel asChild>
+            <Button variant="ghost" size="sm">
+              Cancel
+            </Button>
+          </ComposerPrimitive.Cancel>
+          <ComposerPrimitive.Send asChild>
+            <Button size="sm">Update</Button>
+          </ComposerPrimitive.Send>
         </div>
-      </ComposerPrimitive.Root>
+      </ComposerPrimitive.Form>
     </MessagePrimitiveRoot >
   );
 };

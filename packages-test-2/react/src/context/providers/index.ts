@@ -7,7 +7,7 @@ export { MessageByIndexProvider, useMessageByIndexContext } from "../../primitiv
 export { SuggestionByIndexProvider } from "./suggestion-by-index-provider";
 export { PartByIndexProvider } from "./part-by-index-provider";
 export {
-  ComposerAttachmentByIndexProvider,
+  AttachmentByIndexProvider,
 } from "./attachment-by-index-provider";
 export { TextMessagePartProvider } from "./text-message-part-provider";
 export { MessageProvider } from "./message-provider";

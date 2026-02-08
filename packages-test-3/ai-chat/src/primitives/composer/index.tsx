@@ -1,4 +1,5 @@
-export { ComposerPrimitiveRoot as Root } from "./composer-root";
+export { ComposerPrimitiveRoot as Root } from "./composer-provider";
+export { ComposerPrimitiveForm as Form } from "./composer-form";
 export { ComposerPrimitiveInput as Input } from "./composer-input";
 export { ComposerPrimitiveSend as Send } from "./composer-send";
 export { ComposerPrimitiveCancel as Cancel } from "./composer-cancel";

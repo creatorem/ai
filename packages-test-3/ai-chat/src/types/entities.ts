@@ -49,6 +49,7 @@ export type Thread = {
      * The capabilities of the thread, such as whether the thread supports editing, branch switching, etc.
      */
     capabilities: ThreadCapabilities;
+    editingComposers: string[];
     title: string;
     status: 'regular' | 'archived',
     // metadata?: Record<string, unknown>,
@@ -62,7 +63,7 @@ export type Composer = {
     text: string;
     role: UIMessage<unknown, CustomUIDataTypes>['role'];
     attachments: readonly Attachment[];
-    isEditing: boolean;
+    // isEditing: boolean;
     canCancel: boolean;
     attachmentAccept: string;
     isEmpty: boolean;
@@ -96,7 +97,7 @@ export type SpeechState = {
 // }
 export type PartState = (ThreadUserMessagePart | ThreadAssistantMessagePart) & {
     readonly status: MessagePartStatus | ToolCallMessagePartStatus;
-  };
+};
 
 export type Message = Omit<UIMessage<unknown, CustomUIDataTypes>, 'metadata'> & {
     metadata: {

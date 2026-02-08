@@ -3,7 +3,7 @@
 import { ComponentType, type FC, memo, useMemo } from "react";
 import { Attachment } from "../../types";
 import { useAuiState } from "@creatorem/ai-assistant-store";
-import { ComposerAttachmentByIndexProvider } from "../../context/providers";
+import { AttachmentByIndexProvider } from "../../context/providers";
 
 export namespace ComposerPrimitiveAttachments {
   export type Props = {
@@ -75,9 +75,9 @@ export const ComposerPrimitiveAttachmentByIndex: FC<ComposerPrimitiveAttachmentB
   memo(
     ({ index, components }) => {
       return (
-        <ComposerAttachmentByIndexProvider index={index}>
+        <AttachmentByIndexProvider index={index}>
           <AttachmentComponent components={components} />
-        </ComposerAttachmentByIndexProvider>
+        </AttachmentByIndexProvider>
       );
     },
     (prev, next) =>

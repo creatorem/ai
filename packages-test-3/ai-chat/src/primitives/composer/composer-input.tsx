@@ -101,7 +101,6 @@ export const ComposerPrimitiveInput = forwardRef<
     forwardedRef,
   ) => {
     const eventHandler = useAiContext(s => s.eventHandler);
-    const isEditing = useComposer(s => s.isEditing);
     const text = useComposer(s => s.text);
     const composerType = useComposer(s => s.type);
     const composerStore = useComposerStore();
@@ -110,9 +109,8 @@ export const ComposerPrimitiveInput = forwardRef<
     const threadCapabilities = useThread(s => s.capabilities);
 
     const value = useMemo(() => {
-      if (!isEditing) return "";
       return text;
-    }, [isEditing, text]);
+    }, [text]);
 
     const Component = asChild ? Slot : TextareaAutosize;
 
@@ -219,7 +217,6 @@ export const ComposerPrimitiveInput = forwardRef<
         ref={ref as React.ForwardedRef<HTMLTextAreaElement>}
         disabled={isDisabled}
         onChange={composeEventHandlers(onChange, (e) => {
-          if (!isEditing) return;
           composerStore.getState().setText(e.target.value);
         })}
         onKeyDown={composeEventHandlers(onKeyDown, handleKeyPress)}

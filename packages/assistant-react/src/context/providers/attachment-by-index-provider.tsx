@@ -19,7 +19,7 @@ export const MessageAttachmentByIndexProvider: FC<
   return <AuiProvider value={aui}>{children}</AuiProvider>;
 };
 
-export const ComposerAttachmentByIndexProvider: FC<
+export const AttachmentByIndexProvider: FC<
   PropsWithChildren<{
     index: number;
   }>

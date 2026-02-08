@@ -6,7 +6,7 @@ import { useAiChat } from "@creatorem/ai-store";
 
 
 
-export const ComposerAttachmentByIndexProvider: FC<
+export const AttachmentByIndexProvider: FC<
   PropsWithChildren<{
     index: number;
   }>

@@ -7,6 +7,7 @@ import { Primitive } from "@radix-ui/react-primitive";
 import { useCallback } from "react";
 import { useMessage, useMessageStore } from "../message/message-by-index-provider";
 import { useComposer } from "../composer/composer-provider";
+import { useThread } from "../thread/thread-root";
 
 /**
  * Hook that provides copy functionality for action bar buttons.
@@ -41,7 +42,8 @@ const useActionBarPrimitiveCopy = ({
   const messageStatus = useMessage(s => s.status);
   const messageParts = useMessage(s => s.parts);
   const messageStore = useMessageStore();
-  const composer = useComposer({optional: true});
+  // const messageId = useMessage(s => s.id);
+  // const { editingComposers } = useThread()
 
   const hasCopyableContent = useMemo(() => {
     return (
@@ -52,7 +54,8 @@ const useActionBarPrimitiveCopy = ({
 
   const callback = useCallback(() => {
     const msg = messageStore.getState();
-    const valueToCopy = composer?.isEditing ? composer.text : msg.getCopyText();
+    // const valueToCopy = editingComposers.includes(messageId) ? composer.text : msg.getCopyText();
+    const valueToCopy = msg.getCopyText();
 
     if (!valueToCopy) return;
 
@@ -60,7 +63,8 @@ const useActionBarPrimitiveCopy = ({
       msg.setIsCopied(true);
       setTimeout(() => messageStore.getState().setIsCopied(false), copiedDuration);
     });
-  }, [messageStore, composer?.isEditing, composer?.text, copiedDuration]);
+    // }, [messageStore, editingComposers, messageId, copiedDuration]);
+  }, [messageStore, copiedDuration]);
 
   if (!hasCopyableContent) return null;
   return callback;

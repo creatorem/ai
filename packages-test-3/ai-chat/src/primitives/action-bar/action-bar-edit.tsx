@@ -7,6 +7,8 @@ import {
 } from "../../utils/create-action-button";
 import { useCallback } from "react";
 import { useComposer } from "../composer/composer-provider";
+import { useThread } from "../thread/thread-root";
+import { useMessage } from "../message/message-by-index-provider";
 
 /**
  * Hook that provides edit functionality for action bar buttons.
@@ -30,16 +32,16 @@ import { useComposer } from "../composer/composer-provider";
  * ```
  */
 const useActionBarEdit = () => {
-  const composer = useComposer({optional:true});
-  const disabled = composer?.isEditing;
+  const { id } = useMessage();
+  const { beginEdit, editingComposers } = useThread()
+  const disabled = editingComposers.includes(id);
 
   const callback = useCallback(() => {
-    composer?.beginEdit();
-  }, [composer?.beginEdit]);
+    beginEdit(id);
+  }, [beginEdit, id]);
 
   if (disabled) return null;
   return callback;
-  return null;
 };
 
 export namespace ActionBarPrimitiveEdit {

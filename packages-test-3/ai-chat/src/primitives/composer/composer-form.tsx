@@ -9,7 +9,6 @@ import {
   ComponentPropsWithoutRef,
 } from "react";
 import { useComposerSend } from "./composer-send";
-import { ComposerProvider } from "./composer-provider";
 
 export namespace ComposerPrimitiveRoot {
   export type Element = ComponentRef<typeof Primitive.form>;
@@ -35,7 +34,7 @@ export namespace ComposerPrimitiveRoot {
  * </ComposerPrimitive.Root>
  * ```
  */
-const ComposerPrimitiveRootInner = forwardRef<
+export const ComposerPrimitiveForm = forwardRef<
   ComposerPrimitiveRoot.Element,
   ComposerPrimitiveRoot.Props
 >(({ onSubmit, ...rest }, forwardedRef) => {
@@ -56,11 +55,3 @@ const ComposerPrimitiveRootInner = forwardRef<
     />
   );
 });
-
-export const ComposerPrimitiveRoot: React.FC<ComposerPrimitiveRoot.Props> = (props) => {
-  return (
-    <ComposerProvider>
-      <ComposerPrimitiveRootInner {...props} />
-    </ComposerProvider>
-  );
-}

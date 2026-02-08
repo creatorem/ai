@@ -35,6 +35,8 @@ type ThreadCtxType = Thread & Omit<ReturnType<typeof useChat<Thread['messages'][
     // composerText: string,
     // setComposerText: (v: string) => void,
     send: (o: { clearText?: boolean, prompt?: string }) => void,
+    beginEdit: (messageId: string) => void;
+    stopEdit: (messageId: string) => void;
     /** The StoreApi of the first composer mounted within this thread. */
     composerStore: StoreApi<ComposerCtxType> | null,
 }
@@ -64,6 +66,7 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
     const [status, setStatus] = useState<Thread['status']>('regular');
     const [isLoading, setIsLoading] = useState(true);
     const [isDisabled, setIsDisabled] = useState(false);
+    const [editingComposers, setEditingComposers] = useState<string[]>([]);
     const [capabilities, setCapabilities] = useState<ThreadCapabilities>({
         // switchToBranch: false,
         // switchBranchDuringRun: false,
@@ -149,8 +152,8 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
 
     const send = useCallback(({ clearText = true, prompt }: { clearText?: boolean, prompt?: string }) => {
         const text = storeRef.current!.getState().composerStore!.getState().text
-        console.log({ text })
-        console.log({ prompt })
+        // console.log({ text })
+        // console.log({ prompt })
         const finalPrompt = prompt ?? text
         if (!finalPrompt) {
             throw new Error('No prompt passed.')
@@ -162,6 +165,14 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
             storeRef.current!.getState().composerStore!.getState()!.setText('')
         }
     }, [sendMessage])
+
+    const beginEdit = useCallback((messageId: string) => {
+        setEditingComposers((prev) => [...prev, messageId])
+    }, [setEditingComposers])
+
+    const stopEdit = useCallback((messageId: string) => {
+        setEditingComposers((prev) => prev.filter((id) => id !== messageId))
+    }, [setEditingComposers])
 
     // console.log({ messages })
 
@@ -182,7 +193,7 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
     useEffect(() => {
         if (chatStatus === 'streaming') {
             isRunningRef.current = true;
-            console.warn( 'thread.runStart' )
+            console.warn('thread.runStart')
             eventHandler.trigger('thread.runStart', { 'threadId': id })
         } else if (isRunningRef.current && chatStatus === 'ready') {
             isRunningRef.current = false;
@@ -203,9 +214,12 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
             status,
             messages,
             capabilities,
+            editingComposers,
             chatStatus,
             dataStream,
             setDataStream,
+            beginEdit,
+            stopEdit,
             // composerText,
             // setComposerText,
             send,
@@ -226,8 +240,11 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
             status,
             messages,
             capabilities,
+            editingComposers,
             dataStream,
             setDataStream,
+            beginEdit,
+            stopEdit,
             // composerText,
             // setComposerText,
             send,
