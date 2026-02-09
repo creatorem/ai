@@ -15,7 +15,8 @@
     "./primitives/thread/thread-viewport-context": "./src/primitives/thread/thread-viewport-context.ts",
     "./primitives/*/index": "./src/primitives/*/index.tsx",
     "./primitives/*/*": "./src/primitives/*/*.tsx",
-    "./types": "./src/types/index.ts"
+    "./types": "./src/types/index.ts",
+    "./adapters": "./src/adapters/index.ts"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
