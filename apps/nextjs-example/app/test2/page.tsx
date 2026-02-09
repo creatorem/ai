@@ -2,22 +2,29 @@
 
 import { useChat } from '@ai-sdk/react';
 import { FC, useState } from 'react';
-import { AiProvider } from '@creatorem/ai-chat/primitives/ai-provider'
-import { ThreadPrimitiveRoot } from '@creatorem/ai-chat/primitives/thread/thread-root'
-import { ThreadPrimitiveViewport } from '@creatorem/ai-chat/primitives/thread/thread-viewport'
-import { ThreadPrimitiveViewportFooter } from '@creatorem/ai-chat/primitives/thread/thread-viewport-footer'
-import { ThreadPrimitiveMessages } from '@creatorem/ai-chat/primitives/thread/thread-messages'
-import { ThreadPrimitiveSuggestion } from '@creatorem/ai-chat/primitives/thread/thread-suggestion'
-import { ThreadPrimitiveScrollToBottom } from '@creatorem/ai-chat/primitives/thread/thread-scroll-to-bottom'
+import { AiProvider as AuiProvider } from '@creatorem/ai-chat/primitives/ai-provider'
+import {
+  ThreadPrimitiveRoot,
+  ThreadPrimitiveViewport,
+  ThreadPrimitiveViewportFooter,
+  ThreadPrimitiveMessages,
+  ThreadPrimitiveSuggestion,
+  ThreadPrimitiveScrollToBottom,
+  ThreadPrimitiveIf
+} from '@creatorem/ai-chat/primitives/thread/index'
 
 import * as ComposerPrimitive from '@creatorem/ai-chat/primitives/composer/index'
-import { ThreadPrimitiveIf } from '@creatorem/ai-chat/primitives/thread/thread-if'
-import { MessagePrimitiveRoot } from '@creatorem/ai-chat/primitives/message/message-root'
-import { MessagePrimitiveParts } from '@creatorem/ai-chat/primitives/message/message-parts'
-import { MessagePrimitiveIf } from '@creatorem/ai-chat/primitives/message/message-if'
-import { MessagePrimitiveError } from '@creatorem/ai-chat/primitives/message/message-error'
-import { ErrorPrimitiveRoot } from '@creatorem/ai-chat/primitives/error/error-root'
-import { ErrorPrimitiveMessage } from '@creatorem/ai-chat/primitives/error/error-message'
+// import { ThreadPrimitiveIf } from '@creatorem/ai-chat/primitives/thread/thread-if'
+import {
+  Root as MessagePrimitiveRoot,
+  Parts as MessagePrimitiveParts,
+  If as MessagePrimitiveIf,
+  Error as MessagePrimitiveError,
+} from '@creatorem/ai-chat/primitives/message/index'
+import {
+  Root as ErrorPrimitiveRoot,
+  Message as ErrorPrimitiveMessage
+} from '@creatorem/ai-chat/primitives/error/index'
 
 import * as ActionBarPrimitive from '@creatorem/ai-chat/primitives/action-bar/index'
 import * as BranchPickerPrimitive from '@creatorem/ai-chat/primitives/branch-picker/index'
@@ -34,13 +41,14 @@ import { ComposerAddAttachment, ComposerAttachments, UserMessageAttachments } fr
 import { Reasoning, ReasoningGroup } from './reasoning';
 import { ToolFallback } from './tool-fallback';
 import { MarkdownText } from './markdown-text';
+import { ThreadListSidebar } from './threadlist-sidebar';
 
 export default function Chat() {
   return (
-    <AiProvider>
+    <AuiProvider>
       <SidebarProvider>
         <div className="flex h-dvh w-full pr-0.5">
-          {/* <ThreadListSidebar /> */}
+          <ThreadListSidebar />
           <SidebarInset>
             <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
               <SidebarTrigger />
@@ -69,7 +77,7 @@ export default function Chat() {
           </SidebarInset>
         </div>
       </SidebarProvider>
-    </AiProvider>
+    </AuiProvider>
   );
 }
 

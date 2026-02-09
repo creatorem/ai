@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --port 3000 --turbo --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "biome check .",
@@ -19,6 +19,7 @@
     "@ai-sdk/openai": "^3.0.19",
     "@ai-sdk/react": "^3.0.71",
     "@creatorem/ai-assistant-react": "workspace:*",
+    "@creatorem/ai-chat": "workspace:*",
     "@creatorem/ai-assistant-react-markdown": "workspace:*",
     "@creatorem/ai-react": "workspace:*",
     "@creatorem/ai-sdk": "workspace:*",

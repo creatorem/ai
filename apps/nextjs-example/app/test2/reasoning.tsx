@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 import { useScrollLock } from '../../../../packages-test-3/ai-chat/src/primitives/reasoning/use-scroll-lock';
 import { ReasoningGroupComponent, ReasoningMessagePartComponent } from "../../../../packages-test-3/ai-chat/src/types/message-part-component-types";
 import { useMemo } from "react";
-import { useMessage } from "@creatorem/ai-chat/primitives/message/message-by-index-provider";
+import { useMessage } from "@creatorem/ai-chat/primitives/message/index";
 
 const ANIMATION_DURATION = 200;
 

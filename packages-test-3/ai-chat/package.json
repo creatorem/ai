@@ -5,7 +5,16 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./primitives/*": "./src/primitives/*.tsx",
+    "./primitives/ai-provider": "./src/primitives/ai-provider.tsx",
+    "./primitives/events": "./src/primitives/events.ts",
+    "./primitives/message-part/index": "./src/primitives/message-part/index.ts",
+    "./primitives/reasoning/index": "./src/primitives/reasoning/index.ts",
+    "./primitives/suggestion/index": "./src/primitives/suggestion/index.ts",
+    "./primitives/thread-list-item-more/index": "./src/primitives/thread-list-item-more/index.ts",
+    "./primitives/thread-list-item/index": "./src/primitives/thread-list-item/index.ts",
+    "./primitives/thread/thread-viewport-context": "./src/primitives/thread/thread-viewport-context.ts",
+    "./primitives/*/index": "./src/primitives/*/index.tsx",
+    "./primitives/*/*": "./src/primitives/*/*.tsx",
     "./types": "./src/types/index.ts"
   },
   "main": "./dist/index.js",
