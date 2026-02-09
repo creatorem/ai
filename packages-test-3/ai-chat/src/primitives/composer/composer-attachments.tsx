@@ -1,6 +1,6 @@
 "use client";
 
-import { ComponentType, type FC, memo, useMemo } from "react";
+import { ComponentType, type FC, memo } from "react";
 import type { Attachment } from "../../types/attachment-types";
 import { useComposer } from "./composer-provider";
 import {
@@ -12,13 +12,13 @@ import {
 export namespace ComposerPrimitiveAttachments {
   export type Props = {
     components:
-      | {
-          Image?: ComponentType | undefined;
-          Document?: ComponentType | undefined;
-          File?: ComponentType | undefined;
-          Attachment?: ComponentType | undefined;
-        }
-      | undefined;
+    | {
+      Image?: ComponentType | undefined;
+      Document?: ComponentType | undefined;
+      File?: ComponentType | undefined;
+      Attachment?: ComponentType | undefined;
+    }
+    | undefined;
   };
 }
 
@@ -35,8 +35,8 @@ const getComponent = (
     case "file":
       return components?.File ?? components?.Attachment;
     default:
-      const _exhaustiveCheck: never = type;
-      throw new Error(`Unknown attachment type: ${_exhaustiveCheck}`);
+      // Fallback for attachments whose type is not yet set (e.g. pending)
+      return components?.Attachment;
   }
 };
 
@@ -53,21 +53,23 @@ const AttachmentComponent: FC<{
 export namespace ComposerPrimitiveAttachmentByIndex {
   export type Props = {
     index: number;
+    attachment?: Attachment;
     components?: ComposerPrimitiveAttachments.Props["components"];
   };
 }
 
 export const ComposerPrimitiveAttachmentByIndex: FC<ComposerPrimitiveAttachmentByIndex.Props> =
   memo(
-    ({ index, components }) => {
+    ({ index, attachment, components }) => {
       return (
-        <AttachmentByIndexProvider index={index}>
+        <AttachmentByIndexProvider index={index} attachment={attachment}>
           <AttachmentComponent components={components} />
         </AttachmentByIndexProvider>
       );
     },
     (prev, next) =>
       prev.index === next.index &&
+      prev.attachment === next.attachment &&
       prev.components?.Image === next.components?.Image &&
       prev.components?.Document === next.components?.Document &&
       prev.components?.File === next.components?.File &&
@@ -95,17 +97,18 @@ const ComposerPrimitiveAttachmentsInner: FC<
 > = ({ components }) => {
   const attachments = useComposer(s => s.attachments);
 
-  const attachmentElements = useMemo(() => {
-    return Array.from({ length: attachments.length }, (_, index) => (
-      <ComposerPrimitiveAttachmentByIndex
-        key={index}
-        index={index}
-        components={components}
-      />
-    ));
-  }, [attachments.length, components]);
-
-  return <>{attachmentElements}</>;
+  return (
+    <>
+      {attachments.map((attachment, index) => (
+        <ComposerPrimitiveAttachmentByIndex
+          key={attachment.id ?? index}
+          index={index}
+          attachment={attachment}
+          components={components}
+        />
+      ))}
+    </>
+  );
 };
 
 ComposerPrimitiveAttachments.displayName = "ComposerPrimitive.Attachments";

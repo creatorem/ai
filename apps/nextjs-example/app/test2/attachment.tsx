@@ -123,6 +123,8 @@ const AttachmentThumb: FC = () => {
 
 const AttachmentUI: FC = () => {
   const attachment = useAttachment();
+  console.log( 'hello' )
+  console.log({ attachment })
   const isComposer = attachment.status.type !== "complete";
   const isImage = attachment.type === "image";
 
@@ -147,7 +149,7 @@ const AttachmentUI: FC = () => {
         className={cn(
           "aui-attachment-root relative",
           isImage &&
-            "aui-attachment-root-composer only:[&>#attachment-tile]:size-24",
+          "aui-attachment-root-composer only:[&>#attachment-tile]:size-24",
         )}
       >
         <AttachmentPreviewDialog>
@@ -156,7 +158,7 @@ const AttachmentUI: FC = () => {
               className={cn(
                 "aui-attachment-tile size-14 cursor-pointer overflow-hidden rounded-[14px] border bg-muted transition-opacity hover:opacity-75",
                 isComposer &&
-                  "aui-attachment-tile-composer border-foreground/20",
+                "aui-attachment-tile-composer border-foreground/20",
               )}
               role="button"
               id="attachment-tile"

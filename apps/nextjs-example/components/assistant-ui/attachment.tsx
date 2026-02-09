@@ -128,6 +128,7 @@ const AttachmentThumb: FC = () => {
 
 const AttachmentUI: FC = () => {
   const api = useAssistantApi();
+  console.log( {attachment: api.attachment} )
   const isComposer = api.attachment.source === "composer";
 
   const isImage = useAssistantState(

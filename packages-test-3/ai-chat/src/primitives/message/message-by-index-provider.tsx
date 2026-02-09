@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useLayoutEffect, useRef } from "react";
+import React, { useLayoutEffect, useMemo, useRef } from "react";
 import type { UIMessage } from "ai";
 import { createStore, useStore, type StoreApi } from 'zustand';
 import { Message, MessageStatus } from "../../types/entities";
+import type { CompleteAttachment } from "../../types/attachment-types";
 import { useThread, useThreadStore } from "../thread/thread-root";
 
 type MessageMethods = {
@@ -81,6 +82,21 @@ export function MessageByIndexProvider({
   const branchCount = branches.length;
   const branchNumber = branches.indexOf(message.id) + 1;
 
+  // Derive attachments from file parts in the message
+  const attachments: readonly CompleteAttachment[] = useMemo(() =>
+    message.parts
+      .filter((p): p is Extract<typeof p, { type: 'file' }> => p.type === 'file')
+      .map((p, i) => ({
+        id: `${message.id}-file-${i}`,
+        type: (p.mediaType.startsWith('image/') ? 'image' : 'file') as 'image' | 'document' | 'file',
+        name: p.filename ?? `file-${i}`,
+        contentType: p.mediaType,
+        content: [],
+        status: { type: 'complete' as const },
+      })),
+    [message.id, message.parts],
+  );
+
   // Derived state
   const status = _deriveMessageStatus(message, isLast, isRunning);
   const metadata = {
@@ -98,7 +114,7 @@ export function MessageByIndexProvider({
           parts: message.parts,
           metadata,
           status,
-          attachments: [],
+          attachments,
           speech: undefined,
           parentId,
           isLast,
@@ -158,7 +174,7 @@ export function MessageByIndexProvider({
           parts: message.parts,
           metadata,
           status,
-          attachments: [],
+          attachments,
           speech: undefined,
           parentId,
           isLast,

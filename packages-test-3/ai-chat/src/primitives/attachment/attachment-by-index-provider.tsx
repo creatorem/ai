@@ -77,11 +77,12 @@ export function useAttachmentStore(): StoreApi<AttachmentCtxType> {
 }
 
 export const AttachmentByIndexProvider: React.FC<
-    React.PropsWithChildren<{ index: number }>
-> = ({ index, children }) => {
+    React.PropsWithChildren<{ index: number; attachment?: Attachment }>
+> = ({ index, attachment: attachmentProp, children }) => {
     const attachments = useAttachments(s => s.attachments);
     const removeAttachment = useAttachments(s => s.removeAttachment);
-    const attachment = attachments[index]!;
+    // Prefer the direct prop (always fresh) over the store value (may lag by one render)
+    const attachment = attachmentProp ?? attachments[index];
 
     const _indexRef = useRef(index);
     _indexRef.current = index;
@@ -93,14 +94,26 @@ export const AttachmentByIndexProvider: React.FC<
     const storeRef = useRef<StoreApi<AttachmentCtxType> | null>(null);
     if (storeRef.current === null) {
         storeRef.current = createStore<AttachmentCtxType>(() => ({
-            ...attachment,
+            ...(attachment ?? {} as Attachment),
             remove,
         }));
     }
 
+    // Sync store eagerly during render so children always see fresh data.
+    // We track the previous attachment id to avoid unnecessary setState calls.
+    const _prevAttachmentIdRef = useRef<string | undefined>(undefined);
+    if (attachment && attachment.id !== _prevAttachmentIdRef.current) {
+        _prevAttachmentIdRef.current = attachment.id;
+        storeRef.current.setState({ ...attachment, remove });
+    }
+
     useLayoutEffect(() => {
-        storeRef.current!.setState({ ...attachment, remove });
+        if (attachment) {
+            storeRef.current!.setState({ ...attachment, remove });
+        }
     });
+
+    if (!attachment) return null;
 
     return (
         <AttachmentStoreCtx.Provider value={storeRef.current}>

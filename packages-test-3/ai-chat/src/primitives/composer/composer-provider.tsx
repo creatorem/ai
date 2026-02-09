@@ -3,6 +3,7 @@
 import React, { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { createStore, useStore, type StoreApi } from 'zustand';
 import { Composer } from '../../types/entities';
+import type { FileUIPart } from "ai";
 import type { Attachment, CompleteAttachment, PendingAttachment } from "../../types/attachment-types";
 import type { DictationAdapter, DictationState } from "../../types/adapters";
 import type { Unsubscribe } from "../../types/unsuscribe";
@@ -76,6 +77,20 @@ export function useComposerStore(): StoreApi<ComposerCtxType> {
 const _isAttachmentComplete = (a: Attachment): a is CompleteAttachment =>
     a.status.type === "complete";
 
+function _fileToFileUIPart(file: File): Promise<FileUIPart> {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve({
+            type: 'file',
+            mediaType: file.type,
+            filename: file.name,
+            url: reader.result as string,
+        });
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
 export function ComposerPrimitiveRoot({ children, id, defaultText = "", editMessageId }: { children: React.ReactNode } & { id?: number, defaultText?: string, editMessageId?: string }) {
     const adapters = useAiContext(s => s.adapters);
     const threadStore = useThreadStore();
@@ -89,9 +104,6 @@ export function ComposerPrimitiveRoot({ children, id, defaultText = "", editMess
     const [attachmentAccept, setAttachmentAccept] = useState<Composer['attachmentAccept']>('*');
     const [type, setType] = useState<Composer['type']>('thread');
     const [dictation, setDictation] = useState<DictationState | undefined>(undefined);
-
-    console.log({ id })
-    console.log({ text, defaultText })
 
     // Dictation internal refs (mutable state that doesn't trigger re-renders)
     const _dictationSessionRef = useRef<DictationAdapter.Session | undefined>(undefined);
@@ -146,9 +158,6 @@ export function ComposerPrimitiveRoot({ children, id, defaultText = "", editMess
     }, []);
 
     const setText = useCallback((value: string): void => {
-        console.log({ defaultText })
-        console.log('setText')
-        console.log(value)
         if (_textRef.current === value) return;
 
         // When dictation is active and the user manually edits the composer text,
@@ -172,7 +181,21 @@ export function ComposerPrimitiveRoot({ children, id, defaultText = "", editMess
 
     const addAttachment = useCallback(async (file: File): Promise<void> => {
         const adapter = _adaptersRef.current?.attachment;
-        if (!adapter) throw new Error("Attachments are not supported");
+
+        if (!adapter) {
+            // No adapter: hold the file in memory as a complete attachment
+            const attachment: CompleteAttachment = {
+                id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+                type: file.type.startsWith('image/') ? 'image' : 'file',
+                name: file.name,
+                contentType: file.type,
+                file,
+                content: [],
+                status: { type: 'complete' },
+            };
+            setAttachments(prev => [...prev, attachment]);
+            return;
+        }
 
         const upsertAttachment = (a: PendingAttachment) => {
             setAttachments(prev => {
@@ -248,6 +271,7 @@ export function ComposerPrimitiveRoot({ children, id, defaultText = "", editMess
 
         // Process attachments and send message asynchronously
         (async () => {
+            // Run attachment adapter processing (e.g. upload)
             const processedAttachments =
                 adapter && currentAttachments.length > 0
                     ? await Promise.all(
@@ -257,14 +281,19 @@ export function ComposerPrimitiveRoot({ children, id, defaultText = "", editMess
                             return result as CompleteAttachment;
                         }),
                     )
-                    : [];
+                    : currentAttachments;
+
+            // Convert attachments that have File objects to FileUIPart[]
+            const files: FileUIPart[] = await Promise.all(
+                processedAttachments
+                    .filter((a): a is Attachment & { file: File } => !!a.file)
+                    .map((a) => _fileToFileUIPart(a.file)),
+            );
 
             if (editMessageId) {
-                // Edit mode: truncate to parent and resend, creating a branch
-                threadStore.getState().sendEdit(editMessageId, currentText);
+                threadStore.getState().sendEdit(editMessageId, currentText, files.length > 0 ? files : undefined);
             } else {
-                // Normal mode: append to end of conversation
-                threadStore.getState().send({ prompt: currentText });
+                threadStore.getState().send({ prompt: currentText, files: files.length > 0 ? files : undefined });
             }
         })();
     }, [_cleanupDictation, editMessageId]);

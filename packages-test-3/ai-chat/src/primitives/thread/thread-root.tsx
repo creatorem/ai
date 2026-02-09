@@ -1,7 +1,7 @@
 'use client';
 
 import { useChat } from "@ai-sdk/react";
-import { DataUIPart, DefaultChatTransport, generateId } from "ai";
+import { DataUIPart, DefaultChatTransport, FileUIPart, generateId } from "ai";
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createStore, useStore, type StoreApi } from 'zustand';
 import { Thread, ThreadCapabilities } from '../../types/entities';
@@ -35,8 +35,8 @@ export type ThreadCtxType = Thread & Omit<ReturnType<typeof useChat<Thread['mess
     // chatStatus: ReturnType<typeof useChat<Thread['messages'][0]>>['status']
     // composerText: string,
     // setComposerText: (v: string) => void,
-    send: (o: { clearText?: boolean, prompt?: string }) => void,
-    sendEdit: (messageId: string, text: string) => void,
+    send: (o: { clearText?: boolean, prompt?: string, files?: FileList | FileUIPart[] }) => void,
+    sendEdit: (messageId: string, text: string, files?: FileList | FileUIPart[]) => void,
     beginEdit: (messageId: string) => void;
     stopEdit: (messageId: string) => void;
     getBranches: (messageId: string) => string[];
@@ -154,23 +154,19 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
         // id: activeThreadId || undefined,
     });
 
-    const send = useCallback(({ clearText = true, prompt }: { clearText?: boolean, prompt?: string }) => {
+    const send = useCallback(({ clearText = true, prompt, files }: { clearText?: boolean, prompt?: string, files?: FileList | FileUIPart[] }) => {
         const text = storeRef.current!.getState().composerStore!.getState().text
-        // console.log({ text })
-        // console.log({ prompt })
         const finalPrompt = prompt ?? text
-        if (!finalPrompt) {
+        if (!finalPrompt && (!files || (Array.isArray(files) ? files.length === 0 : files.length === 0))) {
             throw new Error('No prompt passed.')
         }
-        // console.warn( 'thread.runStart' )
-        // eventHandler.trigger('thread.runStart', { 'threadId': id })
-        sendMessage({ text: finalPrompt })
+        sendMessage({ text: finalPrompt ?? '', files })
         if (clearText) {
             storeRef.current!.getState().composerStore!.getState()!.setText('')
         }
     }, [sendMessage])
 
-    const sendEdit = useCallback((messageId: string, text: string): void => {
+    const sendEdit = useCallback((messageId: string, text: string, files?: FileList | FileUIPart[]): void => {
         const currentMessages = storeRef.current!.getState().messages;
         const editIndex = currentMessages.findIndex(m => m.id === messageId);
         if (editIndex === -1) throw new Error('Message not found for edit');
@@ -181,7 +177,7 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
         setMessages(truncated);
 
         // Send the new text — the SDK appends it after the truncated messages
-        sendMessage({ text });
+        sendMessage({ text, files });
 
         // Close the edit composer
         setEditingComposers((prev) => prev.filter((id) => id !== messageId));
