@@ -6,7 +6,7 @@ import {
   createToolCallStreamController,
   ToolCallStreamController,
 } from "./tool-call";
-import { Counter } from "../utils/counter";
+import { Counter } from "../utils/Counter";
 import {
   PathAppendEncoder,
   PathMergeEncoder,
