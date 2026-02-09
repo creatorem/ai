@@ -10,11 +10,10 @@ import { useThread } from "../thread/thread-root";
 import { useComposer, useComposerStore } from "./composer-provider";
 
 export const useComposerSend = () => {
-  const isEditing = useComposer(s => s.isEditing);
   const isEmpty = useComposer(s => s.isEmpty);
   const isRunning = useThread(s => s.isRunning);
   const composerStore = useComposerStore();
-  const disabled = useMemo(() => isRunning || !isEditing || isEmpty, [isRunning, isEditing, isEmpty])
+  const disabled = useMemo(() => isRunning || isEmpty, [isRunning, isEmpty])
 
   const callback = useCallback(() => {
     composerStore.getState().send();
