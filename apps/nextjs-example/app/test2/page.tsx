@@ -1,7 +1,6 @@
 'use client';
 
-import { useChat } from '@ai-sdk/react';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { AiProvider } from '@creatorem/ai-chat/primitives/ai-provider'
 import { ThreadPrimitiveRoot } from '@creatorem/ai-chat/primitives/thread/thread-root'
 import { ThreadPrimitiveViewport } from '@creatorem/ai-chat/primitives/thread/thread-viewport'
@@ -34,6 +33,7 @@ import { ComposerAddAttachment, ComposerAttachments, UserMessageAttachments } fr
 import { Reasoning, ReasoningGroup } from './reasoning';
 import { ToolFallback } from './tool-fallback';
 import { MarkdownText } from './markdown-text';
+import { WeatherToolRegistration } from './weather-tool-ui';
 
 export default function Chat() {
   return (
@@ -76,6 +76,7 @@ export default function Chat() {
 const Thread: React.FC = () => {
   return (
     <ThreadPrimitiveRoot>
+      <WeatherToolRegistration />
       <div
         className="aui-root aui-thread-root @container flex h-full flex-col"
         style={{

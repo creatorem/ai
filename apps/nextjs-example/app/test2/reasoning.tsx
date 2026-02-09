@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useCallback, useRef, useState } from "react";
+import { memo, useCallback, useRef, useState, useMemo } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { BrainIcon, ChevronDownIcon } from "lucide-react";
 import { MarkdownText } from "./markdown-text";
@@ -12,7 +12,6 @@ import {
 import { cn } from "@/lib/utils";
 import { useScrollLock } from '../../../../packages-test-3/ai-chat/src/primitives/reasoning/use-scroll-lock';
 import { ReasoningGroupComponent, ReasoningMessagePartComponent } from "../../../../packages-test-3/ai-chat/src/types/message-part-component-types";
-import { useMemo } from "react";
 import { useMessage } from "@creatorem/ai-chat/primitives/message/message-by-index-provider";
 
 const ANIMATION_DURATION = 200;
@@ -220,6 +219,15 @@ const ReasoningGroupImpl: ReasoningGroupComponent = ({
   endIndex,
 }) => {
   const message = useMessage();
+  const hasReasoningText = useMemo(() => {
+    const parts = message.parts.slice(startIndex, endIndex + 1);
+    return parts.some(
+      (part) =>
+        part.type === "reasoning" &&
+        typeof part.text === "string" &&
+        part.text.trim().length > 0,
+    );
+  }, [message.parts, startIndex, endIndex]);
   const isReasoningStreaming = useMemo(() => {
     if (message.status?.type !== "running") return false;
     const lastIndex = message.parts.length - 1;
@@ -228,6 +236,10 @@ const ReasoningGroupImpl: ReasoningGroupComponent = ({
     if (lastType !== "reasoning") return false;
     return lastIndex >= startIndex && lastIndex <= endIndex;
   }, [message]);
+
+  if (!hasReasoningText && !isReasoningStreaming) {
+    return null;
+  }
 
   return (
     <ReasoningRoot defaultOpen={isReasoningStreaming}>

@@ -261,9 +261,7 @@ const ToolUIDisplay = ({
 }: {
   Fallback: ToolCallMessagePartComponent | undefined;
 } & ToolCallMessagePartProps) => {
-  console.log('ToolUIDisplay')
   const toolUIs = useThread((s) => s.tools.tools);
-  console.log('toolUIs')
   const Render = toolUIs[props.toolName] ?? Fallback;
   if (!Render) return null;
   const Resolved = Array.isArray(Render) ? (Render[0] ?? Fallback) : Render;
@@ -304,18 +302,15 @@ const MessagePartComponent: FC<MessagePartComponentProps> = ({
     tools = {},
   } = {},
 }) => {
-  console.log('MessagePartComponent')
   const part = usePart();
 
   const type = part.type;
-  console.log({ type })
   if (type === "tool-call") {
     const addResult = part.addToolResult;
     const resume = part.resumeToolCall;
     if ("Override" in tools)
       return <tools.Override {...part} addResult={addResult} resume={resume} />;
     const Tool = tools.by_name?.[part.toolName] ?? tools.Fallback;
-    console.log({ Tool })
     return (
       <ToolUIDisplay
         {...part}

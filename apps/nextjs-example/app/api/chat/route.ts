@@ -1,6 +1,6 @@
-import { openai, createOpenAI } from "@ai-sdk/openai";
-import { streamText, convertToModelMessages, type UIMessage, tool, stepCountIs } from "ai";
-import { z } from 'zod'
+import { createOpenAI } from "@ai-sdk/openai";
+import { streamText, convertToModelMessages, type UIMessage } from "ai";
+import { weatherTool } from "../../../lib/tools/weather-tool";
 
 const groq = createOpenAI({
   apiKey: process.env.GROQ_API_KEY ?? '',
@@ -108,19 +108,7 @@ export async function POST(req: Request) {
     // model: groq('meta-llama/llama-4-scout-17b-16e-instruct'),
     messages: await convertToModelMessages(messages),
     tools: {
-      weather: tool({
-        description: 'Get the weather in a location (fahrenheit)',
-        inputSchema: z.object({
-          location: z.string().describe('The location to get the weather for'),
-        }),
-        execute: async ({ location }) => {
-          const temperature = Math.round(Math.random() * (90 - 32) + 32);
-          return {
-            location,
-            temperature,
-          };
-        },
-      }),
+      weather: weatherTool,
     },
   });
 
