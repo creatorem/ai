@@ -219,6 +219,15 @@ const ReasoningGroupImpl: ReasoningGroupComponent = ({
   endIndex,
 }) => {
   const message = useMessage();
+  const hasReasoningText = useMemo(() => {
+    const parts = message.parts.slice(startIndex, endIndex + 1);
+    return parts.some(
+      (part) =>
+        part.type === "reasoning" &&
+        typeof part.text === "string" &&
+        part.text.trim().length > 0,
+    );
+  }, [message.parts, startIndex, endIndex]);
   const isReasoningStreaming = useMemo(() => {
     if (message.status?.type !== "running") return false;
     const lastIndex = message.parts.length - 1;
@@ -227,6 +236,10 @@ const ReasoningGroupImpl: ReasoningGroupComponent = ({
     if (lastType !== "reasoning") return false;
     return lastIndex >= startIndex && lastIndex <= endIndex;
   }, [message]);
+
+  if (!hasReasoningText && !isReasoningStreaming) {
+    return null;
+  }
 
   return (
     <ReasoningRoot defaultOpen={isReasoningStreaming}>

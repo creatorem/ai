@@ -84,6 +84,7 @@ export default function Chat() {
 const Thread: React.FC = () => {
   return (
     <ThreadPrimitiveRoot>
+      <WeatherToolRegistration />
       <div
         className="aui-root aui-thread-root @container flex h-full flex-col"
         style={{
