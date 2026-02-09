@@ -495,9 +495,15 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
             } else if (messages.length > 0) {
                 // Create new thread directly
                 const newId = generateId();
-                const firstMessage = messages[0];
-                const cleanContent = firstMessage.content || (firstMessage.parts && firstMessage.parts.length > 0 && typeof firstMessage.parts[0] === 'object' && 'text' in firstMessage.parts[0] ? (firstMessage.parts[0] as any).text : '') || '';
-                const title = cleanContent ? cleanContent.slice(0, 50) : 'New Thread';
+                
+                let title = 'New Thread';
+                if (threadAdapter.generateTitle) {
+                    title = await threadAdapter.generateTitle(messages as any);
+                } else {
+                    const firstMessage = messages[0];
+                    const cleanContent = firstMessage.content || (firstMessage.parts && firstMessage.parts.length > 0 && typeof firstMessage.parts[0] === 'object' && 'text' in firstMessage.parts[0] ? (firstMessage.parts[0] as any).text : '') || '';
+                    title = cleanContent ? cleanContent.slice(0, 30) : 'New Thread';
+                }
 
                 await threadAdapter.save(newId, {
                     title: title,

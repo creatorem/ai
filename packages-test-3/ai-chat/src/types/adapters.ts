@@ -27,10 +27,9 @@ export type ThreadAdapter = {
     // unarchive(remoteId: string): Promise<void>;
     // delete(remoteId: string): Promise<void>;
     // initialize(threadId: string): Promise<ThreadInitializeResponse>;
-    // generateTitle(
-    //   remoteId: string,
-    //   // unstable_messages: readonly ThreadMessage[],
-    // ): Promise<string>;
+    generateTitle?(
+      messages: any[],
+    ): Promise<string>;
     fetch(threadId: string): Promise<Pick<Thread, 'title' | 'status' | 'messages'>>;
     save(threadId: string, thread: Pick<Thread, 'title' | 'status' | 'messages'>): Promise<void>;
     delete(threadId: string): Promise<void>;
