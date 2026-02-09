@@ -9,6 +9,7 @@ import { Threads } from "../types/entities";
 import { useChat } from "@ai-sdk/react";
 import { AiChatEventHandler, AiChatEvents } from "./events";
 import type { Toolkit } from "../types/toolbox";
+import { localStorageThreadAdapter } from "../adapters/local-storage-adapter";
 
 type LanguageModelV1CallSettings = {
     maxTokens?: number;
@@ -112,6 +113,7 @@ export function useThreadsStore(): StoreApi<ThreadsCtx> {
 
 function ThreadsProvider({ children }: { children: React.ReactNode }) {
     const adapters = useAiContext(s => s.adapters);
+    const threadAdapter = adapters?.thread ?? localStorageThreadAdapter;
     const [activeThreadId, setActiveThreadId] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [threadIds, setThreadIds] = useState<string[]>([])
@@ -119,14 +121,12 @@ function ThreadsProvider({ children }: { children: React.ReactNode }) {
 
     useEffect(() => {
         (async function () {
-            if (adapters?.thread) {
-                const { threadIds: ids, archivedThreadIds: archivedIds } = await adapters.thread.list();
-                setThreadIds(ids)
-                setArchivedThreadIds(archivedIds)
-            }
+            const { threadIds: ids, archivedThreadIds: archivedIds } = await threadAdapter.list();
+            setThreadIds(ids)
+            setArchivedThreadIds(archivedIds)
             setIsLoading(false)
         })()
-    }, [adapters])
+    }, [threadAdapter])
 
     // Create store once
     const storeRef = useRef<StoreApi<ThreadsCtx> | null>(null);

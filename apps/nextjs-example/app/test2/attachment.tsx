@@ -17,7 +17,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { TooltipIconButton } from "@/components/assistant-ui/tooltip-icon-button";
 import { cn } from "@/lib/utils";
 import * as AttachmentPrimitive from '@creatorem/ai-chat/primitives/attachment/index'
-import { useAttachment } from '@creatorem/ai-chat/primitives/attachment/attachment-by-index-provider'
+import { useAttachment } from '@creatorem/ai-chat/primitives/attachment/index'
 import * as ComposerPrimitive from '@creatorem/ai-chat/primitives/composer/index'
 import * as MessagePrimitive from '@creatorem/ai-chat/primitives/message/index'
 

@@ -425,17 +425,41 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
     // console.log({ messages })
 
     useEffect(() => {
+        let cancelled = false;
+
         (async function () {
-            if (adapters?.thread && activeThreadId) {
-                const thread = await adapters.thread.fetch(activeThreadId);
-                setTitle(thread.title)
-                setStatus(thread.status)
-                setMessages(thread.messages)
-                setIsLoading(false)
-                eventHandler.trigger('thread.initialize', { 'threadId': id })
+            if (!activeThreadId) {
+                setTitle('New thread');
+                setStatus('regular');
+                setMessages([]);
+                setIsLoading(false);
+                return;
             }
-        })()
-    }, [adapters, id, eventHandler])
+
+            if (adapters?.thread) {
+                try {
+                    setIsLoading(true);
+                    const thread = await adapters.thread.fetch(activeThreadId);
+                    if (cancelled) return;
+                    setTitle(thread.title);
+                    setStatus(thread.status);
+                    setMessages(thread.messages);
+                    setIsLoading(false);
+                    eventHandler.trigger('thread.initialize', { 'threadId': id });
+                } catch {
+                    if (cancelled) return;
+                    setIsLoading(false);
+                }
+                return;
+            }
+
+            setIsLoading(false);
+        })();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [adapters, activeThreadId, eventHandler, id, setMessages])
 
     const isRunningRef = useRef(false);
     useEffect(() => {
