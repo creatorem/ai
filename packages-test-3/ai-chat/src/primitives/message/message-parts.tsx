@@ -10,9 +10,10 @@ import {
 import { MessagePartPrimitiveText } from "../message-part/message-part-text";
 import { MessagePartPrimitiveImage } from "../message-part/message-part-image";
 import { MessagePartPrimitiveInProgress } from "../message-part/message-part-in-progress";
-import { useShallow } from "zustand/shallow";
 import { PartByIndexProvider, usePart } from "../message-part/part-by-index-provider";
+import { TextMessagePartProvider } from "./text-message-part-provider";
 import { useMessage } from "./message-by-index-provider";
+import { useThread } from "../thread/thread-root";
 import type {
   Unstable_AudioMessagePartComponent,
   EmptyMessagePartComponent,
@@ -260,13 +261,14 @@ const ToolUIDisplay = ({
 }: {
   Fallback: ToolCallMessagePartComponent | undefined;
 } & ToolCallMessagePartProps) => {
-  const Render = useAuiState(({ tools }) => {
-    const Render = tools.tools[props.toolName] ?? Fallback;
-    if (Array.isArray(Render)) return Render[0] ?? Fallback;
-    return Render;
-  });
+  console.log('ToolUIDisplay')
+  const toolUIs = useThread((s) => s.tools.tools);
+  console.log('toolUIs')
+  const Render = toolUIs[props.toolName] ?? Fallback;
   if (!Render) return null;
-  return <Render {...props} />;
+  const Resolved = Array.isArray(Render) ? (Render[0] ?? Fallback) : Render;
+  if (!Resolved) return null;
+  return <Resolved {...props} />;
 };
 
 const defaultComponents = {
@@ -302,17 +304,18 @@ const MessagePartComponent: FC<MessagePartComponentProps> = ({
     tools = {},
   } = {},
 }) => {
-  // const aui = useAui();
-  // const part = useAuiState(({ part }) => part);
+  console.log('MessagePartComponent')
   const part = usePart();
 
   const type = part.type;
+  console.log({ type })
   if (type === "tool-call") {
     const addResult = part.addToolResult;
     const resume = part.resumeToolCall;
     if ("Override" in tools)
       return <tools.Override {...part} addResult={addResult} resume={resume} />;
     const Tool = tools.by_name?.[part.toolName] ?? tools.Fallback;
+    console.log({ Tool })
     return (
       <ToolUIDisplay
         {...part}
@@ -350,7 +353,7 @@ const MessagePartComponent: FC<MessagePartComponentProps> = ({
 
     default:
       const unhandledType: never = type;
-      // throw new Error(`Unknown message part type: ${unhandledType}`);
+    // throw new Error(`Unknown message part type: ${unhandledType}`);
   }
 };
 
@@ -407,12 +410,9 @@ const EmptyPartFallback: FC<{
   component: TextMessagePartComponent;
 }> = ({ status, component: Component }) => {
   return (
-    <div className="h-12 bg-orange-300 w-full">
-      EmptyPartFallback
-    </div>
-    // <TextMessagePartProvider text="" isRunning={status.type === "running"}>
-    //   <Component type="text" text="" status={status} />
-    // </TextMessagePartProvider>
+    <TextMessagePartProvider text="" isRunning={status.type === "running"}>
+      <Component type="text" text="" status={status} />
+    </TextMessagePartProvider>
   );
 };
 

@@ -37,6 +37,48 @@ export function usePartStore(): StoreApi<PartCtxType> {
     return store;
 }
 
+type PartProviderProps = React.PropsWithChildren<{
+    part: PartState;
+    status?: PartState["status"];
+    addToolResult?: (result: unknown) => void;
+    resumeToolCall?: (payload: unknown) => void;
+}>;
+
+export const PartProvider: React.FC<PartProviderProps> = ({
+    part,
+    status = part.status,
+    addToolResult,
+    resumeToolCall,
+    children,
+}) => {
+    const storeRef = useRef<StoreApi<PartCtxType> | null>(null);
+    if (storeRef.current === null) {
+        storeRef.current = createStore<PartCtxType>(() => ({
+            ...part,
+            status,
+            addToolResult: addToolResult ?? (() => {
+                throw new Error("Not supported");
+            }),
+            resumeToolCall: resumeToolCall ?? (() => {
+                throw new Error("Not supported");
+            }),
+        }));
+    }
+
+    useLayoutEffect(() => {
+        storeRef.current!.setState({
+            ...part,
+            status,
+        });
+    });
+
+    return (
+        <PartStoreCtx.Provider value={storeRef.current}>
+            {children}
+        </PartStoreCtx.Provider>
+    );
+};
+
 const _COMPLETE_STATUS: PartState['status'] = Object.freeze({
     type: "complete" as const,
 });

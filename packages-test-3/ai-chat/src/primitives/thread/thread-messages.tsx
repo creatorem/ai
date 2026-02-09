@@ -151,24 +151,15 @@ const ComposerMessageProvider = ({
   index
 }: React.PropsWithChildren & { index: number }) => {
   const messageStore = useMessageStore()
-  // const message = useMessage(s => s);
-  console.log({ message: messageStore.getState() })
-  console.log({ index })
-  // const parts = useMessage(s => s.parts);
-  // parts[0]?.type === ''
 
   const initialText = useMemo(() => {
-    console.log({ index })
     const part = messageStore.getState().parts[0]
-    console.log({ part })
-    console.log({ id: messageStore.getState().id })
     if (part?.type === 'text') {
       return part.text
     }
     return '';
   }, [messageStore, index])
 
-  console.log({ initialText })
 
   return (
     <ComposerPrimitiveRoot id={index} defaultText={initialText} editMessageId={messageStore.getState().id}>

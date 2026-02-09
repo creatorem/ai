@@ -1,6 +1,6 @@
 'use client';
 
-import { Tool} from "ai";
+import { Tool } from "ai";
 // import { useChat } from "@ai-sdk/react";
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createStore, useStore, type StoreApi } from 'zustand';
@@ -8,6 +8,7 @@ import { ThreadAdapter, AttachmentAdapter, DictationAdapter } from "../types/ada
 import { Threads } from "../types/entities";
 import { useChat } from "@ai-sdk/react";
 import { AiChatEventHandler, AiChatEvents } from "./events";
+import type { Toolkit } from "../types/toolbox";
 
 type LanguageModelV1CallSettings = {
     maxTokens?: number;
@@ -34,6 +35,7 @@ export type AiContextType = {
     priority?: number | undefined;
     system?: string | undefined;
     tools?: Record<string, Tool<any, any>> | undefined;
+    toolkit?: Toolkit | undefined;
     callSettings?: LanguageModelV1CallSettings | undefined;
     config?: LanguageModelConfig | undefined;
     chatOptions?: Omit<Parameters<typeof useChat>[0], 'id' | 'transport'>

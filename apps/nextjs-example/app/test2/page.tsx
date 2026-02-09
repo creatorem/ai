@@ -11,11 +11,6 @@ import { ThreadPrimitiveSuggestion } from '@creatorem/ai-chat/primitives/thread/
 import { ThreadPrimitiveScrollToBottom } from '@creatorem/ai-chat/primitives/thread/thread-scroll-to-bottom'
 
 import * as ComposerPrimitive from '@creatorem/ai-chat/primitives/composer/index'
-// import { ComposerPrimitiveRoot } from '@creatorem/ai-chat/primitives/composer/composer-root'
-// import { ComposerPrimitiveInput } from '@creatorem/ai-chat/primitives/composer/composer-input'
-// import { ComposerPrimitiveAttachmentDropzone } from '@creatorem/ai-chat/primitives/composer/composer-attachment-dropzone'
-// import { ComposerPrimitiveSend } from '@creatorem/ai-chat/primitives/composer/composer-send'
-// import { ComposerPrimitiveCancel } from '@creatorem/ai-chat/primitives/composer/composer-cancel'
 import { ThreadPrimitiveIf } from '@creatorem/ai-chat/primitives/thread/thread-if'
 import { MessagePrimitiveRoot } from '@creatorem/ai-chat/primitives/message/message-root'
 import { MessagePrimitiveParts } from '@creatorem/ai-chat/primitives/message/message-parts'
@@ -41,39 +36,7 @@ import { ToolFallback } from './tool-fallback';
 import { MarkdownText } from './markdown-text';
 
 export default function Chat() {
-  // const [input, setInput] = useState('');
-  // const { messages, sendMessage, ...opts } = useChat();
-  // console.log( {messages} )
-  // console.log( opts )
   return (
-    //   <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
-    //   {messages.map(message => (
-    //     <div key={message.id} className="whitespace-pre-wrap">
-    //       {message.role === 'user' ? 'User: ' : 'AI: '}
-    //       {message.parts.map((part, i) => {
-    //         switch (part.type) {
-    //           case 'text':
-    //             return <div key={`${message.id}-${i}`}>{part.text}</div>;
-    //         }
-    //       })}
-    //     </div>
-    //   ))}
-
-    //   <form
-    //     onSubmit={e => {
-    //       e.preventDefault();
-    //       sendMessage({ text: input });
-    //       setInput('');
-    //     }}
-    //   >
-    //     <input
-    //       className="fixed dark:bg-zinc-900 bottom-0 w-full max-w-md p-2 mb-8 border border-zinc-300 dark:border-zinc-800 rounded shadow-xl"
-    //       value={input}
-    //       placeholder="Say something..."
-    //       onChange={e => setInput(e.currentTarget.value)}
-    //     />
-    //   </form>
-    // </div>
     <AiProvider>
       <SidebarProvider>
         <div className="flex h-dvh w-full pr-0.5">
