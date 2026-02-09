@@ -114,6 +114,8 @@ export const MessagePrimitiveRoot = forwardRef<
 >((props, forwardRef) => {
     const isHoveringRef = useIsHoveringRef();
     const anchorUserMessageRef = useMessageViewportRef();
+    // const messageRole = useMessage(s => s.role);
+    // const messageIndex = useMessage(s => s.index);
     const ref = useComposedRefs<HTMLDivElement>(
         forwardRef,
         isHoveringRef,
@@ -122,7 +124,12 @@ export const MessagePrimitiveRoot = forwardRef<
 
     return (
         <ThreadPrimitiveViewportSlack>
-            <Primitive.div {...props} ref={ref} />
+            <Primitive.div 
+                {...props} 
+                ref={ref} 
+                // data-role={messageRole}
+                // data-index={messageIndex}
+            />
         </ThreadPrimitiveViewportSlack>
     );
 });

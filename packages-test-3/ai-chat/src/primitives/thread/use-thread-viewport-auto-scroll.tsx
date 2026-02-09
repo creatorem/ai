@@ -65,10 +65,6 @@ export const useThreadViewportAutoScroll = <TElement extends HTMLElement>({
   const scrollToBottom = useCallback((behavior: ScrollBehavior) => {
     const div = divRef.current;
     if (!div) return;
-
-    // console.log( {div} )
-
-    // console.log({ top: div.scrollHeight })
     scrollingToBottomBehaviorRef.current = behavior;
     div.scrollTo({ top: div.scrollHeight, behavior });
   }, []);
@@ -103,10 +99,12 @@ export const useThreadViewportAutoScroll = <TElement extends HTMLElement>({
   };
 
   const resizeRef = useOnResizeContent(() => {
+    // Only scroll if we have an active "sticky" scroll behavior set
     const scrollBehavior = scrollingToBottomBehaviorRef.current;
     if (scrollBehavior) {
       scrollToBottom(scrollBehavior);
     } else if (autoScroll && threadViewportStore.getState().isAtBottom) {
+      // Standard sticky scroll if enabled and already at bottom
       scrollToBottom("instant");
     }
 
@@ -114,9 +112,10 @@ export const useThreadViewportAutoScroll = <TElement extends HTMLElement>({
   });
 
   const scrollRef = useManagedRef<HTMLElement>((el) => {
-    el.addEventListener("scroll", handleScroll);
+    const onScroll = () => handleScroll();
+    el.addEventListener("scroll", onScroll);
     return () => {
-      el.removeEventListener("scroll", handleScroll);
+      el.removeEventListener("scroll", onScroll);
     };
   });
 
@@ -124,18 +123,15 @@ export const useThreadViewportAutoScroll = <TElement extends HTMLElement>({
     scrollToBottom(behavior);
   });
 
-  // const eventHandler = useAiContext(s => s.eventHandler);
-
-  // autoscroll on run start
+  // autoscroll on run start - scroll ONCE, do not enable sticky scroll
   useAiEvent("thread.runStart", () => {
-    console.warn('thread.runStart called')
     if (!scrollToBottomOnRunStart) return;
-    scrollingToBottomBehaviorRef.current = "auto";
-    requestAnimationFrame(() => {
-      scrollToBottom("auto");
-    });
+    // We do NOT set scrollingToBottomBehaviorRef.current here because
+    // the user specifically requested to ONLY scroll once at the start,
+    // and NOT to keep scrolling as content updates.
+    scrollToBottom("smooth");
   });
-
+  
   // scroll to bottom instantly when thread history is first loaded
   useAiEvent("thread.initialize", () => {
     if (!scrollToBottomOnInitialize) return;
@@ -144,7 +140,7 @@ export const useThreadViewportAutoScroll = <TElement extends HTMLElement>({
       scrollToBottom("instant");
     });
   });
-
+  
   // scroll to bottom instantly when switching threads
   useAiEvent("threadListItem.switchedTo", () => {
     if (!scrollToBottomOnThreadSwitch) return;
