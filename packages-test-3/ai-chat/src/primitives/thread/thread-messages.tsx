@@ -171,7 +171,7 @@ const ComposerMessageProvider = ({
   console.log({ initialText })
 
   return (
-    <ComposerPrimitiveRoot id={index} defaultText={initialText}>
+    <ComposerPrimitiveRoot id={index} defaultText={initialText} editMessageId={messageStore.getState().id}>
       {children}
     </ComposerPrimitiveRoot>
   )

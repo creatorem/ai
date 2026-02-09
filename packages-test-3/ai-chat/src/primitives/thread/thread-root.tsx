@@ -27,7 +27,7 @@ export type CustomUIDataTypes = {
 export type ThreadMethods = {
 };
 
-type ThreadCtxType = Thread & Omit<ReturnType<typeof useChat<Thread['messages'][0]>>, 'status' | 'setMessages' | 'sendMessage'> & {
+export type ThreadCtxType = Thread & Omit<ReturnType<typeof useChat<Thread['messages'][0]>>, 'status' | 'setMessages' | 'sendMessage'> & {
     dataStream: DataUIPart<CustomUIDataTypes>[];
     setDataStream: React.Dispatch<
         React.SetStateAction<DataUIPart<CustomUIDataTypes>[]>
@@ -36,6 +36,7 @@ type ThreadCtxType = Thread & Omit<ReturnType<typeof useChat<Thread['messages'][
     // composerText: string,
     // setComposerText: (v: string) => void,
     send: (o: { clearText?: boolean, prompt?: string }) => void,
+    sendEdit: (messageId: string, text: string) => void,
     beginEdit: (messageId: string) => void;
     stopEdit: (messageId: string) => void;
     getBranches: (messageId: string) => string[];
@@ -169,6 +170,23 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
         }
     }, [sendMessage])
 
+    const sendEdit = useCallback((messageId: string, text: string): void => {
+        const currentMessages = storeRef.current!.getState().messages;
+        const editIndex = currentMessages.findIndex(m => m.id === messageId);
+        if (editIndex === -1) throw new Error('Message not found for edit');
+
+        // Truncate to the parent (everything before the edited message).
+        // The old message stays in the repository, creating a branch.
+        const truncated = currentMessages.slice(0, editIndex);
+        setMessages(truncated);
+
+        // Send the new text — the SDK appends it after the truncated messages
+        sendMessage({ text });
+
+        // Close the edit composer
+        setEditingComposers((prev) => prev.filter((id) => id !== messageId));
+    }, [setMessages, sendMessage, setEditingComposers])
+
     const beginEdit = useCallback((messageId: string) => {
         setEditingComposers((prev) => [...prev, messageId])
     }, [setEditingComposers])
@@ -250,6 +268,7 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
             // composerText,
             // setComposerText,
             send,
+            sendEdit,
             getBranches,
             switchToBranch: switchToBranchFn,
             composerStore: null,
@@ -277,6 +296,7 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
             // composerText,
             // setComposerText,
             send,
+            sendEdit,
             getBranches,
             switchToBranch: switchToBranchFn,
             ...other

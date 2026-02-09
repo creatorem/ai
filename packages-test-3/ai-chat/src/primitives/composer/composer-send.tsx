@@ -16,7 +16,8 @@ export const useComposerSend = () => {
   const disabled = useMemo(() => isRunning || isEmpty, [isRunning, isEmpty])
 
   const callback = useCallback(() => {
-    composerStore.getState().send();
+    const state = composerStore.getState()
+    state.send();
   }, [composerStore]);
 
   if (disabled) return null;

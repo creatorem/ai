@@ -7,7 +7,7 @@ import type { Attachment, CompleteAttachment, PendingAttachment } from "../../ty
 import type { DictationAdapter, DictationState } from "../../types/adapters";
 import type { Unsubscribe } from "../../types/unsuscribe";
 import { useAiContext } from "../ai-provider";
-import { useThread, useThreadStore } from "../thread/thread-root";
+import { ThreadCtxType, useThread, useThreadStore } from "../thread/thread-root";
 
 type ComposerMethods = {
     setText(text: string): void;
@@ -17,7 +17,7 @@ type ComposerMethods = {
     clearAttachments(): Promise<void>;
     // attachment(selector: { index: number } | { id: string }): AttachmentMethods;
     reset(): Promise<void>;
-    send(): void;
+    send: () => void;
     cancel(): void;
     // beginEdit(): void;
 
@@ -76,7 +76,7 @@ export function useComposerStore(): StoreApi<ComposerCtxType> {
 const _isAttachmentComplete = (a: Attachment): a is CompleteAttachment =>
     a.status.type === "complete";
 
-export function ComposerPrimitiveRoot({ children, id, defaultText = "" }: { children: React.ReactNode } & { id?: number, defaultText?: string }) {
+export function ComposerPrimitiveRoot({ children, id, defaultText = "", editMessageId }: { children: React.ReactNode } & { id?: number, defaultText?: string, editMessageId?: string }) {
     const adapters = useAiContext(s => s.adapters);
     const threadStore = useThreadStore();
     const capabilities = useThread((s) => s.capabilities)
@@ -233,16 +233,12 @@ export function ComposerPrimitiveRoot({ children, id, defaultText = "" }: { chil
     }, []);
 
     const send = useCallback((): void => {
-        console.log('send')
         if (_dictationSessionRef.current) {
             _dictationSessionRef.current.cancel();
             _cleanupDictation();
         }
 
-        // const currentText = _textRef.current;
-        // console.log('currentText')
-        // console.log(currentText)
-        const currentRole = _roleRef.current;
+        const currentText = _textRef.current;
         const currentAttachments = _attachmentsRef.current;
         const adapter = _adaptersRef.current?.attachment;
 
@@ -263,9 +259,15 @@ export function ComposerPrimitiveRoot({ children, id, defaultText = "" }: { chil
                     )
                     : [];
 
-            threadStore.getState().send({});
+            if (editMessageId) {
+                // Edit mode: truncate to parent and resend, creating a branch
+                threadStore.getState().sendEdit(editMessageId, currentText);
+            } else {
+                // Normal mode: append to end of conversation
+                threadStore.getState().send({ prompt: currentText });
+            }
         })();
-    }, [_cleanupDictation]);
+    }, [_cleanupDictation, editMessageId]);
 
     const cancel = useCallback((): void => {
         threadStore.getState().stop();
