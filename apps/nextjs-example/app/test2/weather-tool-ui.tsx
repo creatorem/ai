@@ -1,7 +1,7 @@
 "use client";
 
 import { FC } from "react";
-import { useAssistantToolUI } from "@creatorem/ai-chat/primitives/model-context/use-assistant-tool-ui";
+import { useAssistantToolUI } from "@creatorem/ai-chat/primitives/model-context/index";
 import type { ToolCallMessagePartProps } from "../../../../packages-test-3/ai-chat/src/types/message-part-component-types";
 
 const HOUR_LABELS = ["1PM", "2PM", "3PM", "4PM", "5PM"] as const;

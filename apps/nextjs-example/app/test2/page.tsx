@@ -42,6 +42,7 @@ import { Reasoning, ReasoningGroup } from './reasoning';
 import { ToolFallback } from './tool-fallback';
 import { MarkdownText } from './markdown-text';
 import { ThreadListSidebar } from './threadlist-sidebar';
+import { WeatherToolRegistration } from './weather-tool-ui';
 
 export default function Chat() {
   return (
