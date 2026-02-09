@@ -8,7 +8,6 @@ import type { DictationAdapter, DictationState } from "../../types/adapters";
 import type { Unsubscribe } from "../../types/unsuscribe";
 import { useAiContext } from "../ai-provider";
 import { useThread, useThreadStore } from "../thread/thread-root";
-import * as ComposerPrimitive from '@creatorem/ai-chat/primitives/composer/index';
 
 type ComposerMethods = {
     setText(text: string): void;
@@ -416,7 +415,6 @@ export function ComposerPrimitiveRoot({ children, id, defaultText = "" }: { chil
             text,
             role,
             attachments,
-            // isEditing,
             canCancel: capabilities.cancel,
             attachmentAccept,
             isEmpty: !text.trim() && !attachments.length,
@@ -430,7 +428,6 @@ export function ComposerPrimitiveRoot({ children, id, defaultText = "" }: { chil
             reset,
             send,
             cancel,
-            // beginEdit,
             startDictation,
             stopDictation,
         });

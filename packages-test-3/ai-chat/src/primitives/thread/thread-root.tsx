@@ -7,6 +7,7 @@ import { createStore, useStore, type StoreApi } from 'zustand';
 import { Thread, ThreadCapabilities } from '../../types/entities';
 import { useAiContext, useThreads } from "../ai-provider";
 import { ComposerCtxType } from "../composer/composer-provider";
+import { MessageRepository } from "../../utils/message-repository";
 
 export type CustomUIDataTypes = {
     textDelta: string;
@@ -37,6 +38,8 @@ type ThreadCtxType = Thread & Omit<ReturnType<typeof useChat<Thread['messages'][
     send: (o: { clearText?: boolean, prompt?: string }) => void,
     beginEdit: (messageId: string) => void;
     stopEdit: (messageId: string) => void;
+    getBranches: (messageId: string) => string[];
+    switchToBranch: (messageId: string) => void;
     /** The StoreApi of the first composer mounted within this thread. */
     composerStore: StoreApi<ComposerCtxType> | null,
 }
@@ -174,6 +177,30 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
         setEditingComposers((prev) => prev.filter((id) => id !== messageId))
     }, [setEditingComposers])
 
+    // --- Message branching repository ---
+    type ThreadMessage = Thread['messages'][0];
+    const repositoryRef = useRef(new MessageRepository<ThreadMessage>());
+
+    // Sync repository with SDK messages (additive only — never delete,
+    // so branches are preserved when the SDK temporarily removes messages
+    // during regeneration or editing).
+    useLayoutEffect(() => {
+        const repo = repositoryRef.current;
+        for (let i = 0; i < messages.length; i++) {
+            const parentId = i > 0 ? messages[i - 1]!.id : null;
+            repo.addOrUpdateMessage(parentId, messages[i]!);
+        }
+    }, [messages]);
+
+    const getBranches = useCallback((messageId: string): string[] => {
+        return repositoryRef.current.getBranches(messageId);
+    }, []);
+
+    const switchToBranchFn = useCallback((messageId: string): void => {
+        repositoryRef.current.switchToBranch(messageId);
+        setMessages(repositoryRef.current.getMessages() as ThreadMessage[]);
+    }, [setMessages]);
+
     // console.log({ messages })
 
     useEffect(() => {
@@ -223,6 +250,8 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
             // composerText,
             // setComposerText,
             send,
+            getBranches,
+            switchToBranch: switchToBranchFn,
             composerStore: null,
             ...other
         }));
@@ -248,6 +277,8 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
             // composerText,
             // setComposerText,
             send,
+            getBranches,
+            switchToBranch: switchToBranchFn,
             ...other
         });
     });

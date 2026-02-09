@@ -76,6 +76,11 @@ export function MessageByIndexProvider({
   const isLast = useThread(s => index === s.messages.length - 1);
   const threadStore = useThreadStore();
 
+  // Branch info
+  const branches = useThread(s => s.getBranches(s.messages[index]!.id));
+  const branchCount = branches.length;
+  const branchNumber = branches.indexOf(message.id) + 1;
+
   // Derived state
   const status = _deriveMessageStatus(message, isLast, isRunning);
   const metadata = {
@@ -97,8 +102,8 @@ export function MessageByIndexProvider({
           speech: undefined,
           parentId,
           isLast,
-          branchNumber: 1,
-          branchCount: 1,
+          branchNumber,
+          branchCount,
           isCopied: false,
           isHovering: false,
           index,
@@ -118,8 +123,19 @@ export function MessageByIndexProvider({
           submitFeedback: (_feedback: { type: "positive" | "negative" }) => {
               // TODO: requires feedback adapter
           },
-          switchToBranch: (_options: { position?: "previous" | "next"; branchId?: string }) => {
-              // TODO: requires branch support
+          switchToBranch: (options: { position?: "previous" | "next"; branchId?: string }) => {
+              const state = threadStore.getState();
+              if (options.branchId) {
+                  state.switchToBranch(options.branchId);
+                  return;
+              }
+              const currentBranches = state.getBranches(storeRef.current!.getState().id);
+              const currentIndex = currentBranches.indexOf(storeRef.current!.getState().id);
+              if (options.position === "previous" && currentIndex > 0) {
+                  state.switchToBranch(currentBranches[currentIndex - 1]!);
+              } else if (options.position === "next" && currentIndex < currentBranches.length - 1) {
+                  state.switchToBranch(currentBranches[currentIndex + 1]!);
+              }
           },
           getCopyText: () => {
               const state = storeRef.current!.getState();
@@ -146,8 +162,8 @@ export function MessageByIndexProvider({
           speech: undefined,
           parentId,
           isLast,
-          branchNumber: 1,
-          branchCount: 1,
+          branchNumber,
+          branchCount,
           index,
       });
   });
