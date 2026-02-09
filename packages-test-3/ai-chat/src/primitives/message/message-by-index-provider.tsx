@@ -86,14 +86,21 @@ export function MessageByIndexProvider({
   const attachments: readonly CompleteAttachment[] = useMemo(() =>
     message.parts
       .filter((p): p is Extract<typeof p, { type: 'file' }> => p.type === 'file')
-      .map((p, i) => ({
-        id: `${message.id}-file-${i}`,
-        type: (p.mediaType.startsWith('image/') ? 'image' : 'file') as 'image' | 'document' | 'file',
-        name: p.filename ?? `file-${i}`,
-        contentType: p.mediaType,
-        content: [],
-        status: { type: 'complete' as const },
-      })),
+      .map((p, i) => {
+        const isImage = p.mediaType.startsWith('image/');
+        return {
+          id: `${message.id}-file-${i}`,
+          type: (isImage ? 'image' : 'file') as 'image' | 'document' | 'file',
+          name: p.filename ?? `file-${i}`,
+          contentType: p.mediaType,
+          content: isImage && p.url
+            ? [{ type: 'image' as const, image: p.url }]
+            : p.url
+              ? [{ type: 'file' as const, data: p.url, mimeType: p.mediaType }]
+              : [],
+          status: { type: 'complete' as const },
+        };
+      }),
     [message.id, message.parts],
   );
 

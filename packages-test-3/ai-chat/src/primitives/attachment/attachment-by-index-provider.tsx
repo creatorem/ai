@@ -83,7 +83,7 @@ export const AttachmentByIndexProvider: React.FC<
     const removeAttachment = useAttachments(s => s.removeAttachment);
     // Prefer the direct prop (always fresh) over the store value (may lag by one render)
     const attachment = attachmentProp ?? attachments[index];
-
+// 
     const _indexRef = useRef(index);
     _indexRef.current = index;
 

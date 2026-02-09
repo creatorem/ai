@@ -1,10 +1,9 @@
 "use client";
 
-import { ComponentType, type FC, memo, useMemo } from "react";
-import type { CompleteAttachment } from "../../types/attachment-types";
+import { ComponentType, type FC, memo } from "react";
+import type { Attachment, CompleteAttachment } from "../../types/attachment-types";
 import { useMessage } from "./message-by-index-provider";
 import {
-  AttachmentsProvider,
   AttachmentByIndexProvider,
   useAttachment,
 } from "../attachment/attachment-by-index-provider";
@@ -35,8 +34,7 @@ const getComponent = (
     case "file":
       return components?.File ?? components?.Attachment;
     default:
-      const _exhaustiveCheck: never = type;
-      throw new Error(`Unknown attachment type: ${_exhaustiveCheck}`);
+      return components?.Attachment;
   }
 };
 
@@ -53,21 +51,23 @@ const AttachmentComponent: FC<{
 export namespace MessagePrimitiveAttachmentByIndex {
   export type Props = {
     index: number;
+    attachment?: Attachment;
     components?: MessagePrimitiveAttachments.Props["components"];
   };
 }
 
 export const MessagePrimitiveAttachmentByIndex: FC<MessagePrimitiveAttachmentByIndex.Props> =
   memo(
-    ({ index, components }) => {
+    ({ index, attachment, components }) => {
       return (
-        <AttachmentByIndexProvider index={index}>
+        <AttachmentByIndexProvider index={index} attachment={attachment}>
           <AttachmentComponent components={components} />
         </AttachmentByIndexProvider>
       );
     },
     (prev, next) =>
       prev.index === next.index &&
+      prev.attachment === next.attachment &&
       prev.components?.Image === next.components?.Image &&
       prev.components?.Document === next.components?.Document &&
       prev.components?.File === next.components?.File &&
@@ -77,67 +77,25 @@ export const MessagePrimitiveAttachmentByIndex: FC<MessagePrimitiveAttachmentByI
 MessagePrimitiveAttachmentByIndex.displayName =
   "MessagePrimitive.AttachmentByIndex";
 
-  export const MessagePrimitiveAttachments: FC<
+export const MessagePrimitiveAttachments: FC<
   MessagePrimitiveAttachments.Props
 > = ({ components }) => {
-    const role = useMessage(s => s.role);
-    const attachments = useMessage(s => s.attachments);
+  const role = useMessage(s => s.role);
+  const attachments = useMessage(s => s.attachments);
   if (role !== "user") return null;
 
-  const attachmentElements = useMemo(() => {
-    return Array.from({ length: attachments.length }, (_, index) => (
-      <MessagePrimitiveAttachmentByIndex
-        key={index}
-        index={index}
-        components={components}
-      />
-    ));
-  }, [attachments.length, components]);
-
-  return attachmentElements;
+  return (
+    <>
+      {attachments.map((attachment, index) => (
+        <MessagePrimitiveAttachmentByIndex
+          key={attachment.id ?? index}
+          index={index}
+          attachment={attachment}
+          components={components}
+        />
+      ))}
+    </>
+  );
 };
 
 MessagePrimitiveAttachments.displayName = "MessagePrimitive.Attachments";
-
-
-// const _noopRemoveAttachment = () => {};
-
-// export const MessagePrimitiveAttachments: FC<
-//   MessagePrimitiveAttachments.Props
-// > = ({ components }) => {
-//   const message = useMessage();
-
-//   if (message.role !== "user") return null;
-
-//   return (
-//     <AttachmentsProvider
-//       attachments={message.attachments}
-//       removeAttachment={_noopRemoveAttachment}
-//     >
-//       <MessagePrimitiveAttachmentsInner components={components} />
-//     </AttachmentsProvider>
-//   );
-// };
-
-// const MessagePrimitiveAttachmentsInner: FC<
-//   MessagePrimitiveAttachments.Props
-// > = ({ components }) => {
-//   const message = useMessage();
-
-//   const attachmentsCount =
-//     message.role === "user" ? message.attachments.length : 0;
-
-//   const attachmentElements = useMemo(() => {
-//     return Array.from({ length: attachmentsCount }, (_, index) => (
-//       <MessagePrimitiveAttachmentByIndex
-//         key={index}
-//         index={index}
-//         components={components}
-//       />
-//     ));
-//   }, [attachmentsCount, components]);
-
-//   return <>{attachmentElements}</>;
-// };
-
-// MessagePrimitiveAttachments.displayName = "MessagePrimitive.Attachments";

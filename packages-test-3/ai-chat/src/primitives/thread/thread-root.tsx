@@ -8,6 +8,7 @@ import { Thread, ThreadCapabilities } from '../../types/entities';
 import { useAiContext, useThreads } from "../ai-provider";
 import { ComposerCtxType } from "../composer/composer-provider";
 import { MessageRepository } from "../../utils/message-repository";
+import { AttachmentsProvider } from "../attachment/attachment-by-index-provider";
 
 export type CustomUIDataTypes = {
     textDelta: string;
@@ -60,6 +61,8 @@ export function useThreadStore(): StoreApi<ThreadCtxType> {
     if (!store) throw new Error('This component must be used within ThreadCtx.Provider.');
     return store;
 }
+
+const _noopRemoveAttachment = () => {};
 
 export function ThreadPrimitiveRoot({ children, ...value }: { children: React.ReactNode }) {
     const eventHandler = useAiContext(s => s.eventHandler);
@@ -300,6 +303,8 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
     });
 
     return <ThreadStoreCtx.Provider value={storeRef.current}>
-        {children}
+        <AttachmentsProvider attachments={[]} removeAttachment={_noopRemoveAttachment}>
+            {children}
+        </AttachmentsProvider>
     </ThreadStoreCtx.Provider>;
 };

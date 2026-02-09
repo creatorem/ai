@@ -91,6 +91,18 @@ function throttleStream(stream: ReadableStream, delay = 50) {
 export async function POST(req: Request) {
   const { messages }: { messages: UIMessage[] } = await req.json();
 
+  // Debug: check if file parts are present in the last message
+  const lastMsg = messages.at(-1);
+  const fileParts = lastMsg?.parts?.filter((p: any) => p.type === 'file');
+  if (fileParts?.length) {
+    console.log('[chat/route] File parts received:', fileParts.map((f: any) => ({
+      type: f.type,
+      mediaType: f.mediaType,
+      filename: f.filename,
+      urlLength: f.url?.length,
+    })));
+  }
+
   const result = streamText({
     // model: groq('llama-3.3-70b-versatile'),
     model: groq('meta-llama/llama-4-scout-17b-16e-instruct'),
