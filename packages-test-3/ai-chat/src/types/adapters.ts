@@ -32,7 +32,8 @@ export type ThreadAdapter = {
     //   // unstable_messages: readonly ThreadMessage[],
     // ): Promise<string>;
     fetch(threadId: string): Promise<Pick<Thread, 'title' | 'status' | 'messages'>>;
-
+    save(threadId: string, thread: Pick<Thread, 'title' | 'status' | 'messages'>): Promise<void>;
+    delete(threadId: string): Promise<void>;
     // unstable_Provider?: ComponentType<PropsWithChildren>;
   };
 

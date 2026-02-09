@@ -2,6 +2,7 @@
 
 import { Primitive } from "@radix-ui/react-primitive";
 import { ComponentPropsWithoutRef, ComponentRef, forwardRef } from "react";
+import { ThreadListProvider } from "./thread-list-provider";
 
 type PrimitiveDivProps = ComponentPropsWithoutRef<typeof Primitive.div>;
 
@@ -14,7 +15,12 @@ export const ThreadListPrimitiveRoot = forwardRef<
   ThreadListPrimitiveRoot.Element,
   ThreadListPrimitiveRoot.Props
 >((props, ref) => {
-  return <Primitive.div {...props} ref={ref} />;
+  return (
+    <ThreadListProvider>
+      <Primitive.div {...props} ref={ref} />
+    </ThreadListProvider>
+  );
 });
 
 ThreadListPrimitiveRoot.displayName = "ThreadListPrimitive.Root";
+

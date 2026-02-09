@@ -1,7 +1,7 @@
 'use client';
 
 import { ComponentType, FC, memo, useMemo } from "react";
-import { useThreads } from "../ai-provider";
+import { useThreadList } from "./thread-list-provider";
 import { ThreadListItemByIndexProvider } from "../thread-list-item/thread-list-item-by-index-provider";
 
 export namespace ThreadListPrimitiveItems {
@@ -44,8 +44,8 @@ export const ThreadListPrimitiveItems: FC<ThreadListPrimitiveItems.Props> = ({
   archived = false,
   components,
 }) => {
-  const contentLength = useThreads((threads) =>
-    archived ? threads.archivedThreadIds.length : threads.threadIds.length,
+  const contentLength = useThreadList((s) =>
+    archived ? s.archivedThreads.length : s.threads.length,
   );
 
   const listElements = useMemo(() => {
@@ -63,3 +63,4 @@ export const ThreadListPrimitiveItems: FC<ThreadListPrimitiveItems.Props> = ({
 };
 
 ThreadListPrimitiveItems.displayName = "ThreadListPrimitive.Items";
+

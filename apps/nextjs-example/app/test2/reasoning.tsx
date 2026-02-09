@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useCallback, useRef, useState } from "react";
+import { memo, useCallback, useRef, useState, useMemo } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { BrainIcon, ChevronDownIcon } from "lucide-react";
 import { MarkdownText } from "./markdown-text";
@@ -12,7 +12,6 @@ import {
 import { cn } from "@/lib/utils";
 import { useScrollLock } from '../../../../packages-test-3/ai-chat/src/primitives/reasoning/use-scroll-lock';
 import { ReasoningGroupComponent, ReasoningMessagePartComponent } from "../../../../packages-test-3/ai-chat/src/types/message-part-component-types";
-import { useMemo } from "react";
 import { useMessage } from "@creatorem/ai-chat/primitives/message/index";
 
 const ANIMATION_DURATION = 200;

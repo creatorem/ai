@@ -7,7 +7,7 @@ import {
 import { forwardRef } from "react";
 import { Primitive } from "@radix-ui/react-primitive";
 import { composeEventHandlers } from "@radix-ui/primitive";
-import { useThreads } from "../ai-provider";
+import { useThreadList } from "./thread-list-provider";
 
 export namespace ThreadListPrimitiveNew {
   export type Element = ActionButtonElement;
@@ -18,8 +18,8 @@ export const ThreadListPrimitiveNew = forwardRef<
   ThreadListPrimitiveNew.Element,
   ThreadListPrimitiveNew.Props
 >(({ onClick, disabled, ...props }, forwardedRef) => {
-  const activeThreadId = useThreads((threads) => threads.activeThreadId);
-  const setActiveThreadId = useThreads((threads) => threads.setActiveThreadId);
+  const activeThreadId = useThreadList((s) => s.activeThreadId);
+  const switchToNewThread = useThreadList((s) => s.switchToNewThread);
 
   const isMain = activeThreadId === null;
 
@@ -31,10 +31,11 @@ export const ThreadListPrimitiveNew = forwardRef<
       ref={forwardedRef}
       disabled={disabled}
       onClick={composeEventHandlers(onClick, () => {
-        setActiveThreadId(null);
+        switchToNewThread();
       })}
     />
   );
 });
 
 ThreadListPrimitiveNew.displayName = "ThreadListPrimitive.New";
+

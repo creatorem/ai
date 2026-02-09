@@ -79,6 +79,17 @@ export const localStorageThreadAdapter: ThreadAdapter = {
       messages: thread.messages,
     };
   },
+
+  async save(
+    threadId: string,
+    thread: Pick<Thread, "title" | "status" | "messages">
+  ): Promise<void> {
+    saveThread(threadId, thread);
+  },
+
+  async delete(threadId: string): Promise<void> {
+    deleteThread(threadId);
+  },
 };
 
 // Helper functions for saving threads (to be used externally)

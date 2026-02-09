@@ -17,6 +17,8 @@ import { useAiContext, useThreads } from "../ai-provider";
 import { ComposerCtxType } from "../composer/composer-provider";
 import { MessageRepository } from "../../utils/message-repository";
 import { AttachmentsProvider } from "../attachment/attachment-by-index-provider";
+import { localStorageThreadAdapter } from "../../adapters/local-storage-adapter";
+
 import { ToolCallMessagePartComponent } from "../../types/message-part-component-types";
 import { Unsubscribe } from "../../types/unsuscribe";
 import { Tool } from "@creatorem/stream";
@@ -426,6 +428,7 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
 
     useEffect(() => {
         let cancelled = false;
+        const threadAdapter = adapters?.thread ?? localStorageThreadAdapter;
 
         (async function () {
             if (!activeThreadId) {
@@ -436,12 +439,12 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
                 return;
             }
 
-            if (adapters?.thread) {
+            if (threadAdapter) {
                 try {
                     setIsLoading(true);
-                    const thread = await adapters.thread.fetch(activeThreadId);
+                    const thread = await threadAdapter.fetch(activeThreadId);
                     if (cancelled) return;
-                    setTitle(thread.title);
+                    setTitle(thread.title || 'New thread');
                     setStatus(thread.status);
                     setMessages(thread.messages);
                     setIsLoading(false);
@@ -460,6 +463,73 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
             cancelled = true;
         };
     }, [adapters, activeThreadId, eventHandler, id, setMessages])
+
+    const setActiveThreadId = useThreads(s => s.setActiveThreadId);
+    const setThreadIds = useThreads(s => s.setThreadIds);
+
+    // Persistence logic
+    const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const prevActiveThreadIdRef = useRef(activeThreadId);
+
+    useEffect(() => {
+        const threadAdapter = adapters?.thread ?? localStorageThreadAdapter;
+        
+        if (!threadAdapter || !threadAdapter.save) return;
+
+        const prevActiveThreadId = prevActiveThreadIdRef.current;
+        const hasSwitchedThread = prevActiveThreadId !== activeThreadId;
+
+        if (hasSwitchedThread) {
+            prevActiveThreadIdRef.current = activeThreadId;
+            return;
+        }
+
+        const save = async () => {
+            if (activeThreadId) {
+                // Update existing thread
+                await threadAdapter.save(activeThreadId, {
+                    title,
+                    status,
+                    messages: messages as any,
+                });
+            } else if (messages.length > 0) {
+                // Create new thread directly
+                const newId = generateId();
+                const firstMessage = messages[0];
+                const cleanContent = firstMessage.content || (firstMessage.parts && firstMessage.parts.length > 0 && typeof firstMessage.parts[0] === 'object' && 'text' in firstMessage.parts[0] ? (firstMessage.parts[0] as any).text : '') || '';
+                const title = cleanContent ? cleanContent.slice(0, 50) : 'New Thread';
+
+                await threadAdapter.save(newId, {
+                    title: title,
+                    status: 'regular',
+                    messages: messages as any,
+                });
+                
+                // Update global state
+                setThreadIds(prev => [newId, ...prev]);
+                setActiveThreadId(newId);
+                
+                // We don't need to manually update title/status here as the effect above will run
+                // when activeThreadId changes, but since we are the ones changing it and we just saved,
+                // the fetch will return what we just saved.
+            }
+        };
+
+        if (activeThreadId) {
+            // Debounce updates for existing threads
+            if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+            saveTimeoutRef.current = setTimeout(save, 1000);
+        } else if (messages.length > 0) {
+            // Immediate save for new threads
+            save();
+        }
+
+        return () => {
+            if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+        };
+    }, [messages, activeThreadId, adapters, title, status, setThreadIds, setActiveThreadId]);
+
+
 
     const isRunningRef = useRef(false);
     useEffect(() => {
