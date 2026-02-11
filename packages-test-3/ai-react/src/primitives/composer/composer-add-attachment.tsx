@@ -1,0 +1,63 @@
+"use client";
+
+import { useCallback } from "react";
+import {
+  ActionButtonElement,
+  ActionButtonProps,
+  createActionButton,
+} from "@creatorem/ai-chat/utils";
+import { useComposerStore } from "@creatorem/ai-chat/primitives/composer";
+
+const useComposerAddAttachment = ({
+  multiple = true,
+}: {
+  /** allow selecting multiple files */
+  multiple?: boolean | undefined;
+} = {}) => {
+  const composerStore = useComposerStore();
+
+  const callback = useCallback(() => {
+    const { attachmentAccept, addAttachment } = composerStore.getState();
+    const input = document.createElement("input");
+    input.type = "file";
+    input.multiple = multiple;
+    input.hidden = true;
+
+    if (attachmentAccept !== "*") {
+      input.accept = attachmentAccept;
+    }
+
+    document.body.appendChild(input);
+
+    input.onchange = (e) => {
+      const fileList = (e.target as HTMLInputElement).files;
+      if (!fileList) return;
+      for (const file of fileList) {
+        addAttachment(file);
+      }
+
+      document.body.removeChild(input);
+    };
+
+    input.oncancel = () => {
+      if (!input.files || input.files.length === 0) {
+        document.body.removeChild(input);
+      }
+    };
+
+    input.click();
+  }, [composerStore, multiple]);
+
+  return callback;
+};
+
+export namespace ComposerPrimitiveAddAttachment {
+  export type Element = ActionButtonElement;
+  export type Props = ActionButtonProps<typeof useComposerAddAttachment>;
+}
+
+export const ComposerPrimitiveAddAttachment = createActionButton(
+  "ComposerPrimitive.AddAttachment",
+  useComposerAddAttachment,
+  ["multiple"],
+);

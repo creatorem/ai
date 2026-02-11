@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { useThread } from "../thread/thread-root";
-import type { ToolCallMessagePartComponent } from "../../types/message-part-component-types";
+import { useThread } from "../primitives/thread";
+import type { ToolCallMessagePartComponent } from "../types/message-part-component-types";
 import type { Tool } from "@creatorem/stream";
 
 export type AssistantToolProps<

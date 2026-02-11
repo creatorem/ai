@@ -2,9 +2,8 @@
 
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createStore, useStore, type StoreApi } from 'zustand';
-import type { Threads } from "../../types/entities";
-import { useAiContext, useThreads, useThreadsStore } from "../ai-provider";
-import { localStorageThreadAdapter, saveThread, deleteThread as deleteStoredThread, archiveThread as archiveStoredThread, unarchiveThread as unarchiveStoredThread, renameThread as renameStoredThread } from "../../adapters/local-storage-adapter";
+import { useAiContext, useThreads, useThreadsStore } from "../../ai-provider";
+import { localStorageThreadAdapter, saveThread, deleteThread as deleteStoredThread, archiveThread as archiveStoredThread, unarchiveThread as unarchiveStoredThread, renameThread as renameStoredThread } from "@creatorem/ai-chat/adapters/local-storage-adapter";
 import { generateId } from "ai";
 
 export type ThreadListItem = {

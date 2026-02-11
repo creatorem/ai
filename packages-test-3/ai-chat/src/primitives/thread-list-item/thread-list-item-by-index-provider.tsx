@@ -2,7 +2,7 @@
 
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createStore, useStore, type StoreApi } from "zustand";
-import { useAiContext, useThreads } from "../ai-provider";
+import { useAiContext, useThreads } from "../../ai-provider";
 
 export type ThreadListItemMethods = {
   switchToThread(): void;

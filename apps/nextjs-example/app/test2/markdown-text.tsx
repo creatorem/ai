@@ -13,7 +13,7 @@ import {
   MarkdownTextPrimitive,
   unstable_memoizeMarkdownComponents as memoizeMarkdownComponents,
   useIsMarkdownCodeBlock,
-} from '../../../../packages-test-3/ai-chat/src/markdown/index';
+} from '@creatorem/ai-react/markdown/index';
 
 const MarkdownTextImpl = () => {
   return (

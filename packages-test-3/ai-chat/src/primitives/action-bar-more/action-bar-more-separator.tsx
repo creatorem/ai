@@ -1,13 +1,13 @@
 "use client";
 
 import { ComponentPropsWithoutRef, ComponentRef, forwardRef } from "react";
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { ScopedProps, useDropdownMenuScope } from "./scope";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
+import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 
 export namespace ActionBarMorePrimitiveSeparator {
-  export type Element = ComponentRef<typeof DropdownMenuPrimitive.Separator>;
+  export type Element = ComponentRef<RuntimeComponents['ActionBarSeparator']>;
   export type Props = ComponentPropsWithoutRef<
-    typeof DropdownMenuPrimitive.Separator
+    RuntimeComponents['ActionBarSeparator']
   >;
 }
 
@@ -17,14 +17,16 @@ export const ActionBarMorePrimitiveSeparator = forwardRef<
 >(
   (
     {
-      __scopeActionBarMore,
+      // __scopeActionBarMore,
       ...rest
-    }: ScopedProps<ActionBarMorePrimitiveSeparator.Props>,
+    // }: ScopedProps<ActionBarMorePrimitiveSeparator.Props>,
+    }: ActionBarMorePrimitiveSeparator.Props,
     ref,
   ) => {
-    const scope = useDropdownMenuScope(__scopeActionBarMore);
+    const {components:{ActionBarSeparator}} = useRuntime();
+    // const scope = useDropdownMenuScope(__scopeActionBarMore);
 
-    return <DropdownMenuPrimitive.Separator {...scope} {...rest} ref={ref} />;
+    return <ActionBarSeparator /* {...scope} */ {...rest} ref={ref} />;
   },
 );
 

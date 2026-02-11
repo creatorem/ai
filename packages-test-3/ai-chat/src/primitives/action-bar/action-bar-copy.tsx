@@ -3,11 +3,10 @@
 import { forwardRef, useMemo } from "react";
 import { ActionButtonProps } from "../../utils/create-action-button";
 import { composeEventHandlers } from "@radix-ui/primitive";
-import { Primitive } from "@radix-ui/react-primitive";
 import { useCallback } from "react";
 import { useMessage, useMessageStore } from "../message/message-by-index-provider";
-import { useComposer } from "../composer/composer-provider";
-import { useThread } from "../thread/thread-root";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
+import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 
 /**
  * Hook that provides copy functionality for action bar buttons.
@@ -71,7 +70,7 @@ const useActionBarPrimitiveCopy = ({
 };
 
 export namespace ActionBarPrimitiveCopy {
-  export type Element = HTMLButtonElement;
+  export type Element = RuntimeComponents['Button'];
   /**
    * Props for the ActionBarPrimitive.Copy component.
    * Inherits all button element props and action button functionality.
@@ -99,13 +98,17 @@ export const ActionBarPrimitiveCopy = forwardRef<
 >(({ copiedDuration, onClick, disabled, ...props }, forwardedRef) => {
   const isCopied = useMessage(s => s.isCopied);
   const callback = useActionBarPrimitiveCopy({ copiedDuration });
+
+  const { components: { Button } } = useRuntime();
+
   return (
-    <Primitive.button
+    <Button
       type="button"
       {...(isCopied ? { "data-copied": "true" } : {})}
       {...props}
       ref={forwardedRef}
       disabled={disabled || !callback}
+      // @ts-ignore
       onClick={composeEventHandlers(onClick, () => {
         callback?.();
       })}

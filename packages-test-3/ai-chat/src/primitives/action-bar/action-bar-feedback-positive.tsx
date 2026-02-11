@@ -2,9 +2,9 @@
 
 import { forwardRef, useCallback, useMemo } from "react";
 import { ActionButtonProps } from "../../utils/create-action-button";
-import { composeEventHandlers } from "@radix-ui/primitive";
-import { Primitive } from "@radix-ui/react-primitive";
-import { useMessage, useMessageStore } from "../message/message-by-index-provider";
+import { useMessage, useMessageStore } from "../message";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
+import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 
 const useActionBarFeedbackPositive = () => {
   const messageStore = useMessageStore();
@@ -17,7 +17,7 @@ const useActionBarFeedbackPositive = () => {
 };
 
 export namespace ActionBarPrimitiveFeedbackPositive {
-  export type Element = HTMLButtonElement;
+  export type Element = RuntimeComponents['Button'];
   export type Props = ActionButtonProps<typeof useActionBarFeedbackPositive>;
 }
 
@@ -31,16 +31,21 @@ export const ActionBarPrimitiveFeedbackPositive = forwardRef<
     [metadata]);
 
   const callback = useActionBarFeedbackPositive();
+
+  const { components: { Button } } = useRuntime();
+
   return (
-    <Primitive.button
+    <Button
       type="button"
       {...(isSubmitted ? { "data-submitted": "true" } : {})}
       {...props}
       ref={forwardedRef}
       disabled={disabled || !callback}
-      onClick={composeEventHandlers(onClick, () => {
+      // @ts-ignore
+      onClick={(e: React.MouseEvent) => {
+        onClick?.(e);
         callback?.();
-      })}
+      }}
     />
   );
 });

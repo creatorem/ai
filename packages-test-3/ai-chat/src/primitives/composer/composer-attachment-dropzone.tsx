@@ -1,25 +1,25 @@
 "use client";
 
 import { forwardRef, useCallback, useState } from "react";
-
-import { Slot } from "@radix-ui/react-slot";
 import React from "react";
 import { useComposerStore } from "./composer-provider";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
+import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 
 export namespace ComposerPrimitiveAttachmentDropzone {
-  export type Element = HTMLDivElement;
-  export type Props = React.HTMLAttributes<HTMLDivElement> & {
-    asChild?: boolean | undefined;
+  export type Element = RuntimeComponents['Box'];
+  export type Props = React.ComponentPropsWithoutRef<RuntimeComponents['Box']> & {
     disabled?: boolean | undefined;
   };
 }
 
 export const ComposerPrimitiveAttachmentDropzone = forwardRef<
-  HTMLDivElement,
+  ComposerPrimitiveAttachmentDropzone.Element,
   ComposerPrimitiveAttachmentDropzone.Props
->(({ disabled, asChild = false, children, ...rest }, ref) => {
+>(({ disabled, children, ...rest }, ref) => {
   const [isDragging, setIsDragging] = useState(false);
   const composerStore = useComposerStore();
+  const { components: { Box } } = useRuntime();
 
   const handleDragEnterCapture = useCallback(
     (e: React.DragEvent) => {
@@ -75,17 +75,15 @@ export const ComposerPrimitiveAttachmentDropzone = forwardRef<
     onDropCapture: handleDrop,
   };
 
-  const Comp = asChild ? Slot : "div";
-
   return (
-    <Comp
+    <Box
       {...(isDragging ? { "data-dragging": "true" } : null)}
       ref={ref}
       {...dragProps}
       {...rest}
     >
       {children}
-    </Comp>
+    </Box>
   );
 });
 

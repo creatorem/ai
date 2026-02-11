@@ -1,7 +1,7 @@
 "use client";
 
 import type { FC } from "react";
-import { useAttachment } from "./attachment-by-index-provider";
+import { useAttachment } from "../attachment";
 
 export namespace AttachmentPrimitiveName {
   export type Props = Record<string, never>;

@@ -1,18 +1,14 @@
 "use client";
 
-import { Primitive } from "@radix-ui/react-primitive";
-import { type ComponentRef, forwardRef, ComponentPropsWithoutRef } from "react";
-import { MessagePrimitiveIf } from "../message/message-if";
+import { forwardRef, type ComponentPropsWithoutRef } from "react";
+import * as MessagePrimitive from "../message";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
+import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 
 export namespace BranchPickerPrimitiveRoot {
-  export type Element = ComponentRef<typeof Primitive.div>;
-  export type Props = ComponentPropsWithoutRef<typeof Primitive.div> & {
-    /**
-     * Whether to hide the branch picker when there's only one branch available.
-     * When true, the component will only render when multiple branches exist.
-     * @default false
-     */
-    hideWhenSingleBranch?: boolean | undefined;
+  export type Element = RuntimeComponents['Box'];
+  export type Props = ComponentPropsWithoutRef<RuntimeComponents['Box']> & {
+    hideWhenSingleBranch?: boolean;
   };
 }
 
@@ -37,10 +33,13 @@ export const BranchPickerPrimitiveRoot = forwardRef<
   BranchPickerPrimitiveRoot.Element,
   BranchPickerPrimitiveRoot.Props
 >(({ hideWhenSingleBranch, ...rest }, ref) => {
+  const { components } = useRuntime();
+  const { Box } = components;
+
   return (
-    <MessagePrimitiveIf hasBranches={hideWhenSingleBranch ? true : undefined}>
-      <Primitive.div {...rest} ref={ref} />
-    </MessagePrimitiveIf>
+    <MessagePrimitive.If hasBranches={hideWhenSingleBranch ? true : undefined}>
+      <Box {...rest} ref={ref} />
+    </MessagePrimitive.If>
   );
 });
 

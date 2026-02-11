@@ -1,13 +1,13 @@
 "use client";
 
 import { ComponentPropsWithoutRef, ComponentRef, forwardRef } from "react";
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { ScopedProps, useDropdownMenuScope } from "./scope";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
+import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 
 export namespace ActionBarMorePrimitiveTrigger {
-  export type Element = ComponentRef<typeof DropdownMenuPrimitive.Trigger>;
+  export type Element = ComponentRef<RuntimeComponents['ActionBarTrigger']>;
   export type Props = ComponentPropsWithoutRef<
-    typeof DropdownMenuPrimitive.Trigger
+    RuntimeComponents['ActionBarTrigger']
   >;
 }
 
@@ -17,14 +17,16 @@ export const ActionBarMorePrimitiveTrigger = forwardRef<
 >(
   (
     {
-      __scopeActionBarMore,
+      // __scopeActionBarMore,
       ...rest
-    }: ScopedProps<ActionBarMorePrimitiveTrigger.Props>,
+    // }: ScopedProps<ActionBarMorePrimitiveTrigger.Props>,
+    }: ActionBarMorePrimitiveTrigger.Props,
     ref,
   ) => {
-    const scope = useDropdownMenuScope(__scopeActionBarMore);
+    const {components: {ActionBarTrigger}} = useRuntime()
+    // const scope = useDropdownMenuScope(__scopeActionBarMore);
 
-    return <DropdownMenuPrimitive.Trigger {...scope} {...rest} ref={ref} />;
+    return <ActionBarTrigger /* {...scope} */ {...rest} ref={ref} />;
   },
 );
 

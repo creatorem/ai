@@ -1,22 +1,23 @@
 "use client";
 
 import { FC } from "react";
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { ScopedProps, useDropdownMenuScope } from "./scope";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
+import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 
 export namespace ActionBarMorePrimitiveRoot {
-  export type Props = DropdownMenuPrimitive.DropdownMenuProps;
+  export type Props = React.ComponentPropsWithRef<RuntimeComponents['ActionBarRoot']>;
 }
 
 export const ActionBarMorePrimitiveRoot: FC<
   ActionBarMorePrimitiveRoot.Props
 > = ({
-  __scopeActionBarMore,
+  // __scopeActionBarMore,
   ...rest
-}: ScopedProps<ActionBarMorePrimitiveRoot.Props>) => {
-  const scope = useDropdownMenuScope(__scopeActionBarMore);
+}: ActionBarMorePrimitiveRoot.Props) => {
+  const {components:{ActionBarRoot}} = useRuntime();
+  // const scope = useDropdownMenuScope(__scopeActionBarMore);
 
-  return <DropdownMenuPrimitive.Root {...scope} {...rest} />;
+  return <ActionBarRoot /* {...scope} */ {...rest} />;
 };
 
 ActionBarMorePrimitiveRoot.displayName = "ActionBarMorePrimitive.Root";

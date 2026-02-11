@@ -1,7 +1,8 @@
 "use client";
 
 import type { FC } from "react";
-import { useMessage } from "../message/message-by-index-provider";
+import { useMessage } from "../message";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
 
 const useBranchPickerCount = () => {
   return useMessage(s => s.branchCount);
@@ -31,8 +32,9 @@ export namespace BranchPickerPrimitiveCount {
 export const BranchPickerPrimitiveCount: FC<
   BranchPickerPrimitiveCount.Props
 > = () => {
+    const { components: {Text} } = useRuntime();
   const branchCount = useBranchPickerCount();
-  return <>{branchCount}</>;
+  return <Text>{branchCount}</Text>;
 };
 
 BranchPickerPrimitiveCount.displayName = "BranchPickerPrimitive.Count";

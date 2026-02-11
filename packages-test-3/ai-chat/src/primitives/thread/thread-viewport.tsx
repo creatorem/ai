@@ -1,21 +1,22 @@
 "use client";
 
-import { useComposedRefs } from "@radix-ui/react-compose-refs";
-import { Primitive } from "@radix-ui/react-primitive";
+import { useComposedRefs } from "../../utils/composed-refs";
 import {
   type ComponentRef,
   forwardRef,
-  ComponentPropsWithoutRef,
   useCallback,
+  type ComponentProps,
 } from "react";
-import { useThreadViewport } from "./thread-viewport-context";
-import { ThreadPrimitiveViewportProvider } from "./thread-viewport-provider";
+import { useThreadViewport } from "../../primitives/thread/thread-viewport-context";
+import { ThreadPrimitiveViewportProvider } from "../../primitives/thread/thread-viewport-provider";
 import { useSizeHandle } from "../../hooks/use-size-handle";
 import { useThreadViewportAutoScroll } from "./use-thread-viewport-auto-scroll";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
+import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 
 export namespace ThreadPrimitiveViewport {
-  export type Element = ComponentRef<typeof Primitive.div>;
-  export type Props = ComponentPropsWithoutRef<typeof Primitive.div> & {
+  export type Element = RuntimeComponents['ScrollArea']; 
+  export type Props = ComponentProps<RuntimeComponents['ScrollArea']> & {
     /**
      * Whether to automatically scroll to the bottom when new messages are added.
      * When enabled, the viewport will automatically scroll to show the latest content.
@@ -75,7 +76,8 @@ const ThreadPrimitiveViewportScrollable = forwardRef<
     },
     forwardedRef,
   ) => {
-    const autoScrollRef = useThreadViewportAutoScroll<HTMLDivElement>({
+    const { components: { ScrollArea } } = useRuntime();
+    const autoScrollRef = useThreadViewportAutoScroll({
       autoScroll,
       scrollToBottomOnRunStart,
       scrollToBottomOnInitialize,
@@ -85,9 +87,9 @@ const ThreadPrimitiveViewportScrollable = forwardRef<
     const ref = useComposedRefs(forwardedRef, autoScrollRef, viewportSizeRef);
 
     return (
-      <Primitive.div {...rest} ref={ref}>
+      <ScrollArea {...rest} ref={ref}>
         {children}
-      </Primitive.div>
+      </ScrollArea>
     );
   },
 );

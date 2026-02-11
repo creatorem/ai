@@ -1,16 +1,16 @@
 "use client";
 
-import { Primitive } from "@radix-ui/react-primitive";
 import { type ComponentRef, forwardRef, ComponentPropsWithoutRef } from "react";
 import { useMessagePartImage } from "./use-message-part-image";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
+import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 
 export namespace MessagePartPrimitiveImage {
-  export type Element = ComponentRef<typeof Primitive.img>;
+  export type Element = ComponentRef<RuntimeComponents['Image']>;
   /**
    * Props for the MessagePartPrimitive.Image component.
-   * Accepts all standard img element props.
    */
-  export type Props = ComponentPropsWithoutRef<typeof Primitive.img>;
+  export type Props = Omit<ComponentPropsWithoutRef<RuntimeComponents['Image']>, 'src'>;
 }
 
 /**
@@ -33,7 +33,9 @@ export const MessagePartPrimitiveImage = forwardRef<
   MessagePartPrimitiveImage.Props
 >((props, forwardedRef) => {
   const { image } = useMessagePartImage();
-  return <Primitive.img src={image} {...props} ref={forwardedRef} />;
+  const { components: { Image } } = useRuntime();
+  
+  return <Image src={image} {...props} ref={forwardedRef} />;
 });
 
 MessagePartPrimitiveImage.displayName = "MessagePartPrimitive.Image";

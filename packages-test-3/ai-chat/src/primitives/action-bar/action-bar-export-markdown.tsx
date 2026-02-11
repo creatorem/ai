@@ -2,9 +2,9 @@
 
 import { forwardRef, useCallback, useMemo } from "react";
 import { ActionButtonProps } from "../../utils/create-action-button";
-import { composeEventHandlers } from "@radix-ui/primitive";
-import { Primitive } from "@radix-ui/react-primitive";
 import { useMessage, useMessageStore } from "../message/message-by-index-provider";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
+import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 
 const useActionBarExportMarkdown = ({
   filename,
@@ -48,7 +48,7 @@ const useActionBarExportMarkdown = ({
 };
 
 export namespace ActionBarPrimitiveExportMarkdown {
-  export type Element = HTMLButtonElement;
+  export type Element = RuntimeComponents['Button'];
   export type Props = ActionButtonProps<typeof useActionBarExportMarkdown>;
 }
 
@@ -57,13 +57,19 @@ export const ActionBarPrimitiveExportMarkdown = forwardRef<
   ActionBarPrimitiveExportMarkdown.Props
 >(({ filename, onExport, onClick, disabled, ...props }, forwardedRef) => {
   const callback = useActionBarExportMarkdown({ filename, onExport });
+
+  const { components } = useRuntime();
+  const { Button } = components;
+
   return (
-    <Primitive.button
+    // @ts-ignore
+    <Button
       type="button"
       {...props}
       ref={forwardedRef}
       disabled={disabled || !callback}
-      onClick={composeEventHandlers(onClick, () => {
+      onClick={((e) => {
+        onClick?.(e);
         callback?.();
       })}
     />

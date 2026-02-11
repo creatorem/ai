@@ -1,6 +1,5 @@
 "use client";
 
-import { Slot } from "@radix-ui/react-slot";
 import {
   createContext,
   type FC,
@@ -10,9 +9,9 @@ import {
   useMemo,
 } from "react";
 import { useThreadViewportStore } from "./thread-viewport-context";
-import { useManagedRef } from "../../hooks/use-managed-ref";
 import { useThread } from "./thread-root";
 import { useMessage } from "../message/message-by-index-provider";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
 
 const SlackNestingContext = createContext(false);
 
@@ -41,11 +40,11 @@ export type ThreadViewportSlackProps = {
   fillClampThreshold?: string;
   /** Offset used when clamping large user messages */
   fillClampOffset?: string;
-  children: ReactNode;
+  children?: ReactNode;
 };
 
 /**
- * A slot component that provides minimum height to enable scroll anchoring.
+ * A component that provides minimum height to enable scroll anchoring.
  *
  * When using `turnAnchor="top"`, this component ensures there is
  * enough scroll room below the anchor point (last user message) for it to scroll
@@ -74,13 +73,15 @@ export const ThreadPrimitiveViewportSlack: FC<ThreadViewportSlackProps> = ({
       messageIndex >= 1 &&
       prevMessageRole === "user",
     [messageIsLast, messageRole, messageIndex, prevMessageRole]);
-    
+
   const threadViewportStore = useThreadViewportStore({ optional: true });
   const isNested = useContext(SlackNestingContext);
+  const { components } = useRuntime();
+  const { Box } = components;
 
-  const callback = useCallback(
-    (el: HTMLElement) => {
-      if (!threadViewportStore || isNested) return;
+  const ref = useCallback(
+    (el: HTMLElement | null) => {
+      if (!el || !threadViewportStore || isNested) return;
 
       const updateMinHeight = () => {
         const state = threadViewportStore.getState();
@@ -114,11 +115,9 @@ export const ThreadPrimitiveViewportSlack: FC<ThreadViewportSlackProps> = ({
     ],
   );
 
-  const ref = useManagedRef<HTMLElement>(callback);
-
   return (
     <SlackNestingContext.Provider value={true}>
-      <Slot ref={ref}>{children}</Slot>
+      <Box ref={ref}>{children}</Box>
     </SlackNestingContext.Provider>
   );
 };

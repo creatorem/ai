@@ -1,34 +1,21 @@
 'use client';
 
-import { useChat } from '@ai-sdk/react';
 import { FC, useState } from 'react';
-import { AiProvider as AuiProvider } from '@creatorem/ai-chat/primitives/ai-provider'
-import {
-  ThreadPrimitiveRoot,
-  ThreadPrimitiveViewport,
-  ThreadPrimitiveViewportFooter,
-  ThreadPrimitiveMessages,
-  ThreadPrimitiveSuggestion,
-  ThreadPrimitiveScrollToBottom,
-  ThreadPrimitiveIf
-} from '@creatorem/ai-chat/primitives/thread/index'
-
-import * as ComposerPrimitive from '@creatorem/ai-chat/primitives/composer/index'
-// import { ThreadPrimitiveIf } from '@creatorem/ai-chat/primitives/thread/thread-if'
+import { AiProvider } from '@creatorem/ai-react/ai-provider'
+import * as ComposerPrimitive from '@creatorem/ai-react/primitives/composer'
 import {
   Root as MessagePrimitiveRoot,
-  Parts as MessagePrimitiveParts,
   If as MessagePrimitiveIf,
   Error as MessagePrimitiveError,
-} from '@creatorem/ai-chat/primitives/message/index'
-import {
-  Root as ErrorPrimitiveRoot,
-  Message as ErrorPrimitiveMessage
-} from '@creatorem/ai-chat/primitives/error/index'
+} from '@creatorem/ai-react/primitives/message'
+import * as ErrorPrimitive from '@creatorem/ai-react/primitives/error'
 
-import * as ActionBarPrimitive from '@creatorem/ai-chat/primitives/action-bar/index'
-import * as BranchPickerPrimitive from '@creatorem/ai-chat/primitives/branch-picker/index'
-import * as ActionBarMorePrimitive from '@creatorem/ai-chat/primitives/action-bar-more/index'
+import * as ActionBarPrimitive from "@creatorem/ai-react/primitives/action-bar";
+import * as ActionBarMorePrimitive from "@creatorem/ai-react/primitives/action-bar-more";
+import * as BranchPickerPrimitive from "@creatorem/ai-react/primitives/branch-picker";
+import * as ThreadPrimitive from "@creatorem/ai-react/primitives/thread";
+import * as MessagePrimitive from "@creatorem/ai-react/primitives/message";
+// import { MessagePrimitiveParts } from "@creatorem/ai-react/primitives/message";
 import { Button } from '@/components/ui/button';
 import { ArrowDownIcon, ArrowUpIcon, CheckIcon, ChevronLeftIcon, ChevronRightIcon, CopyIcon, DownloadIcon, MoreHorizontalIcon, PencilIcon, RefreshCwIcon, SquareIcon } from 'lucide-react';
 import { TooltipIconButton } from '@/components/ai-chat/tooltip-icon-button';
@@ -36,7 +23,6 @@ import { cn } from '@/lib/utils';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { Separator } from '@/components/ui/separator';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { ComposerAddAttachment, ComposerAttachments, UserMessageAttachments } from './attachment';
 import { Reasoning, ReasoningGroup } from './reasoning';
 import { ToolFallback } from './tool-fallback';
@@ -46,45 +32,45 @@ import { WeatherToolRegistration } from './weather-tool-ui';
 
 export default function Chat() {
   return (
-    <AuiProvider>
-      <SidebarProvider>
-        <div className="flex h-dvh w-full pr-0.5">
-          <ThreadListSidebar />
-          <SidebarInset>
-            <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-              <SidebarTrigger />
-              <Separator orientation="vertical" className="mr-2 h-4" />
-              <Breadcrumb>
-                <BreadcrumbList>
-                  <BreadcrumbItem className="hidden md:block">
-                    <BreadcrumbLink
-                      href="https://www.assistant-ui.com/docs/getting-started"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Build Your Own ChatGPT UX
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator className="hidden md:block" />
-                  <BreadcrumbItem>
-                    <BreadcrumbPage>Starter Template</BreadcrumbPage>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
-            </header>
-            <div className="flex-1 overflow-hidden">
-              <Thread />
-            </div>
-          </SidebarInset>
-        </div>
-      </SidebarProvider>
-    </AuiProvider>
+      <AiProvider>
+        <SidebarProvider>
+          <div className="flex h-dvh w-full pr-0.5">
+            <ThreadListSidebar />
+            <SidebarInset>
+              <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+                <SidebarTrigger />
+                <Separator orientation="vertical" className="mr-2 h-4" />
+                <Breadcrumb>
+                  <BreadcrumbList>
+                    <BreadcrumbItem className="hidden md:block">
+                      <BreadcrumbLink
+                        href="https://www.assistant-ui.com/docs/getting-started"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Build Your Own ChatGPT UX
+                      </BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator className="hidden md:block" />
+                    <BreadcrumbItem>
+                      <BreadcrumbPage>Starter Template</BreadcrumbPage>
+                    </BreadcrumbItem>
+                  </BreadcrumbList>
+                </Breadcrumb>
+              </header>
+              <div className="flex-1 overflow-hidden">
+                <Thread />
+              </div>
+            </SidebarInset>
+          </div>
+        </SidebarProvider>
+      </AiProvider>
   );
 }
 
 const Thread: React.FC = () => {
   return (
-    <ThreadPrimitiveRoot>
+    <ThreadPrimitive.Root>
       <WeatherToolRegistration />
       <div
         className="aui-root aui-thread-root @container flex h-full flex-col"
@@ -92,16 +78,16 @@ const Thread: React.FC = () => {
           ["--thread-max-width" as string]: "44rem",
         }}
       >
-        <ThreadPrimitiveViewport
+        <ThreadPrimitive.Viewport
           turnAnchor="top"
           className='aui-thread-viewport relative flex flex-1 flex-col overflow-x-auto overflow-y-scroll scroll-smooth px-4 pt-4'
         >
 
-          <ThreadPrimitiveIf empty={true}>
+          <ThreadPrimitive.If empty={true}>
             <ThreadWelcome />
-          </ThreadPrimitiveIf>
+          </ThreadPrimitive.If>
 
-          <ThreadPrimitiveMessages
+          <ThreadPrimitive.Messages
             components={{
               UserMessage,
               EditComposer,
@@ -109,19 +95,19 @@ const Thread: React.FC = () => {
             }}
           />
 
-          <ThreadPrimitiveViewportFooter className="aui-thread-viewport-footer sticky bottom-0 mx-auto mt-auto flex w-full max-w-(--thread-max-width) flex-col gap-4 overflow-visible rounded-t-3xl bg-background pb-4 md:pb-6">
+          <ThreadPrimitive.ViewportFooter className="aui-thread-viewport-footer sticky bottom-0 mx-auto mt-auto flex w-full max-w-(--thread-max-width) flex-col gap-4 overflow-visible rounded-t-3xl bg-background pb-4 md:pb-6">
             <ThreadScrollToBottom />
             <Composer />
-          </ThreadPrimitiveViewportFooter>
-        </ThreadPrimitiveViewport>
+          </ThreadPrimitive.ViewportFooter>
+        </ThreadPrimitive.Viewport>
       </div>
-    </ThreadPrimitiveRoot>
+    </ThreadPrimitive.Root>
   );
 };
 
 const ThreadScrollToBottom: FC = () => {
   return (
-    <ThreadPrimitiveScrollToBottom asChild>
+    <ThreadPrimitive.ScrollToBottom asChild>
       <TooltipIconButton
         tooltip="Scroll to bottom"
         variant="outline"
@@ -129,7 +115,7 @@ const ThreadScrollToBottom: FC = () => {
       >
         <ArrowDownIcon />
       </TooltipIconButton>
-    </ThreadPrimitiveScrollToBottom>
+    </ThreadPrimitive.ScrollToBottom>
   );
 };
 
@@ -173,7 +159,7 @@ const ThreadSuggestions: FC = () => {
           className="aui-thread-welcome-suggestion-display fade-in slide-in-from-bottom-2 @md:nth-[n+3]:block nth-[n+3]:hidden animate-in fill-mode-both duration-200"
           style={{ animationDelay: `${100 + index * 50}ms` }}
         >
-          <ThreadPrimitiveSuggestion prompt={suggestion.prompt} send asChild>
+          <ThreadPrimitive.Suggestion prompt={suggestion.prompt} send asChild>
             <Button
               variant="ghost"
               className="aui-thread-welcome-suggestion h-auto w-full @md:flex-col flex-wrap items-start justify-start gap-1 rounded-2xl border px-4 py-3 text-left text-sm transition-colors hover:bg-muted"
@@ -186,7 +172,7 @@ const ThreadSuggestions: FC = () => {
                 {suggestion.label}
               </span>
             </Button>
-          </ThreadPrimitiveSuggestion>
+          </ThreadPrimitive.Suggestion>
         </div>
       ))}
     </div>
@@ -218,7 +204,7 @@ const ComposerAction: FC = () => {
     <div className="aui-composer-action-wrapper relative mx-2 mb-2 flex items-center justify-between">
       <ComposerAddAttachment />
 
-      <ThreadPrimitiveIf running={false}>
+      <ThreadPrimitive.If running={false}>
         <ComposerPrimitive.Send asChild>
           <TooltipIconButton
             tooltip="Send message"
@@ -232,9 +218,9 @@ const ComposerAction: FC = () => {
             <ArrowUpIcon className="aui-composer-send-icon size-4" />
           </TooltipIconButton>
         </ComposerPrimitive.Send>
-      </ThreadPrimitiveIf>
+      </ThreadPrimitive.If>
 
-      <ThreadPrimitiveIf running={true}>
+      <ThreadPrimitive.If running={true}>
         <ComposerPrimitive.Cancel asChild>
           <Button
             type="button"
@@ -246,7 +232,7 @@ const ComposerAction: FC = () => {
             <SquareIcon className="aui-composer-cancel-icon size-3 fill-current" />
           </Button>
         </ComposerPrimitive.Cancel>
-      </ThreadPrimitiveIf>
+      </ThreadPrimitive.If>
     </div>
   );
 };
@@ -255,9 +241,9 @@ const ComposerAction: FC = () => {
 const MessageError: FC = () => {
   return (
     <MessagePrimitiveError>
-      <ErrorPrimitiveRoot className="aui-message-error-root mt-2 rounded-md border border-destructive bg-destructive/10 p-3 text-destructive text-sm dark:bg-destructive/5 dark:text-red-200">
-        <ErrorPrimitiveMessage className="aui-message-error-message line-clamp-2" />
-      </ErrorPrimitiveRoot>
+      <ErrorPrimitive.Root className="aui-message-error-root mt-2 rounded-md border border-destructive bg-destructive/10 p-3 text-destructive text-sm dark:bg-destructive/5 dark:text-red-200">
+        <ErrorPrimitive.Message className="aui-message-error-message line-clamp-2" />
+      </ErrorPrimitive.Root>
     </MessagePrimitiveError>
   );
 };
@@ -270,7 +256,7 @@ const AssistantMessage: FC = () => {
       data-role="assistant"
     >
       <div className="aui-assistant-message-content wrap-break-word px-2 text-foreground leading-relaxed">
-        <MessagePrimitiveParts
+        <MessagePrimitive.Parts
           components={{
             Text: MarkdownText,
             Reasoning,
@@ -348,7 +334,7 @@ const UserMessage: FC = () => {
 
       <div className="aui-user-message-content-wrapper relative col-start-2 min-w-0">
         <div className="aui-user-message-content wrap-break-word rounded-2xl bg-muted px-4 py-2.5 text-foreground">
-          <MessagePrimitiveParts />
+          <MessagePrimitive.Parts />
         </div>
         <div className="aui-user-action-bar-wrapper absolute top-1/2 left-0 -translate-x-full -translate-y-1/2 pr-2">
           <UserActionBar />
@@ -417,8 +403,8 @@ const BranchPicker: FC<BranchPickerPrimitive.Root.Props> = ({
           <ChevronLeftIcon />
         </TooltipIconButton>
       </BranchPickerPrimitive.Previous>
-      <span className="aui-branch-picker-state font-medium">
-        <BranchPickerPrimitive.Number /> / <BranchPickerPrimitive.Count />
+      <span className="aui-branch-picker-state flex items-center gap-1 font-medium">
+        <BranchPickerPrimitive.Number /> <span>/</span> <BranchPickerPrimitive.Count />
       </span>
       <BranchPickerPrimitive.Next asChild>
         <TooltipIconButton tooltip="Next">

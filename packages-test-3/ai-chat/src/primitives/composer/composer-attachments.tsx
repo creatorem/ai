@@ -2,12 +2,12 @@
 
 import { ComponentType, type FC, memo } from "react";
 import type { Attachment } from "../../types/attachment-types";
-import { useComposer } from "./composer-provider";
+import { useComposer } from "../composer";
 import {
   AttachmentsProvider,
   AttachmentByIndexProvider,
   useAttachment,
-} from "../attachment/attachment-by-index-provider";
+} from "../attachment";
 
 export namespace ComposerPrimitiveAttachments {
   export type Props = {

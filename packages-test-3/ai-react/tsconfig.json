@@ -1,0 +1,12 @@
+{
+  "extends": "../../tooling/tsconfig/base.json",
+  "compilerOptions": {
+      "paths": {
+        "@creatorem/ai-chat/component-types": ["./@types/components.d.ts"],
+    },
+    "outDir": "dist",
+    "rootDir": "src"
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.test.tsx"]
+}

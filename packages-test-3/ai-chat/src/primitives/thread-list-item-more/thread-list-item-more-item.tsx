@@ -1,32 +1,25 @@
-'use client';
+"use client";
 
-import { ComponentPropsWithoutRef, ComponentRef, forwardRef } from "react";
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { ScopedProps, useDropdownMenuScope } from "./scope";
+import { ComponentPropsWithoutRef, forwardRef, useCallback } from "react";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
+import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
+// import { useThreadListItemMoreContext } from "./scope";
 
 export namespace ThreadListItemMorePrimitiveItem {
-  export type Element = ComponentRef<typeof DropdownMenuPrimitive.Item>;
-  export type Props = ComponentPropsWithoutRef<
-    typeof DropdownMenuPrimitive.Item
-  >;
+  export type Element = RuntimeComponents['ThreadListItemMoreItem'];
+  export type Props = ComponentPropsWithoutRef<RuntimeComponents['ThreadListItemMoreItem']>;
 }
 
 export const ThreadListItemMorePrimitiveItem = forwardRef<
   ThreadListItemMorePrimitiveItem.Element,
   ThreadListItemMorePrimitiveItem.Props
->(
-  (
-    {
-      __scopeThreadListItemMore,
-      ...rest
-    }: ScopedProps<ThreadListItemMorePrimitiveItem.Props>,
-    ref,
-  ) => {
-    const scope = useDropdownMenuScope(__scopeThreadListItemMore);
+>(({ ...rest }, ref) => {
+  const { components } = useRuntime();
+  const { ThreadListItemMoreItem } = components;
 
-    return <DropdownMenuPrimitive.Item {...scope} {...rest} ref={ref} />;
-  },
-);
+
+  return <ThreadListItemMoreItem {...rest} ref={ref} />;
+});
 
 ThreadListItemMorePrimitiveItem.displayName =
   "ThreadListItemMorePrimitive.Item";

@@ -16,10 +16,10 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { TooltipIconButton } from "@/components/assistant-ui/tooltip-icon-button";
 import { cn } from "@/lib/utils";
-import * as AttachmentPrimitive from '@creatorem/ai-chat/primitives/attachment/index'
-import { useAttachment } from '@creatorem/ai-chat/primitives/attachment/index'
-import * as ComposerPrimitive from '@creatorem/ai-chat/primitives/composer/index'
-import * as MessagePrimitive from '@creatorem/ai-chat/primitives/message/index'
+import * as AttachmentPrimitive from '@creatorem/ai-react/primitives/attachment'
+import { useAttachment } from '@creatorem/ai-react/primitives/attachment'
+import * as ComposerPrimitive from '@creatorem/ai-react/primitives/composer'
+import * as MessagePrimitive from '@creatorem/ai-react/primitives/message'
 
 const useFileSrc = (file: File | undefined) => {
   const [src, setSrc] = useState<string | undefined>(undefined);

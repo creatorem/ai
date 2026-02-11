@@ -42,6 +42,8 @@ export const ThreadPrimitiveViewportFooter = forwardRef<
   ThreadPrimitiveViewportFooter.Props
 >((props, forwardedRef) => {
   const register = useThreadViewport((s) => s.registerContentInset);
+  
+  // todo this is web specific, we should use the runtime to get the height
   const getHeight = useCallback((el: HTMLElement) => {
     const marginTop = parseFloat(getComputedStyle(el).marginTop) || 0;
     return el.offsetHeight + marginTop;

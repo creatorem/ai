@@ -1,8 +1,8 @@
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import type { Scope } from "@radix-ui/react-context";
+// import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
+// import type { Scope } from "@radix-ui/react-context";
 
-export const useDropdownMenuScope: ReturnType<
-  typeof DropdownMenuPrimitive.createDropdownMenuScope
-> = DropdownMenuPrimitive.createDropdownMenuScope();
+// export const useDropdownMenuScope: ReturnType<
+//   typeof DropdownMenuPrimitive.createDropdownMenuScope
+// > = DropdownMenuPrimitive.createDropdownMenuScope();
 
-export type ScopedProps<P> = P & { __scopeThreadListItemMore?: Scope };
+// export type ScopedProps<P> = P & { __scopeThreadListItemMore?: Scope };

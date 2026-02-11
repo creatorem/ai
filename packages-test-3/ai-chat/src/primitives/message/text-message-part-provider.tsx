@@ -2,7 +2,7 @@
 
 import { type FC, type PropsWithChildren, useMemo } from "react";
 import { PartProvider } from "../message-part/part-by-index-provider";
-import { PartState } from "../../types/entities";
+import { PartState } from "@creatorem/ai-chat/types/entities";
 
 export const TextMessagePartProvider: FC<
   PropsWithChildren<{

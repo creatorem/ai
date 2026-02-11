@@ -19,7 +19,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@creatorem/ai-chat/component-types": ["./@types/components.d.ts"],
     }
   },
   "include": [

@@ -6,8 +6,8 @@ import {
   createActionButton,
 } from "../../utils/create-action-button";
 import { useCallback, useMemo } from "react";
-import { useThread } from "../thread/thread-root";
-import { useMessage, useMessageStore } from "../message/message-by-index-provider";
+import { useThread } from "../thread";
+import { useMessage, useMessageStore } from "../message";
 
 /**
  * Hook that provides reload functionality for action bar buttons.

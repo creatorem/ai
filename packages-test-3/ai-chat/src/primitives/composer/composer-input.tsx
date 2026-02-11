@@ -1,8 +1,6 @@
 "use client";
 
-import { composeEventHandlers } from "@radix-ui/primitive";
 import { useComposedRefs } from "@radix-ui/react-compose-refs";
-import { Slot } from "@radix-ui/react-slot";
 import {
   ClipboardEvent,
   type KeyboardEvent,
@@ -12,23 +10,23 @@ import {
   useMemo,
   useRef,
 } from "react";
-import TextareaAutosize, {
-  type TextareaAutosizeProps,
-} from "react-textarea-autosize";
-import { useEscapeKeydown } from "@radix-ui/react-use-escape-keydown";
 import { useComposer, useComposerStore } from "./composer-provider";
 import { useThread } from "../thread/thread-root";
-import { useAiContext } from "../ai-provider";
+import { useAiContext } from "../../ai-provider";
 import { useOnScrollToBottom } from "../../hooks/use-on-scroll-to-bottom";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
+import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
+import { composeEventHandlers } from "../../utils/compose-event-handlers";
+import { useEscapeKeydown } from "../../hooks/use-escape-keydown";
 
 export namespace ComposerPrimitiveInput {
-  export type Element = HTMLTextAreaElement;
-  export type Props = TextareaAutosizeProps & {
+  export type Element = RuntimeComponents['Textarea'];
+  export type Props = React.ComponentPropsWithoutRef<RuntimeComponents['Textarea']> & {
     /**
      * Whether to render as a child component using Slot.
      * When true, the component will merge its props with its child.
      */
-    asChild?: boolean | undefined;
+    // asChild?: boolean | undefined;
     /**
      * Whether to submit the message when Enter is pressed (without Shift).
      * @default true
@@ -107,12 +105,13 @@ export const ComposerPrimitiveInput = forwardRef<
     const isThreadDisabled = useThread(s => s.isDisabled);
     const isThreadRunning = useThread(s => s.isRunning);
     const threadCapabilities = useThread(s => s.capabilities);
+    const { components: { Textarea } } = useRuntime();
 
     const value = useMemo(() => {
       return text;
     }, [text]);
 
-    const Component = asChild ? Slot : TextareaAutosize;
+    // const Component = asChild ? Slot : TextareaAutosize;
 
     const isDisabled = useMemo(
       () =>
@@ -120,14 +119,14 @@ export const ComposerPrimitiveInput = forwardRef<
         disabledProp || isThreadDisabled,
       [disabledProp, isThreadDisabled]);
 
-    const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const textareaRef = useRef<ComposerPrimitiveInput.Element>(null);
     const ref = useComposedRefs(forwardedRef, textareaRef);
 
     useEscapeKeydown((e) => {
       if (!cancelOnEscape) return;
 
       // Only handle ESC if it originated from within this input
-      if (!textareaRef.current?.contains(e.target as Node)) return;
+      if (textareaRef.current instanceof HTMLElement && !textareaRef.current?.contains(e.target as Node)) return;
 
       const { canCancel, cancel } = composerStore.getState();
       if (canCancel) {
@@ -144,7 +143,7 @@ export const ComposerPrimitiveInput = forwardRef<
 
       if (e.key === "Enter" && e.shiftKey === false) {
 
-        if (!isThreadRunning) {
+        if (!isThreadRunning && textareaRef.current instanceof HTMLElement) {
           e.preventDefault();
 
           textareaRef.current?.closest("form")?.requestSubmit();
@@ -152,7 +151,7 @@ export const ComposerPrimitiveInput = forwardRef<
       }
     };
 
-    const handlePaste = async (e: ClipboardEvent<HTMLTextAreaElement>) => {
+    const handlePaste = async (e: ClipboardEvent<unknown>) => {
       if (!addAttachmentOnPaste) return;
       const files = Array.from(e.clipboardData?.files || []);
 
@@ -173,8 +172,10 @@ export const ComposerPrimitiveInput = forwardRef<
       const textarea = textareaRef.current;
       if (!textarea || !autoFocusEnabled) return;
 
-      textarea.focus({ preventScroll: true });
-      textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+      if (textarea instanceof HTMLTextAreaElement) {
+        textarea.focus({ preventScroll: true });
+        textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+      }
     }, [autoFocusEnabled]);
 
     useEffect(() => focus(), [focus]);
@@ -210,11 +211,11 @@ export const ComposerPrimitiveInput = forwardRef<
 
     return (
       // @ts-ignore
-      <Component
+      <Textarea
         name="input"
         value={value}
         {...rest}
-        ref={ref as React.ForwardedRef<HTMLTextAreaElement>}
+        ref={ref}
         disabled={isDisabled}
         onChange={composeEventHandlers(onChange, (e) => {
           composerStore.getState().setText(e.target.value);

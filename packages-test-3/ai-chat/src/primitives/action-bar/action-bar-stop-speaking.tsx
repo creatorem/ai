@@ -2,11 +2,10 @@
 
 import { forwardRef, useMemo } from "react";
 import { ActionButtonProps } from "../../utils/create-action-button";
-import { useEscapeKeydown } from "@radix-ui/react-use-escape-keydown";
-import { Primitive } from "@radix-ui/react-primitive";
-import { composeEventHandlers } from "@radix-ui/primitive";
 import { useCallback } from "react";
-import { useMessage, useMessageStore } from "../message/message-by-index-provider";
+import { useMessage, useMessageStore } from "../message";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
+import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 
 const useActionBarStopSpeaking = () => {
   const speech = useMessage(s => s.speech);
@@ -23,7 +22,7 @@ const useActionBarStopSpeaking = () => {
 };
 
 export namespace ActionBarPrimitiveStopSpeaking {
-  export type Element = HTMLButtonElement;
+  export type Element = RuntimeComponents['Button'];
   export type Props = ActionButtonProps<typeof useActionBarStopSpeaking>;
 }
 
@@ -33,23 +32,20 @@ export const ActionBarPrimitiveStopSpeaking = forwardRef<
 >((props, ref) => {
   const callback = useActionBarStopSpeaking();
 
-  // TODO this stops working if the user is not hovering over an older message
-  useEscapeKeydown((e) => {
-    if (callback) {
-      e.preventDefault();
-      callback();
-    }
-  });
+  const { components } = useRuntime();
+  const { Button } = components;
 
   return (
-    <Primitive.button
+    // @ts-ignore
+    <Button
       type="button"
       disabled={!callback}
       {...props}
       ref={ref}
-      onClick={composeEventHandlers(props.onClick, () => {
+      onClick={(e) => {
+        props.onClick?.(e);
         callback?.();
-      })}
+      }}
     />
   );
 });

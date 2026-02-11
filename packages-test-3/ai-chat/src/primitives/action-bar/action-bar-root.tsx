@@ -1,17 +1,16 @@
 "use client";
 
-import { Primitive } from "@radix-ui/react-primitive";
-import { type ComponentRef, forwardRef, ComponentPropsWithoutRef } from "react";
+import { forwardRef, ComponentPropsWithoutRef } from "react";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
+import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 import {
   useActionBarFloatStatus,
   HideAndFloatStatus,
 } from "./use-action-bar-float-status";
 
-type PrimitiveDivProps = ComponentPropsWithoutRef<typeof Primitive.div>;
-
 export namespace ActionBarPrimitiveRoot {
-  export type Element = ComponentRef<typeof Primitive.div>;
-  export type Props = PrimitiveDivProps & {
+  export type Element = RuntimeComponents['Box'];
+  export type Props = ComponentPropsWithoutRef<RuntimeComponents['Box']> & {
     /**
      * Whether to hide the action bar when the thread is running.
      * @default false
@@ -66,10 +65,13 @@ export const ActionBarPrimitiveRoot = forwardRef<
     autohideFloat,
   });
 
+  const { components } = useRuntime();
+  const { Box } = components;
+
   if (hideAndfloatStatus === HideAndFloatStatus.Hidden) return null;
 
   return (
-    <Primitive.div
+    <Box
       {...(hideAndfloatStatus === HideAndFloatStatus.Floating
         ? { "data-floating": "true" }
         : null)}

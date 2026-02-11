@@ -14,7 +14,7 @@ export const useMessagePartFile = () => {
         "MessagePartFile can only be used inside file message parts.",
       );
 
-      return part as MessagePartState & FileMessagePart;
+      return partState as MessagePartState & FileMessagePart;
   }, [partState]);
 
   return file;

@@ -6,7 +6,7 @@ import {
   ActionButtonProps,
   createActionButton,
 } from "../../utils/create-action-button";
-import { useMessage, useMessageStore } from "../message/message-by-index-provider";
+import { useMessage, useMessageStore } from "../message";
 
 const useActionBarSpeak = () => {
   const status = useMessage(s => s.status);

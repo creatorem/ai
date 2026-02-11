@@ -13,17 +13,16 @@ import {
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createStore, useStore, type StoreApi } from 'zustand';
 import { Thread, ThreadCapabilities } from '../../types/entities';
-import { useAiContext, useThreads } from "../ai-provider";
+import { useAiContext, useThreads } from "../../ai-provider";
 import { ComposerCtxType } from "../composer/composer-provider";
 import { MessageRepository } from "../../utils/message-repository";
 import { AttachmentsProvider } from "../attachment/attachment-by-index-provider";
-import { localStorageThreadAdapter } from "../../adapters/local-storage-adapter";
 
-import { ToolCallMessagePartComponent } from "../../types/message-part-component-types";
-import { Unsubscribe } from "../../types/unsuscribe";
 import { Tool } from "@creatorem/stream";
 import { toToolsJSONSchema } from "@creatorem/stream";
-import type { Toolkit } from "../../types/toolbox";
+import { ToolCallMessagePartComponent } from "../../types/message-part-component-types";
+import { Unsubscribe } from "../../types/unsuscribe";
+import { localStorageThreadAdapter } from "../../adapters";
 
 export type CustomUIDataTypes = {
     textDelta: string;
@@ -126,7 +125,7 @@ const convertParts = (message: UIMessage): any[] => {
                     args,
                     result,
                     isError,
-                    ...(part.artifact !== undefined ? { artifact: part.artifact } : {}),
+                    ...((part as any).artifact !== undefined ? { artifact: (part as any).artifact } : {}),
                 };
             }
 
@@ -261,7 +260,7 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
                         ...(context.system ? { system: context.system } : {}),
                         ...(context.callSettings ? { callSettings: context.callSettings } : {}),
                         ...(context.config ? { config: context.config } : {}),
-                        tools: toToolsJSONSchema(context.tools ?? {}),
+                        tools: toToolsJSONSchema(Object.values(toolsRef.current) as any) as any,
                     },
                 };
             },
@@ -276,7 +275,7 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
         sendMessage,
         ...other
     } = useChat<Thread['messages'][0]>({
-        generateId: generateId,
+        generateId,
         transport: transportRef.current,
         // sendAutomaticallyWhen: ({ messages: currentMessages }) => {
         //     const lastMessage = currentMessages.at(-1);
@@ -432,6 +431,7 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
 
         (async function () {
             if (!activeThreadId) {
+                repositoryRef.current.clear();
                 setTitle('New thread');
                 setStatus('regular');
                 setMessages([]);
@@ -444,6 +444,7 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
                     setIsLoading(true);
                     const thread = await threadAdapter.fetch(activeThreadId);
                     if (cancelled) return;
+                    repositoryRef.current.clear();
                     setTitle(thread.title || 'New thread');
                     setStatus(thread.status);
                     setMessages(thread.messages);
@@ -468,7 +469,7 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
     const setThreadIds = useThreads(s => s.setThreadIds);
 
     // Persistence logic
-    const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const prevActiveThreadIdRef = useRef(activeThreadId);
 
     useEffect(() => {
@@ -500,8 +501,8 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
                 if (threadAdapter.generateTitle) {
                     title = await threadAdapter.generateTitle(messages as any);
                 } else {
-                    const firstMessage = messages[0];
-                    const cleanContent = firstMessage.content || (firstMessage.parts && firstMessage.parts.length > 0 && typeof firstMessage.parts[0] === 'object' && 'text' in firstMessage.parts[0] ? (firstMessage.parts[0] as any).text : '') || '';
+                    const firstMessage = messages[0] as any;
+                    const cleanContent = firstMessage?.content || (firstMessage?.parts && firstMessage.parts.length > 0 && typeof firstMessage.parts[0] === 'object' && 'text' in firstMessage.parts[0] ? (firstMessage.parts[0] as any).text : '') || '';
                     title = cleanContent ? cleanContent.slice(0, 30) : 'New Thread';
                 }
 
@@ -646,7 +647,7 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
         }));
     }
 
-    addToolOutputRef.current = other.addToolOutput;
+    addToolOutputRef.current = other.addToolOutput as any;
 
     // Sync state after render (avoids "setState during render" warning)
     useLayoutEffect(() => {
@@ -728,7 +729,7 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
             unsubs.push(
                 storeRef.current.getState().tools.methods.registerTool(
                     toolName,
-                    tool,
+                    tool as any,
                 ),
             );
         }

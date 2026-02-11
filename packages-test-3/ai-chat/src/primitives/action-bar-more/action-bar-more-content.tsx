@@ -1,16 +1,17 @@
 "use client";
 
 import { ComponentPropsWithoutRef, ComponentRef, forwardRef } from "react";
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { ScopedProps, useDropdownMenuScope } from "./scope";
+// import { ScopedProps , useDropdownMenuScope } from "./scope";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
+import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 
 export namespace ActionBarMorePrimitiveContent {
-  export type Element = ComponentRef<typeof DropdownMenuPrimitive.Content>;
+  export type Element = ComponentRef<RuntimeComponents['ActionBarContent']>;
   export type Props = ComponentPropsWithoutRef<
-    typeof DropdownMenuPrimitive.Content
+    RuntimeComponents['ActionBarContent']
   > & {
     portalProps?:
-      | ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Portal>
+      | ComponentPropsWithoutRef<RuntimeComponents['ActionBarPortal']>
       | undefined;
   };
 }
@@ -21,24 +22,25 @@ export const ActionBarMorePrimitiveContent = forwardRef<
 >(
   (
     {
-      __scopeActionBarMore,
+      // __scopeActionBarMore,
       portalProps,
       sideOffset = 4,
       ...props
-    }: ScopedProps<ActionBarMorePrimitiveContent.Props>,
+    }: ActionBarMorePrimitiveContent.Props,
     forwardedRef,
   ) => {
-    const scope = useDropdownMenuScope(__scopeActionBarMore);
+    // const scope = useDropdownMenuScope(__scopeActionBarMore);
+    const {components:{ActionBarPortal, ActionBarContent}} = useRuntime();
 
     return (
-      <DropdownMenuPrimitive.Portal {...scope} {...portalProps}>
-        <DropdownMenuPrimitive.Content
-          {...scope}
+      <ActionBarPortal /* {...scope} */ {...portalProps}>
+        <ActionBarContent
+          /* {...scope} */
           {...props}
           ref={forwardedRef}
           sideOffset={sideOffset}
         />
-      </DropdownMenuPrimitive.Portal>
+      </ActionBarPortal>
     );
   },
 );

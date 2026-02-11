@@ -1,15 +1,14 @@
 'use client';
 
 import { Tool } from "ai";
-// import { useChat } from "@ai-sdk/react";
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createStore, useStore, type StoreApi } from 'zustand';
-import { ThreadAdapter, AttachmentAdapter, DictationAdapter } from "../types/adapters";
-import { Threads } from "../types/entities";
+import { ThreadAdapter, AttachmentAdapter, DictationAdapter } from "./types/adapters";
+import { Threads } from "./types/entities";
 import { useChat } from "@ai-sdk/react";
-import { AiChatEventHandler, AiChatEvents } from "./events";
-import type { Toolkit } from "../types/toolbox";
-import { localStorageThreadAdapter } from "../adapters/local-storage-adapter";
+import { AiChatEventHandler, AiChatEvents } from "./primitives/events";
+import type { Toolkit } from "./types/toolbox";
+import { localStorageThreadAdapter } from "./adapters/local-storage-adapter";
 
 type LanguageModelV1CallSettings = {
     maxTokens?: number;

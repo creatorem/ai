@@ -7,7 +7,7 @@ import type { FileUIPart } from "ai";
 import type { Attachment, CompleteAttachment, PendingAttachment } from "../../types/attachment-types";
 import type { DictationAdapter, DictationState } from "../../types/adapters";
 import type { Unsubscribe } from "../../types/unsuscribe";
-import { useAiContext } from "../ai-provider";
+import { useAiContext } from "../../ai-provider";
 import { ThreadCtxType, useThread, useThreadStore } from "../thread/thread-root";
 
 type ComposerMethods = {

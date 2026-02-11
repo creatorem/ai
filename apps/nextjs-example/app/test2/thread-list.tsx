@@ -2,10 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import * as ThreadListPrimitive from "@creatorem/ai-chat/primitives/thread-list/index";
-import * as ThreadListItemPrimitive from "@creatorem/ai-chat/primitives/thread-list-item/index";
-import * as ThreadListItemMorePrimitive from "@creatorem/ai-chat/primitives/thread-list-item-more/index";
-import { useThreads } from "@creatorem/ai-chat/primitives/ai-provider";
+import * as ThreadListPrimitive from "@creatorem/ai-react/primitives/thread-list";
+import * as ThreadListItemPrimitive from "@creatorem/ai-react/primitives/thread-list-item";
+import * as ThreadListItemMorePrimitive from "@creatorem/ai-react/primitives/thread-list-item-more";
+import { useThreads } from "@creatorem/ai-react/ai-provider";
 import { ArchiveIcon, MoreHorizontalIcon, PlusIcon } from "lucide-react";
 import type { FC } from "react";
 

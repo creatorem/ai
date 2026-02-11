@@ -1,14 +1,13 @@
 "use client";
 
-import { ComponentPropsWithoutRef, forwardRef, useMemo, type ComponentRef } from "react";
-import { Primitive } from "@radix-ui/react-primitive";
-import { useAttachment } from "./attachment-by-index-provider";
-
-type PrimitiveDivProps = ComponentPropsWithoutRef<typeof Primitive.div>;
+import { ComponentPropsWithoutRef, forwardRef, useMemo } from "react";
+import { useAttachment } from "../attachment";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
+import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 
 export namespace AttachmentPrimitiveThumb {
-  export type Element = ComponentRef<typeof Primitive.div>;
-  export type Props = PrimitiveDivProps;
+  export type Element = RuntimeComponents['Box'];
+  export type Props = ComponentPropsWithoutRef<RuntimeComponents['Box']>
 }
 
 export const AttachmentPrimitiveThumb = forwardRef<
@@ -20,10 +19,14 @@ export const AttachmentPrimitiveThumb = forwardRef<
     const parts = name.split(".");
     return parts.length > 1 ? parts.pop()! : "";
   }, [name]);
+
+  const { components } = useRuntime();
+  const { Box } = components;
+
   return (
-    <Primitive.div {...props} ref={ref}>
+    <Box {...props} ref={ref}>
       .{ext}
-    </Primitive.div>
+    </Box>
   );
 });
 

@@ -104,9 +104,8 @@ function _derivePartStatus(
     }
 
     // Tool invocation parts: check the invocation state
-    if (part.type === "tool-invocation" && 'toolInvocation' in part) {
-        const state = (part.toolInvocation as { state?: string }).state;
-        if (state === "partial-call" || state === "call") {
+    if (part.type === "tool-call") {
+         if (!part.result && !part.isError) {
             return _RUNNING_STATUS;
         }
     }
@@ -140,27 +139,27 @@ export const PartByIndexProvider: React.FC<
     const storeRef = useRef<StoreApi<PartCtxType> | null>(null);
     if (storeRef.current === null) {
         storeRef.current = createStore<PartCtxType>(() => ({
-            ...part,
+            ...(part),
             status,
             addToolResult: (result: unknown) => {
                 const currentPart = messageStore.getState().parts[index];
-                if (!currentPart || currentPart.type !== "tool-invocation") {
+                if (!currentPart || currentPart.type !== "tool-call") {
                     throw new Error("Tried to add tool result to non-tool message part");
                 }
 
-                const toolCallId = (currentPart as { toolInvocation: { toolCallId: string } }).toolInvocation.toolCallId;
-                threadStore.getState().addToolResult({ toolCallId, result });
+                const { toolCallId, toolName } = currentPart as any;
+                threadStore.getState().addToolResult({ toolCallId, tool: toolName, output: result });
             },
             resumeToolCall: (_payload: unknown) => {
                 // TODO: requires thread runtime support for resuming tool calls
             },
-        }));
+        } as PartCtxType));
     }
 
     // Sync React-derived state after render
     useLayoutEffect(() => {
         storeRef.current!.setState({
-            ...part,
+            ...(part as any),
             status,
         });
     });

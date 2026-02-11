@@ -25,7 +25,7 @@ import { useCallbackRef } from "@radix-ui/react-use-callback-ref";
 import { CodeOverride } from "../overrides/CodeOverride";
 import { Primitive } from "@radix-ui/react-primitive";
 import classNames from "classnames";
-import { useMessagePartText } from "../../primitives/message-part/use-message-part-text";
+import { useMessagePartText } from "@creatorem/ai-chat/primitives/message-part";
 
 // const { useSmooth, useSmoothStatus, withSmoothContextProvider } = INTERNAL;
 

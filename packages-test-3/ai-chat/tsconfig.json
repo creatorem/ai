@@ -1,4 +1,10 @@
 {
   "extends": "@tooling/tsconfig/base.json",
-  "include": ["src"]
+  "include": ["src"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@creatorem/ai-chat/*": ["./src/*"]
+    }
+  }
 }

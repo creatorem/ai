@@ -1,0 +1,37 @@
+{
+    "name": "@creatorem/ai-react-native",
+    "version": "0.0.1",
+    "license": "MIT",
+    "type": "module",
+    "main": "./src/index.ts",
+    "types": "./src/index.ts",
+    "exports": {
+        ".": "./src/index.ts",
+        "./native-provider": "./src/AiChatNativeProvider.tsx",
+        "./hooks/*": "./src/hooks/*.ts"
+    },
+    "files": [
+        "dist",
+        "src"
+    ],
+    "scripts": {
+        "clean": "git clean -xdf .turbo node_modules",
+        "format": "prettier --check \"**/*.{ts,tsx}\"",
+        "lint": "eslint .",
+        "typecheck": "tsc --noEmit"
+    },
+    "peerDependencies": {
+        "@creatorem/ai-chat": "workspace:*",
+        "@types/react": "*",
+        "react": "^18 || ^19",
+        "react-native": "*"
+    },
+    "devDependencies": {
+        "@tooling/eslint-config": "workspace:*",
+        "@tooling/prettier-config": "workspace:*",
+        "@tooling/tsconfig": "workspace:*",
+        "@types/react": "^19.1.0",
+        "react": "^19.1.0",
+        "react-native": "0.76.1"
+    }
+}

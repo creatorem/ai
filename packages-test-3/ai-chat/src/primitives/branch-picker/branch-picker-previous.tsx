@@ -6,9 +6,8 @@ import {
   createActionButton,
 } from "../../utils/create-action-button";
 import { useCallback, useMemo } from "react";
-import { useThread } from "../thread/thread-root";
-import { useMessage, useMessageStore } from "../message/message-by-index-provider";
-// import { useAuiState, useAui } from "@creatorem/ai-assistant-store";
+import { useThread } from "../thread";
+import { useMessage, useMessageStore } from "../message";
 
 /**
  * Hook that provides navigation to the previous branch functionality.

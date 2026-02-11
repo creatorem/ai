@@ -27,6 +27,7 @@ import type {
   ReasoningGroupComponent,
 } from "../../types/message-part-component-types";
 import { MessagePartStatus } from "../../types/assistant-types";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
 
 type MessagePartRange =
   | { type: "single"; index: number }
@@ -269,23 +270,28 @@ const ToolUIDisplay = ({
   return <Resolved {...props} />;
 };
 
-const defaultComponents = {
-  Text: () => (
-    <p style={{ whiteSpace: "pre-line" }}>
-      <MessagePartPrimitiveText />
-      <MessagePartPrimitiveInProgress>
-        <span style={{ fontFamily: "revert" }}>{" \u25CF"}</span>
-      </MessagePartPrimitiveInProgress>
-    </p>
-  ),
-  Reasoning: () => null,
-  Source: () => null,
-  Image: () => <MessagePartPrimitiveImage />,
-  File: () => null,
-  Unstable_Audio: () => null,
-  ToolGroup: ({ children }) => children,
-  ReasoningGroup: ({ children }) => children,
-} satisfies MessagePrimitiveParts.Props["components"];
+const DefaultTextComponent = () => {
+    const { components: { Box, Text } } = useRuntime();
+    return (
+      <Box style={{ whiteSpace: "pre-line" }}>
+        <MessagePartPrimitiveText />
+        <MessagePartPrimitiveInProgress>
+          <Text style={{ fontFamily: "revert" }}>{" \u25CF"}</Text>
+        </MessagePartPrimitiveInProgress>
+      </Box>
+    );
+  };
+  
+  const defaultComponents = {
+    Text: DefaultTextComponent,
+    Reasoning: () => null,
+    Source: () => null,
+    Image: () => <MessagePartPrimitiveImage />,
+    File: () => null,
+    Unstable_Audio: () => null,
+    ToolGroup: ({ children }) => children,
+    ReasoningGroup: ({ children }) => children,
+  } satisfies MessagePrimitiveParts.Props["components"];
 
 type MessagePartComponentProps = {
   components: MessagePrimitiveParts.Props["components"];

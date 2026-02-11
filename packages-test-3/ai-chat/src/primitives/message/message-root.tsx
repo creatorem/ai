@@ -1,14 +1,15 @@
-'use client';
+"use client";
 
-import React, { ComponentPropsWithoutRef, ComponentRef, forwardRef, useCallback, useMemo } from "react";
-import { Primitive } from "@radix-ui/react-primitive";
+import React, { ComponentProps, forwardRef, useCallback, useMemo } from "react";
 import { useThread } from "../thread/thread-root";
 import { useManagedRef } from "../../hooks/use-managed-ref";
 import { useThreadViewport } from "../thread/thread-viewport-context";
 import { useSizeHandle } from "../../hooks/use-size-handle";
-import { useComposedRefs } from "@radix-ui/react-compose-refs";
+import { useComposedRefs } from "../../utils/composed-refs";
 import { useMessage, useMessageStore } from "./message-by-index-provider";
-import { ThreadPrimitiveViewportSlack } from "../thread/thread-viewport-slack";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
+import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
+
 export { useMessage, useMessageStore } from "./message-by-index-provider";
 
 
@@ -17,6 +18,8 @@ const useIsHoveringRef = () => {
 
     const callbackRef = useCallback(
         (el: HTMLElement) => {
+            if (typeof window === "undefined" || !window.addEventListener || !el || !el.addEventListener) return;
+
             const handleMouseEnter = () => {
                 messageStore.getState().setIsHovering(true);
             };
@@ -59,8 +62,6 @@ const useMessageViewportRef = () => {
     const messagesLength = useThread(s => s.messages.length);
     const lastMessageRole = useThread(s => s.messages.at(-1)?.role);
 
-    // inset rules:
-    // - the previous user message before the last assistant message registers its full height
     const shouldRegisterAsInset = useMemo(
         () =>
             turnAnchor === "top" &&
@@ -70,6 +71,7 @@ const useMessageViewportRef = () => {
         [turnAnchor, messageRole, messageIndex, messagesLength, lastMessageRole]
     );
 
+    // todo this is web specific, we should use the runtime to get the height
     const getHeight = useCallback((el: HTMLElement) => el.offsetHeight, []);
 
     return useSizeHandle(
@@ -79,12 +81,8 @@ const useMessageViewportRef = () => {
 };
 
 export namespace MessagePrimitiveRoot {
-    export type Element = ComponentRef<typeof Primitive.div>;
-    /**
-     * Props for the MessagePrimitive.Root component.
-     * Accepts all standard div element props.
-     */
-    export type Props = ComponentPropsWithoutRef<typeof Primitive.div>;
+    export type Element = RuntimeComponents['Box'];
+    export type Props = ComponentProps<RuntimeComponents['Box']>;
 }
 
 /**
@@ -114,23 +112,21 @@ export const MessagePrimitiveRoot = forwardRef<
 >((props, forwardRef) => {
     const isHoveringRef = useIsHoveringRef();
     const anchorUserMessageRef = useMessageViewportRef();
-    // const messageRole = useMessage(s => s.role);
-    // const messageIndex = useMessage(s => s.index);
-    const ref = useComposedRefs<HTMLDivElement>(
+    const { components: { Box, MessageSpacer } } = useRuntime();
+
+    const ref = useComposedRefs(
         forwardRef,
         isHoveringRef,
         anchorUserMessageRef,
     );
 
     return (
-        <ThreadPrimitiveViewportSlack>
-            <Primitive.div 
+        <MessageSpacer>
+            <Box 
                 {...props} 
                 ref={ref} 
-                // data-role={messageRole}
-                // data-index={messageIndex}
             />
-        </ThreadPrimitiveViewportSlack>
+        </MessageSpacer>
     );
 });
 

@@ -1,9 +1,9 @@
 "use client";
 
+import { CustomUIDataTypes } from "../primitives/thread/thread-root";
 import type { ThreadAdapter } from "../types/adapters";
 import type { Thread, Threads } from "../types/entities";
 import type { UIMessage } from "ai";
-import type { CustomUIDataTypes } from "../primitives/thread/thread-root";
 
 const STORAGE_KEY = "ai-chat-threads";
 

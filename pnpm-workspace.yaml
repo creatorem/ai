@@ -2,6 +2,5 @@ packages:
   - apps/*
   - packages/*
   - tooling/*
-  - packages-test-2/*
   - packages-test-3/*
 

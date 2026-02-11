@@ -1,18 +1,18 @@
 "use client";
 
-import { Primitive } from "@radix-ui/react-primitive";
 import {
   type ComponentRef,
   forwardRef,
   ComponentPropsWithoutRef,
-  ElementType,
 } from "react";
 import { useMessagePartText } from "./use-message-part-text";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
+import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 
 export namespace MessagePartPrimitiveText {
-  export type Element = ComponentRef<typeof Primitive.span>;
+  export type Element = ComponentRef<RuntimeComponents['Text'] >;
   export type Props = Omit<
-    ComponentPropsWithoutRef<typeof Primitive.span>,
+    ComponentPropsWithoutRef<RuntimeComponents['Text'] >,
     "children" | "asChild"
   > & {
     /**
@@ -21,11 +21,6 @@ export namespace MessagePartPrimitiveText {
      * @default true
      */
     smooth?: boolean;
-    /**
-     * The HTML element or React component to render as.
-     * @default "span"
-     */
-    component?: ElementType;
   };
 }
 
@@ -48,14 +43,15 @@ export namespace MessagePartPrimitiveText {
 export const MessagePartPrimitiveText = forwardRef<
   MessagePartPrimitiveText.Element,
   MessagePartPrimitiveText.Props
->(({ smooth = true, component: Component = "span", ...rest }, forwardedRef) => {
+>(({ smooth = true, ...rest }, forwardedRef) => {
   // const { text, status } = useSmooth(useMessagePartText(), smooth);
   const { text, status } = useMessagePartText();
+  const { components: { Text } } = useRuntime();
 
   return (
-    <Component data-status={status.type} {...rest} ref={forwardedRef}>
+    <Text data-status={status.type} {...rest} ref={forwardedRef}>
       {text}
-    </Component>
+    </Text>
   );
 });
 

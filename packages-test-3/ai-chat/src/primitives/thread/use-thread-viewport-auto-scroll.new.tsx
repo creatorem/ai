@@ -1,13 +1,10 @@
 "use client";
 
 import { useComposedRefs } from "@radix-ui/react-compose-refs";
-import { useCallback, useRef, type RefCallback } from "react";
-import { useAiContext, useAiEvent } from "../ai-provider";
+import { useRef, type RefCallback } from "react";
+import { useAiEvent } from "../../ai-provider";
 import { useThreadViewport, type ThreadViewportState } from "./thread-viewport-context";
-import { writableStore } from "../../utils/readonly-store";
 import { useOnScrollToBottom } from "../../hooks/use-on-scroll-to-bottom";
-import { useOnResizeContent } from "../../hooks/use-on-resize-content";
-import { useManagedRef } from "../../hooks/use-managed-ref";
 
 export namespace useThreadViewportAutoScroll {
   export type Options = {

@@ -1,22 +1,19 @@
 import {
-  ComponentRef,
   forwardRef,
-  ComponentPropsWithoutRef,
-  MouseEventHandler,
+  ComponentProps,
 } from "react";
-import { Primitive } from "@radix-ui/react-primitive";
-import { composeEventHandlers } from "@radix-ui/primitive";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
+import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
+import { composeEventHandlers } from "./compose-event-handlers";
 
 type ActionButtonCallback<TProps> = (
   props: TProps,
-) => MouseEventHandler<HTMLButtonElement> | null;
+) => ComponentProps<RuntimeComponents['Button']>['onClick'] | null;
 
-type PrimitiveButtonProps = ComponentPropsWithoutRef<typeof Primitive.button>;
-
-export type ActionButtonProps<THook> = PrimitiveButtonProps &
+export type ActionButtonProps<THook> = ComponentProps<RuntimeComponents['Button']> &
   (THook extends (props: infer TProps) => unknown ? TProps : never);
 
-export type ActionButtonElement = ComponentRef<typeof Primitive.button>;
+export type ActionButtonElement = RuntimeComponents['Button'];
 
 export const createActionButton = <TProps,>(
   displayName: string,
@@ -25,10 +22,11 @@ export const createActionButton = <TProps,>(
 ) => {
   const ActionButton = forwardRef<
     ActionButtonElement,
-    PrimitiveButtonProps & TProps
+    ComponentProps<RuntimeComponents['Button']> & TProps
   >((props, forwardedRef) => {
+    const { components: { Button } } = useRuntime();
     const forwardedProps = {} as TProps;
-    const primitiveProps = {} as PrimitiveButtonProps;
+    const primitiveProps = {} as ComponentProps<RuntimeComponents['Button']>;
 
     (Object.keys(props) as Array<keyof typeof props>).forEach((key) => {
       if (forwardProps.includes(key as keyof TProps)) {
@@ -39,8 +37,9 @@ export const createActionButton = <TProps,>(
     });
 
     const callback = useActionButton(forwardedProps as TProps) ?? undefined;
+    
     return (
-      <Primitive.button
+      <Button
         type="button"
         {...primitiveProps}
         ref={forwardedRef}

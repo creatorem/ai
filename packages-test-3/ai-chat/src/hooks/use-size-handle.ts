@@ -2,7 +2,7 @@
 
 import { useCallback } from "react";
 import { useManagedRef } from "./use-managed-ref";
-import type { SizeHandle } from "../../context/stores/thread-viewport";
+import { SizeHandle } from "../primitives/thread/thread-viewport-runtime";
 
 /**
  * Hook that creates a ref for tracking element size via a SizeHandle.

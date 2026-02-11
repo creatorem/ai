@@ -1,8 +1,8 @@
 "use client";
 
 import { useMemo } from "react";
-import { useThread } from "../thread/thread-root";
-import { useMessage } from "../message/message-by-index-provider";
+import { useThread } from "../thread";
+import { useMessage } from "../message";
 
 export enum HideAndFloatStatus {
   Hidden = "hidden",

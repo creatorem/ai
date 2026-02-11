@@ -1,17 +1,12 @@
 "use client";
 
-import { Primitive } from "@radix-ui/react-primitive";
-import { ComponentPropsWithoutRef, ComponentRef, forwardRef } from "react";
-
-type PrimitiveDivProps = ComponentPropsWithoutRef<typeof Primitive.div>;
+import { ComponentPropsWithoutRef, forwardRef } from "react";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
+import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 
 export namespace AttachmentPrimitiveRoot {
-  export type Element = ComponentRef<typeof Primitive.div>;
-  /**
-   * Props for the AttachmentPrimitive.Root component.
-   * Accepts all standard div element props.
-   */
-  export type Props = PrimitiveDivProps;
+  export type Element = RuntimeComponents['Box'];
+  export type Props = ComponentPropsWithoutRef<RuntimeComponents['Box']>
 }
 
 /**
@@ -32,7 +27,10 @@ export const AttachmentPrimitiveRoot = forwardRef<
   AttachmentPrimitiveRoot.Element,
   AttachmentPrimitiveRoot.Props
 >((props, ref) => {
-  return <Primitive.div {...props} ref={ref} />;
+  const { components } = useRuntime();
+  const { Box } = components;
+
+  return <Box {...props} ref={ref} />;
 });
 
 AttachmentPrimitiveRoot.displayName = "AttachmentPrimitive.Root";

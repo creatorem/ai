@@ -1,32 +1,22 @@
-'use client';
+"use client";
 
-import { ComponentPropsWithoutRef, ComponentRef, forwardRef } from "react";
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { ScopedProps, useDropdownMenuScope } from "./scope";
+import { ComponentPropsWithoutRef, forwardRef } from "react";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
+import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 
 export namespace ThreadListItemMorePrimitiveSeparator {
-  export type Element = ComponentRef<typeof DropdownMenuPrimitive.Separator>;
-  export type Props = ComponentPropsWithoutRef<
-    typeof DropdownMenuPrimitive.Separator
-  >;
+  export type Element = RuntimeComponents['ThreadListItemMoreSeparator'];
+  export type Props = ComponentPropsWithoutRef<RuntimeComponents['ThreadListItemMoreSeparator']>
 }
 
 export const ThreadListItemMorePrimitiveSeparator = forwardRef<
   ThreadListItemMorePrimitiveSeparator.Element,
   ThreadListItemMorePrimitiveSeparator.Props
->(
-  (
-    {
-      __scopeThreadListItemMore,
-      ...rest
-    }: ScopedProps<ThreadListItemMorePrimitiveSeparator.Props>,
-    ref,
-  ) => {
-    const scope = useDropdownMenuScope(__scopeThreadListItemMore);
+>((props, ref) => {
+  const { components: {ThreadListItemMoreSeparator} } = useRuntime();
 
-    return <DropdownMenuPrimitive.Separator {...scope} {...rest} ref={ref} />;
-  },
-);
+  return <ThreadListItemMoreSeparator {...props} ref={ref} />;
+});
 
 ThreadListItemMorePrimitiveSeparator.displayName =
   "ThreadListItemMorePrimitive.Separator";

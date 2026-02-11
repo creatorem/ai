@@ -7,7 +7,7 @@ import {
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { ToolCallMessagePartComponent } from "../../../../packages-test-3/ai-chat/src/types/message-part-component-types";
+import { ToolCallMessagePartComponent } from "@creatorem/ai-chat/types/message-part-component-types";
 
 export const ToolFallback: ToolCallMessagePartComponent = ({
   toolName,

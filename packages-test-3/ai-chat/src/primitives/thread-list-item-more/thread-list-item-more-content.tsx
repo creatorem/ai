@@ -1,47 +1,41 @@
-'use client';
+"use client";
 
-import { ComponentPropsWithoutRef, ComponentRef, forwardRef } from "react";
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { ScopedProps, useDropdownMenuScope } from "./scope";
+import { ComponentPropsWithoutRef, forwardRef } from "react";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
+import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
+// import { useThreadListItemMoreContext } from "./scope";
 
 export namespace ThreadListItemMorePrimitiveContent {
-  export type Element = ComponentRef<typeof DropdownMenuPrimitive.Content>;
+  export type Element = RuntimeComponents['ThreadListItemMoreContent'];
   export type Props = ComponentPropsWithoutRef<
-    typeof DropdownMenuPrimitive.Content
+    RuntimeComponents['ThreadListItemMoreContent']
   > & {
-    portalProps?:
-      | ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Portal>
-      | undefined;
+    portalProps?: ComponentPropsWithoutRef<RuntimeComponents['ThreadListItemMorePortal']>
   };
 }
 
 export const ThreadListItemMorePrimitiveContent = forwardRef<
   ThreadListItemMorePrimitiveContent.Element,
   ThreadListItemMorePrimitiveContent.Props
->(
-  (
-    {
-      __scopeThreadListItemMore,
-      portalProps,
-      sideOffset = 4,
-      ...props
-    }: ScopedProps<ThreadListItemMorePrimitiveContent.Props>,
-    forwardedRef,
-  ) => {
-    const scope = useDropdownMenuScope(__scopeThreadListItemMore);
+>(({ sideOffset,portalProps, ...props }, forwardedRef) => {
+  // const { open } = useThreadListItemMoreContext();
+  const { components } = useRuntime();
+  const { ThreadListItemMoreContent, ThreadListItemMorePortal } = components;
 
-    return (
-      <DropdownMenuPrimitive.Portal {...scope} {...portalProps}>
-        <DropdownMenuPrimitive.Content
-          {...scope}
+  if (!open) return null;
+
+  // return <Box {...props} ref={forwardedRef} />;
+      return (
+      <ThreadListItemMorePortal /* {...scope} */ {...portalProps}>
+        <ThreadListItemMoreContent
+          // {...scope}
           {...props}
           ref={forwardedRef}
           sideOffset={sideOffset}
         />
-      </DropdownMenuPrimitive.Portal>
+      </ThreadListItemMorePortal>
     );
-  },
-);
+});
 
 ThreadListItemMorePrimitiveContent.displayName =
   "ThreadListItemMorePrimitive.Content";

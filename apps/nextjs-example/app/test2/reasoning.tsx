@@ -10,9 +10,9 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { cn } from "@/lib/utils";
-import { useScrollLock } from '../../../../packages-test-3/ai-chat/src/primitives/reasoning/use-scroll-lock';
-import { ReasoningGroupComponent, ReasoningMessagePartComponent } from "../../../../packages-test-3/ai-chat/src/types/message-part-component-types";
-import { useMessage } from "@creatorem/ai-chat/primitives/message/index";
+import { useScrollLock } from '@creatorem/ai-react/primitives/reasoning';
+import { ReasoningGroupComponent, ReasoningMessagePartComponent } from "@creatorem/ai-chat/types/message-part-component-types";
+import { useMessage } from "@creatorem/ai-chat/primitives/message";
 
 const ANIMATION_DURATION = 200;
 
