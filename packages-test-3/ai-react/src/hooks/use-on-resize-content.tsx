@@ -1,6 +1,5 @@
-import { useCallbackRef } from "@radix-ui/react-use-callback-ref";
 import { useCallback } from "react";
-import { useManagedRef } from "@creatorem/ai-chat/hooks";
+import { useCallbackRef, useManagedRef } from "@creatorem/ai-chat/hooks";
 
 export const useOnResizeContent = (callback: () => void) => {
   const callbackRef = useCallbackRef(callback);

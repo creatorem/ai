@@ -21,6 +21,7 @@
     "./primitives/thread-list-item-more": "./src/primitives/thread-list-item-more/index.ts",
     "./runtime": "./src/runtime.tsx",
     "./component-types": "./src/component-types.ts",
+    "./component-type-check": "./src/component-type-check.ts",
     "./hook-types": "./src/hook-types.ts",
     "./utils": "./src/utils/index.ts",
     "./hooks": "./src/hooks/index.ts",

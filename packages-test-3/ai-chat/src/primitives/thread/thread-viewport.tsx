@@ -1,6 +1,6 @@
 "use client";
 
-import { useComposedRefs } from "../../utils/composed-refs";
+import { useComposedRefs } from "@creatorem/ai-chat/utils";
 import {
   type ComponentRef,
   forwardRef,

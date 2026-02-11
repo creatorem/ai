@@ -1,6 +1,6 @@
-import { useCallbackRef } from "@radix-ui/react-use-callback-ref";
 import { useCallback } from "react";
 import { useManagedRef } from "./use-managed-ref";
+import { useCallbackRef } from "./use-callback-ref";
 
 export const useOnResizeContent = (callback: () => void) => {
   const callbackRef = useCallbackRef(callback);

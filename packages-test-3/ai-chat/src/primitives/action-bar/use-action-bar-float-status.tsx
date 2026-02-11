@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { useThread } from "../thread";
+import { useThread } from "@creatorem/ai-chat/primitives/thread";
 import { useMessage } from "../message";
 
 export enum HideAndFloatStatus {

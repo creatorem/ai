@@ -1,23 +1,23 @@
 'use client';
 
-import { Primitive } from "@radix-ui/react-primitive";
-import { ComponentPropsWithoutRef, ComponentRef, forwardRef } from "react";
+import { ComponentPropsWithoutRef, forwardRef } from "react";
 import { ThreadListProvider } from "./thread-list-provider";
-
-type PrimitiveDivProps = ComponentPropsWithoutRef<typeof Primitive.div>;
+import { RuntimeComponents } from "@creatorem/ai-chat/component-types";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
 
 export namespace ThreadListPrimitiveRoot {
-  export type Element = ComponentRef<typeof Primitive.div>;
-  export type Props = PrimitiveDivProps;
+  export type Element = RuntimeComponents['Box'];
+  export type Props = ComponentPropsWithoutRef<RuntimeComponents['Box']>;
 }
 
 export const ThreadListPrimitiveRoot = forwardRef<
   ThreadListPrimitiveRoot.Element,
   ThreadListPrimitiveRoot.Props
 >((props, ref) => {
+  const {components: {Box}} = useRuntime()
   return (
     <ThreadListProvider>
-      <Primitive.div {...props} ref={ref} />
+      <Box {...props} ref={ref} />
     </ThreadListProvider>
   );
 });

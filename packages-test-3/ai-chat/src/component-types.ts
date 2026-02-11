@@ -24,6 +24,7 @@ type Event = {
 export interface RuntimeComponents {
   Box: ComponentType<BaseComponentPropsWithChildren>
   Text: ComponentType<BaseComponentPropsWithChildren>
+  Form: ComponentType<BaseComponentPropsWithChildren & { onSubmit?: (e: Event) => void; }>
   Button: ButtonComponent
   ScrollArea: ComponentType<BaseComponentPropsWithChildren>
   Input: ComponentType<BaseComponentProps & { value?: string; onChange?: (e: Event) => void; placeholder?: string }>

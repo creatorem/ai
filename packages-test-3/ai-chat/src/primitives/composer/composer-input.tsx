@@ -1,6 +1,5 @@
 "use client";
 
-import { useComposedRefs } from "@radix-ui/react-compose-refs";
 import {
   ClipboardEvent,
   type KeyboardEvent,
@@ -11,13 +10,14 @@ import {
   useRef,
 } from "react";
 import { useComposer, useComposerStore } from "./composer-provider";
-import { useThread } from "../thread";
+import { useThread } from "@creatorem/ai-chat/primitives/thread";
 import { useAiContext } from "../../ai-provider";
 import { useOnScrollToBottom } from "../../hooks/use-on-scroll-to-bottom";
 import { useRuntime } from "@creatorem/ai-chat/runtime";
 import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 import { composeEventHandlers } from "../../utils/compose-event-handlers";
 import { useEscapeKeydown } from "../../hooks/use-escape-keydown";
+import { useComposedRefs } from "@creatorem/ai-chat/utils";
 
 export namespace ComposerPrimitiveInput {
   export type Element = RuntimeComponents['Textarea'];

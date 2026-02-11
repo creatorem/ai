@@ -13,10 +13,10 @@ import {
   SyntaxHighlighterProps,
 } from "./types";
 import { DefaultCodeBlock } from "./CodeBlock";
-import { useCallbackRef } from "@radix-ui/react-use-callback-ref";
 import { withDefaultProps } from "./withDefaults";
 import { DefaultCodeBlockContent } from "./defaultComponents";
 import { memoCompareNodes } from "../memoization";
+import { useCallbackRef } from "@creatorem/ai-chat/hooks";
 
 const CodeBlockOverride: FC<CodeOverrideProps> = ({
   node,

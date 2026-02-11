@@ -1,11 +1,11 @@
 "use client";
 
 import React, { ComponentProps, forwardRef, useCallback, useMemo } from "react";
-import { useThread } from "../thread";
+import { useThread } from "@creatorem/ai-chat/primitives/thread";
 import { useManagedRef } from "../../hooks/use-managed-ref";
 import { useThreadViewport } from "../thread/thread-viewport-context";
 import { useSizeHandle } from "../../hooks/use-size-handle";
-import { useComposedRefs } from "../../utils/composed-refs";
+import { useComposedRefs } from "@creatorem/ai-chat/utils";
 import { useMessage, useMessageStore } from "./message-by-index-provider";
 import { useRuntime } from "@creatorem/ai-chat/runtime";
 import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";

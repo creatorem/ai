@@ -1,6 +1,5 @@
 "use client";
 
-import { CustomUIDataTypes } from "../primitives/thread/thread-root";
 import type { ThreadAdapter } from "../types/adapters";
 import type { Thread, Threads } from "../types/entities";
 import type { UIMessage } from "ai";

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, type ReactNode } from 'react';
 import { RuntimeComponents } from './component-types';
-import { RuntimeHooks } from './hook-types';
+import { RuntimeHooks, AutoScrollConfig, AutoScrollResult } from './hook-types';
+export type { AutoScrollConfig, AutoScrollResult };
 
 export interface RuntimeContextValue {
   components: RuntimeComponents;
@@ -9,6 +10,7 @@ export interface RuntimeContextValue {
 
 const defaultComponents: RuntimeComponents = {
   Box: ({ children, ...props }) => <div {...props}>{children}</div>,
+  Form: ({ children, ...props }) => <div {...props}>{children}</div>,
   Text: React.Fragment,
   Button: ({ children, variant, size, ...props }) => <button {...props}>{children}</button>,
   ScrollArea: ({ children, ...props }) => <div {...props} style={{ overflow: 'auto', ...props.style }}>{children}</div>,

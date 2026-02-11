@@ -1,6 +1,6 @@
 "use client";
 
-import { useComposedRefs } from "@radix-ui/react-compose-refs";
+import { useComposedRefs } from "@creatorem/ai-chat/utils";
 import { useRef, type RefCallback } from "react";
 import { useAiEvent } from "../../ai-provider";
 import { useThreadViewport, type ThreadViewportState } from "./thread-viewport-context";

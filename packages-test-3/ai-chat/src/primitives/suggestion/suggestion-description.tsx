@@ -1,12 +1,13 @@
 "use client";
 
-import { Primitive } from "@radix-ui/react-primitive";
-import { type ElementRef, forwardRef, ComponentPropsWithoutRef } from "react";
+import { forwardRef, ComponentPropsWithoutRef } from "react";
 import { useSuggestion } from "./suggestion-by-index-provider";
+import { RuntimeComponents } from "@creatorem/ai-chat/component-types";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
 
 export namespace SuggestionPrimitiveDescription {
-  export type Element = ElementRef<typeof Primitive.span>;
-  export type Props = ComponentPropsWithoutRef<typeof Primitive.span>;
+  export type Element = RuntimeComponents['Text'];
+  export type Props = ComponentPropsWithoutRef<RuntimeComponents['Text']>;
 }
 
 /**
@@ -21,13 +22,13 @@ export const SuggestionPrimitiveDescription = forwardRef<
   SuggestionPrimitiveDescription.Element,
   SuggestionPrimitiveDescription.Props
 >((props, ref) => {
-  // const label = useAuiState(({ suggestion }) => suggestion.label);
+  const {components: {Text}} = useRuntime();
   const label = useSuggestion(s => s.label);
 
   return (
-    <Primitive.span {...props} ref={ref}>
+    <Text {...props} ref={ref}>
       {props.children ?? label}
-    </Primitive.span>
+    </Text>
   );
 });
 

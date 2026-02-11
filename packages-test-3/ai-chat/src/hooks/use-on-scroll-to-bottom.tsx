@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallbackRef } from "@radix-ui/react-use-callback-ref";
 import { useEffect } from "react";
 import { useThreadViewport } from "../primitives/thread/thread-viewport-context";
+import { useCallbackRef } from "./use-callback-ref";
 
 export const useOnScrollToBottom = (
   callback: (config: { behavior: ScrollBehavior }) => void,

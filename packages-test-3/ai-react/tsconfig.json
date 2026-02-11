@@ -4,8 +4,7 @@
       "paths": {
         "@creatorem/ai-chat/component-types": ["./@types/components.d.ts"],
     },
-    "outDir": "dist",
-    "rootDir": "src"
+    "outDir": "dist"
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.test.tsx"]

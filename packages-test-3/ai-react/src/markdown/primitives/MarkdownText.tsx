@@ -21,11 +21,11 @@ import {
   DefaultCodeBlockContent,
   DefaultCodeHeader,
 } from "../overrides/defaultComponents";
-import { useCallbackRef } from "@radix-ui/react-use-callback-ref";
 import { CodeOverride } from "../overrides/CodeOverride";
 import { Primitive } from "@radix-ui/react-primitive";
 import classNames from "classnames";
 import { useMessagePartText } from "@creatorem/ai-chat/primitives/message-part";
+import { useCallbackRef } from "@creatorem/ai-chat/hooks";
 
 // const { useSmooth, useSmoothStatus, withSmoothContextProvider } = INTERNAL;
 

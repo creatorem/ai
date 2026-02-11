@@ -1,19 +1,19 @@
 "use client";
 
-import { useComposedRefs } from "@radix-ui/react-compose-refs";
-import { Primitive } from "@radix-ui/react-primitive";
 import {
-  type ComponentRef,
   forwardRef,
   ComponentPropsWithoutRef,
   useCallback,
 } from "react";
 import { useThreadViewport } from "./thread-viewport-context";
 import { useSizeHandle } from "../../hooks/use-size-handle";
+import { RuntimeComponents } from "@creatorem/ai-chat/component-types";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
+import { useComposedRefs } from "@creatorem/ai-chat/utils";
 
 export namespace ThreadPrimitiveViewportFooter {
-  export type Element = ComponentRef<typeof Primitive.div>;
-  export type Props = ComponentPropsWithoutRef<typeof Primitive.div>;
+  export type Element = RuntimeComponents['Box'];
+  export type Props = ComponentPropsWithoutRef<RuntimeComponents['Box']>;
 }
 
 /**
@@ -41,6 +41,7 @@ export const ThreadPrimitiveViewportFooter = forwardRef<
   ThreadPrimitiveViewportFooter.Element,
   ThreadPrimitiveViewportFooter.Props
 >((props, forwardedRef) => {
+  const {components: {Box}} = useRuntime();
   const register = useThreadViewport((s) => s.registerContentInset);
   
   // todo this is web specific, we should use the runtime to get the height
@@ -53,7 +54,7 @@ export const ThreadPrimitiveViewportFooter = forwardRef<
 
   const ref = useComposedRefs(forwardedRef, resizeRef);
 
-  return <Primitive.div {...props} ref={ref} />;
+  return <Box {...props} ref={ref} />;
 });
 
 ThreadPrimitiveViewportFooter.displayName = "ThreadPrimitive.ViewportFooter";

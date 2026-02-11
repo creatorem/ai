@@ -1,0 +1,1 @@
+export type {RuntimeComponents} from './component-types'

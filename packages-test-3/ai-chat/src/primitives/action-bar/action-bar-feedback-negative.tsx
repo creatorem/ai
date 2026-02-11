@@ -2,11 +2,11 @@
 
 import { forwardRef, useMemo } from "react";
 import { ActionButtonProps } from "../../utils/create-action-button";
-import { composeEventHandlers } from "@radix-ui/primitive";
 import { useCallback } from "react";
 import { useMessage, useMessageStore } from "../message";
 import { useRuntime } from "@creatorem/ai-chat/runtime";
 import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
+import { composeEventHandlers } from "@creatorem/ai-chat/utils";
 
 const useActionBarFeedbackNegative = () => {
   const messageStore = useMessageStore();
@@ -44,7 +44,6 @@ export const ActionBarPrimitiveFeedbackNegative = forwardRef<
       {...props}
       ref={forwardedRef}
       disabled={disabled || !callback}
-      // @ts-ignore
       onClick={composeEventHandlers(onClick, () => {
         callback?.();
       })}

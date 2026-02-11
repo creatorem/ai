@@ -2,11 +2,11 @@
 
 import { forwardRef, useMemo } from "react";
 import { ActionButtonProps } from "../../utils/create-action-button";
-import { composeEventHandlers } from "@radix-ui/primitive";
 import { useCallback } from "react";
 import { useMessage, useMessageStore } from "../message/message-by-index-provider";
 import { useRuntime } from "@creatorem/ai-chat/runtime";
 import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
+import { composeEventHandlers } from "@creatorem/ai-chat/utils";
 
 /**
  * Hook that provides copy functionality for action bar buttons.
@@ -108,7 +108,6 @@ export const ActionBarPrimitiveCopy = forwardRef<
       {...props}
       ref={forwardedRef}
       disabled={disabled || !callback}
-      // @ts-ignore
       onClick={composeEventHandlers(onClick, () => {
         callback?.();
       })}

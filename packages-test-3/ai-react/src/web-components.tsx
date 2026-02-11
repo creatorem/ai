@@ -1,4 +1,4 @@
-import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
+import type { RuntimeComponents } from "@creatorem/ai-chat/component-type-check";
 import ReactMarkdown from "react-markdown";
 // import { ThreadPrimitiveViewportSlack } from "./primitives/thread/thread-viewport-slack";
 // import { ThreadPrimitiveViewportSlack } from "./primitives/thread";
@@ -11,6 +11,7 @@ import { type ReactNode } from "react";
 
 export const webComponents = {
   Box: Primitive.div,
+  Form: Primitive.form,
   Text: Primitive.p,
   Button: Primitive.button,
   ScrollArea: ({ children, className }: { children?: ReactNode; className?: string }) => (

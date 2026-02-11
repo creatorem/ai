@@ -6,7 +6,7 @@ import {
   createActionButton,
 } from "../../utils/create-action-button";
 import { useCallback, useMemo } from "react";
-import { useThread } from "../thread";
+import { useThread } from "@creatorem/ai-chat/primitives/thread";
 import { useMessage, useMessageStore } from "../message";
 
 const useBranchPickerNext = () => {
