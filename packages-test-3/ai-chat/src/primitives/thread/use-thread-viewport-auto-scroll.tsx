@@ -1,6 +1,7 @@
 "use client";
 
-import { AutoScrollConfig, useRuntime } from "@creatorem/ai-chat/runtime";
+import { AutoScrollConfig } from "@creatorem/ai-chat/hook-types";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
 
 export const useThreadViewportAutoScroll = (
   options?: AutoScrollConfig

@@ -9,7 +9,7 @@ import {
   useMemo,
 } from "react";
 import { useThreadViewportStore } from "./thread-viewport-context";
-import { useThread } from "./thread-root";
+import { useThread } from "./index";
 import { useMessage } from "../message/message-by-index-provider";
 import { useRuntime } from "@creatorem/ai-chat/runtime";
 

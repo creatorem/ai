@@ -5,7 +5,6 @@
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
-  "prettier": "@tooling/prettier-config",
   "exports": {
     ".": "./src/index.ts"
   },
@@ -53,8 +52,6 @@
     }
   },
   "devDependencies": {
-    "@tooling/eslint-config": "workspace:*",
-    "@tooling/prettier-config": "workspace:*",
     "@tooling/tsconfig": "workspace:*",
     "@types/json-schema": "^7.0.15",
     "@types/node": "^25.0.10",

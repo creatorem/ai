@@ -5,7 +5,6 @@
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
-  "prettier": "@tooling/prettier-config",
   "exports": {
     ".": "./src/index.ts"
   },

@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "license": "MIT",
   "type": "module",
-  "prettier": "@tooling/prettier-config",
   "exports": {
     ".": "./src/index.ts",
     "./styles/dot.css": "./styles/dot.css"
@@ -40,8 +39,6 @@
   },
   "devDependencies": {
     "@creatorem/ai-assistant-react": "workspace:*",
-    "@tooling/eslint-config": "workspace:*",
-    "@tooling/prettier-config": "workspace:*",
     "@tooling/tsconfig": "workspace:*",
     "@types/hast": "^3.0.4",
     "@types/react": "^19.1.0",

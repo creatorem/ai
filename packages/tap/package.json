@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "license": "MIT",
   "type": "module",
-  "prettier": "@tooling/prettier-config",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
@@ -34,8 +33,6 @@
     }
   },
   "devDependencies": {
-    "@tooling/eslint-config": "workspace:*",
-    "@tooling/prettier-config": "workspace:*",
     "@tooling/tsconfig": "workspace:*",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/react": "^16.3.2",

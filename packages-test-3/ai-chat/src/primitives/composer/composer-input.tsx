@@ -11,7 +11,7 @@ import {
   useRef,
 } from "react";
 import { useComposer, useComposerStore } from "./composer-provider";
-import { useThread } from "../thread/thread-root";
+import { useThread } from "../thread";
 import { useAiContext } from "../../ai-provider";
 import { useOnScrollToBottom } from "../../hooks/use-on-scroll-to-bottom";
 import { useRuntime } from "@creatorem/ai-chat/runtime";

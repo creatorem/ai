@@ -1,7 +1,7 @@
 "use client";
 
 import React, { ComponentProps, forwardRef, useCallback, useMemo } from "react";
-import { useThread } from "../thread/thread-root";
+import { useThread } from "../thread";
 import { useManagedRef } from "../../hooks/use-managed-ref";
 import { useThreadViewport } from "../thread/thread-viewport-context";
 import { useSizeHandle } from "../../hooks/use-size-handle";
