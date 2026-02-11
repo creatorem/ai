@@ -3,6 +3,7 @@ import { Href, Link } from 'expo-router';
 import type * as LucideIcons from 'lucide-react-native';
 import {
     ArrowLeftIcon,
+    CheckIcon,
     XIcon,
 } from 'lucide-react-native';
 import React from 'react';
@@ -15,6 +16,7 @@ type AllLucideIconName = Exclude<keyof typeof LucideIcons, 'createLucideIcon' | 
 
 const lucideIcons = {
     ArrowLeft: ArrowLeftIcon,
+    Check: CheckIcon,
     X: XIcon,
 } satisfies {
     [key in AllLucideIconName]?: LucideIcons.LucideIcon;
