@@ -23,10 +23,12 @@ import { ToolFallback } from "./tool-fallback";
 import { MarkdownText } from "./markdown-text";
 import { useCSSVariable } from "uniwind";
 import { ComposerAddAttachment } from "./attachment";
+import { WeatherToolRegistration } from "../tools/weather-tool-ui";
 
 export const Thread: React.FC = () => {
   return (
     <ThreadPrimitive.Root>
+      <WeatherToolRegistration />
       <View className="flex-1">
         <ThreadPrimitive.Viewport turnAnchor="top">
           <ThreadPrimitive.ViewportScrollable
@@ -282,7 +284,7 @@ const AssistantActionBar: FC = () => {
       hideWhenRunning
       autohide="not-last"
       autohideFloat="single-branch"
-      className="col-start-3 row-start-2 -ml-1 flex flex-row gap-1 text-muted-foreground data-floating:absolute data-floating:rounded-md data-floating:border data-floating:bg-background data-floating:p-1 data-floating:shadow-sm"
+      className="col-start-3 row-start-2 -ml-1 flex flex-row gap-1 text-muted-foreground"
     >
       <StaggerFadeInItem index={0}>
         <ActionBarPrimitive.Copy size="sm-icon" variant="ghost">

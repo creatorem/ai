@@ -1,14 +1,13 @@
 import React from "react";
 import { Header } from "~/components/header";
 import { View, KeyboardAvoidingView, Platform } from "react-native";
-import { DrawerButton } from "~/components/drawer-button";
 import { ModelSwitch } from "~/components/model-switch";
 import { Thread } from "~/components/ai-chat/thread";
+import { OpenDrawerButton } from "~/components/context/drawer-context";
 
 const HomeScreen = () => {
   const rightComponents = [<ModelSwitch key="model-switch" />];
-
-  const leftComponent = [<DrawerButton key="drawer-button" />];
+  const leftComponent = [<OpenDrawerButton key="drawer-button" />];
 
   return (
     <View className="relative flex-1 bg-background">

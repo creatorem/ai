@@ -9,9 +9,10 @@ import {
 import * as ThreadListPrimitive from "@creatorem/ai-react-native/primitives/thread-list";
 import * as ThreadListItemPrimitive from "@creatorem/ai-react-native/primitives/thread-list-item";
 import { useThreads } from "@creatorem/ai-react-native/ai-provider";
-import { useCallback, type FC } from "react";
+import { type FC } from "react";
 import { useCSSVariable } from "uniwind";
 import { Icon } from "~/components/ui/icon";
+import { useDrawer } from "~/components/context/drawer-context";
 
 export const ThreadList: FC = () => {
   const isLoading = useThreads((threads) => threads.isLoading);
@@ -28,10 +29,14 @@ export const ThreadList: FC = () => {
 };
 
 const ThreadListNew: FC = () => {
+  const { setOpen: setDrawerOpen } = useDrawer();
   return (
     <ThreadListPrimitive.New
       variant="outline"
       className="mb-4 h-9 justify-start gap-2 rounded-lg px-3 text-sm hover:bg-muted data-active:bg-muted"
+      onPress={() => {
+        setDrawerOpen(false);
+      }}
     >
       <Icon name="Plus" className="size-4" />
       <Text>New Thread</Text>
@@ -58,9 +63,16 @@ const ThreadListSkeleton: FC = () => {
 };
 
 const ThreadListItem: FC = () => {
+  const { setOpen: setDrawerOpen } = useDrawer();
+
   return (
     <ThreadListItemPrimitive.Root className="group flex h-9 flex-row items-center gap-2 rounded-lg transition-colors hover:bg-muted focus-visible:bg-muted focus-visible:outline-none data-active:bg-muted">
-      <ThreadListItemPrimitive.Trigger className="flex h-full min-w-0 flex-1 items-center justify-start truncate bg-transparent px-3 text-start text-sm">
+      <ThreadListItemPrimitive.Trigger
+        onPress={() => {
+          setDrawerOpen(false);
+        }}
+        className="flex h-full min-w-0 flex-1 items-center justify-start truncate bg-transparent px-3 text-start text-sm"
+      >
         <ThreadListItemPrimitive.Title
           fallback="New Chat"
           className="text-foreground"

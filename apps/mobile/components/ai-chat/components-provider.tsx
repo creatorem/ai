@@ -17,10 +17,17 @@ export const appNativeComponents = {
   Form: View,
   Button: ({
     onClick,
+    onPress,
     ...props
   }: React.ComponentProps<RuntimeComponents["Button"]> &
-    Omit<React.ComponentProps<typeof Button>, "onPress">) => (
-    <Button onPress={onClick} {...props}>
+    React.ComponentProps<typeof Button>) => (
+    <Button
+      onPress={(e) => {
+        onPress?.(e);
+        onClick?.(e);
+      }}
+      {...props}
+    >
       {props.children}
     </Button>
   ),
