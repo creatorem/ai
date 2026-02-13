@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useThread } from "@creatorem/ai-chat/primitives/thread";
 import type { ToolCallMessagePartComponent } from "../types/message-part-component-types";
-import type { Tool } from "@creatorem/stream";
+import { Tool } from "../stream/tool-types";
 
 export type AssistantToolProps<
   TArgs extends Record<string, unknown>,

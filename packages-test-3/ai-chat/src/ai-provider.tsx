@@ -1,14 +1,14 @@
 'use client';
 
-import { Tool } from "ai";
+import { ChatInit, HttpChatTransportInitOptions, Tool } from "ai";
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createStore, useStore, type StoreApi } from 'zustand';
 import { ThreadAdapter, AttachmentAdapter, DictationAdapter } from "./types/adapters";
-import { Threads } from "./types/entities";
-import { useChat } from "@ai-sdk/react";
+import { emptyStorageThreadAdapter } from "./adapters/empty-storage-adapter";
+import { Thread, Threads } from "./types/entities";
+import { useChat, UseChatOptions } from "@ai-sdk/react";
 import { AiChatEventHandler, AiChatEvents } from "./primitives/events";
 import type { Toolkit } from "./types/toolbox";
-import { localStorageThreadAdapter } from "./adapters/local-storage-adapter";
 
 type LanguageModelV1CallSettings = {
     maxTokens?: number;
@@ -38,7 +38,9 @@ export type AiContextType = {
     toolkit?: Toolkit | undefined;
     callSettings?: LanguageModelV1CallSettings | undefined;
     config?: LanguageModelConfig | undefined;
-    chatOptions?: Omit<Parameters<typeof useChat>[0], 'id' | 'transport'>
+    chatOptions?: Omit<UseChatOptions<Thread['messages'][0]> & ChatInit<Thread['messages'][0]>, 'id' | 'transport'> & {
+        transportOptions?: HttpChatTransportInitOptions<Thread['messages'][0]>
+    }
     eventHandler: AiChatEventHandler
 };
 
@@ -112,7 +114,7 @@ export function useThreadsStore(): StoreApi<ThreadsCtx> {
 
 function ThreadsProvider({ children }: { children: React.ReactNode }) {
     const adapters = useAiContext(s => s.adapters);
-    const threadAdapter = adapters?.thread ?? localStorageThreadAdapter;
+    const threadAdapter = adapters?.thread ?? emptyStorageThreadAdapter;
     const [activeThreadId, setActiveThreadId] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [threadIds, setThreadIds] = useState<string[]>([])

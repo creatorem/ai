@@ -58,8 +58,7 @@ export const ActionBarPrimitiveExportMarkdown = forwardRef<
 >(({ filename, onExport, onClick, disabled, ...props }, forwardedRef) => {
   const callback = useActionBarExportMarkdown({ filename, onExport });
 
-  const { components } = useRuntime();
-  const { Button } = components;
+  const { components: {Button} } = useRuntime();
 
   return (
     // @ts-ignore

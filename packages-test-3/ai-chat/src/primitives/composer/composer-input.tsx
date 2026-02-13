@@ -20,13 +20,8 @@ import { useEscapeKeydown } from "../../hooks/use-escape-keydown";
 import { useComposedRefs } from "@creatorem/ai-chat/utils";
 
 export namespace ComposerPrimitiveInput {
-  export type Element = RuntimeComponents['Textarea'];
-  export type Props = React.ComponentPropsWithoutRef<RuntimeComponents['Textarea']> & {
-    /**
-     * Whether to render as a child component using Slot.
-     * When true, the component will merge its props with its child.
-     */
-    // asChild?: boolean | undefined;
+  export type Element = RuntimeComponents['Input'];
+  export type Props = React.ComponentPropsWithoutRef<RuntimeComponents['Input']> & {
     /**
      * Whether to submit the message when Enter is pressed (without Shift).
      * @default true
@@ -83,7 +78,6 @@ export const ComposerPrimitiveInput = forwardRef<
   (
     {
       autoFocus = false,
-      asChild,
       disabled: disabledProp,
       onChange,
       onKeyDown,
@@ -105,13 +99,12 @@ export const ComposerPrimitiveInput = forwardRef<
     const isThreadDisabled = useThread(s => s.isDisabled);
     const isThreadRunning = useThread(s => s.isRunning);
     const threadCapabilities = useThread(s => s.capabilities);
-    const { components: { Textarea } } = useRuntime();
+    const { components: { Input } } = useRuntime();
 
     const value = useMemo(() => {
       return text;
     }, [text]);
 
-    // const Component = asChild ? Slot : TextareaAutosize;
 
     const isDisabled = useMemo(
       () =>
@@ -126,7 +119,7 @@ export const ComposerPrimitiveInput = forwardRef<
       if (!cancelOnEscape) return;
 
       // Only handle ESC if it originated from within this input
-      if (textareaRef.current instanceof HTMLElement && !textareaRef.current?.contains(e.target as Node)) return;
+      if (textareaRef.current && 'contains' in textareaRef.current && typeof textareaRef.current.contains === 'function' && !textareaRef.current.contains(e.target as Node)) return;
 
       const { canCancel, cancel } = composerStore.getState();
       if (canCancel) {
@@ -143,10 +136,10 @@ export const ComposerPrimitiveInput = forwardRef<
 
       if (e.key === "Enter" && e.shiftKey === false) {
 
-        if (!isThreadRunning && textareaRef.current instanceof HTMLElement) {
+        if (!isThreadRunning && textareaRef.current && 'closest' in textareaRef.current && typeof textareaRef.current.closest === 'function') {
           e.preventDefault();
 
-          textareaRef.current?.closest("form")?.requestSubmit();
+          textareaRef.current.closest("form")?.requestSubmit();
         }
       }
     };
@@ -172,7 +165,7 @@ export const ComposerPrimitiveInput = forwardRef<
       const textarea = textareaRef.current;
       if (!textarea || !autoFocusEnabled) return;
 
-      if (textarea instanceof HTMLTextAreaElement) {
+      if ('focus' in textarea && typeof textarea.focus === 'function' && 'setSelectionRange' in textarea && typeof textarea.setSelectionRange === 'function' && 'value' in textarea && typeof textarea.value === 'string') {
         textarea.focus({ preventScroll: true });
         textarea.setSelectionRange(textarea.value.length, textarea.value.length);
       }
@@ -209,16 +202,17 @@ export const ComposerPrimitiveInput = forwardRef<
       return eventHandler.on("threadListItem.switchedTo", focus);
     }, [unstable_focusOnThreadSwitched, eventHandler, focus, composerType]);
 
+    console.log( 'ComposerPrimitiveInput' )
+
     return (
-      // @ts-ignore
-      <Textarea
+      <Input
         name="input"
         value={value}
         {...rest}
         ref={ref}
         disabled={isDisabled}
-        onChange={composeEventHandlers(onChange, (e) => {
-          composerStore.getState().setText(e.target.value);
+        onChange={composeEventHandlers(onChange, (value) => {
+          composerStore.getState().setText(value);
         })}
         onKeyDown={composeEventHandlers(onKeyDown, handleKeyPress)}
         onPaste={composeEventHandlers(onPaste, handlePaste)}

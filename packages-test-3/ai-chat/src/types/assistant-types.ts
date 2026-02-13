@@ -1,5 +1,5 @@
+import { ReadonlyJSONValue } from "../stream/tool-response";
 import type { CompleteAttachment } from "./attachment-types";
-import type { ReadonlyJSONValue } from "@creatorem/stream/utils";
 import type {
   TextMessagePart,
   ReasoningMessagePart,

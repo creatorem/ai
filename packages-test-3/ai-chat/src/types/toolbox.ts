@@ -1,4 +1,4 @@
-import type { Tool } from "@creatorem/stream";
+import { Tool } from "../stream/tool-types";
 import type { ToolCallMessagePartComponent } from "./message-part-component-types";
 
 export type ToolDefinition<

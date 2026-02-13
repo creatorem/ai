@@ -2,7 +2,8 @@ import React, { type ComponentType } from 'react';
 
 interface BaseComponentProps {
     className?: string;
-    style?: React.CSSProperties;
+    // style?: React.CSSProperties;
+    style?: Record<string, string | number>;
     ref?: any;
 }
 
@@ -27,40 +28,19 @@ export interface RuntimeComponents {
   Form: ComponentType<BaseComponentPropsWithChildren & { onSubmit?: (e: Event) => void; }>
   Button: ButtonComponent
   ScrollArea: ComponentType<BaseComponentPropsWithChildren>
-  Input: ComponentType<BaseComponentProps & { value?: string; onChange?: (e: Event) => void; placeholder?: string }>
-  Textarea: ComponentType<BaseComponentProps & Partial<React.ComponentProps<'textarea'>> & {
-      autoFocus?: boolean;
-      asChild?: boolean;
-      disabled?: boolean;
-      onChange?: (e: Event) => void;
-      onKeyDown?: (e: Event) => void;
-      onPaste?: (e: Event) => void;
-      height?: number;
+  Input: ComponentType<BaseComponentProps & {
+    autoFocus?: boolean;
+    disabled?: boolean;
+    onChange?: (value:string, e?: Event) => void;
+    onKeyDown?: (e: Event) => void;
+    onPaste?: (e: Event) => void;
+    height?: number;
     rowHeight?: number;
     maxRows?: number;
     minRows?: number;
     onHeightChange?: (height: number) => void;
     cacheMeasurements?: boolean;
-    style?: TextareaStyle;
   }>
-
-    //  value?: string; onChange?: (e: any) => void; placeholder?: string; onKeyDown?: (e: React.KeyboardEvent) => void; }>
-
-  // Action bar
-  ActionBarRoot: ComponentType<BaseComponentPropsWithChildren>
-  ActionBarPortal: ComponentType<BaseComponentPropsWithChildren>
-  ActionBarContent: ComponentType<BaseComponentPropsWithChildren & {sideOffset: number}>
-  ActionBarItem: ComponentType<BaseComponentPropsWithChildren>
-  ActionBarSeparator: ComponentType<BaseComponentPropsWithChildren>
-  ActionBarTrigger: ComponentType<BaseComponentPropsWithChildren>
-
-  // Thread List Item More
-  ThreadListItemMoreRoot: ComponentType<BaseComponentPropsWithChildren>
-  ThreadListItemMorePortal: ComponentType<BaseComponentPropsWithChildren>
-  ThreadListItemMoreContent: ComponentType<BaseComponentPropsWithChildren & {sideOffset: number}>
-  ThreadListItemMoreItem: ComponentType<BaseComponentPropsWithChildren>
-  ThreadListItemMoreSeparator: ComponentType<BaseComponentPropsWithChildren>
-  ThreadListItemMoreTrigger: ComponentType<BaseComponentPropsWithChildren>
 
   // Content Components
   Markdown: ComponentType<BaseComponentProps & { content: string }>

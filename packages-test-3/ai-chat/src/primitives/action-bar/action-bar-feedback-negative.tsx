@@ -34,8 +34,7 @@ export const ActionBarPrimitiveFeedbackNegative = forwardRef<
 
   const callback = useActionBarFeedbackNegative();
 
-  const { components } = useRuntime();
-  const { Button } = components;
+  const { components: {Button} } = useRuntime();
 
   return (
     <Button

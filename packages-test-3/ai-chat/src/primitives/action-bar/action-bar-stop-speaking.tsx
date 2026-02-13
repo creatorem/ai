@@ -32,8 +32,7 @@ export const ActionBarPrimitiveStopSpeaking = forwardRef<
 >((props, ref) => {
   const callback = useActionBarStopSpeaking();
 
-  const { components } = useRuntime();
-  const { Button } = components;
+  const { components: {Button} } = useRuntime();
 
   return (
     // @ts-ignore

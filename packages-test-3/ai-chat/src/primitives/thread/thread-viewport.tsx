@@ -1,22 +1,11 @@
 "use client";
 
-import { useComposedRefs } from "@creatorem/ai-chat/utils";
-import {
-  type ComponentRef,
-  forwardRef,
-  useCallback,
-  type ComponentProps,
-} from "react";
-import { useThreadViewport } from "../../primitives/thread/thread-viewport-context";
 import { ThreadPrimitiveViewportProvider } from "../../primitives/thread/thread-viewport-provider";
-import { useSizeHandle } from "../../hooks/use-size-handle";
-import { useThreadViewportAutoScroll } from "./use-thread-viewport-auto-scroll";
-import { useRuntime } from "@creatorem/ai-chat/runtime";
-import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
+// import { useSizeHandle } from "../../hooks/use-size-handle";
 
 export namespace ThreadPrimitiveViewport {
-  export type Element = RuntimeComponents['ScrollArea']; 
-  export type Props = ComponentProps<RuntimeComponents['ScrollArea']> & {
+  export type Props = {
+    children: React.ReactNode;
     /**
      * Whether to automatically scroll to the bottom when new messages are added.
      * When enabled, the viewport will automatically scroll to show the latest content.
@@ -55,48 +44,6 @@ export namespace ThreadPrimitiveViewport {
   };
 }
 
-const useViewportSizeRef = () => {
-  const register = useThreadViewport((s) => s.registerViewport);
-  const getHeight = useCallback((el: HTMLElement) => el.clientHeight, []);
-  return useSizeHandle(register, getHeight);
-};
-
-const ThreadPrimitiveViewportScrollable = forwardRef<
-  ThreadPrimitiveViewport.Element,
-  ThreadPrimitiveViewport.Props
->(
-  (
-    {
-      autoScroll,
-      scrollToBottomOnRunStart,
-      scrollToBottomOnInitialize,
-      scrollToBottomOnThreadSwitch,
-      children,
-      ...rest
-    },
-    forwardedRef,
-  ) => {
-    const { components: { ScrollArea } } = useRuntime();
-    const autoScrollRef = useThreadViewportAutoScroll({
-      autoScroll,
-      scrollToBottomOnRunStart,
-      scrollToBottomOnInitialize,
-      scrollToBottomOnThreadSwitch,
-    });
-    const viewportSizeRef = useViewportSizeRef();
-    const ref = useComposedRefs(forwardedRef, autoScrollRef, viewportSizeRef);
-
-    return (
-      <ScrollArea {...rest} ref={ref}>
-        {children}
-      </ScrollArea>
-    );
-  },
-);
-
-ThreadPrimitiveViewportScrollable.displayName =
-  "ThreadPrimitive.ViewportScrollable";
-
 /**
  * A scrollable viewport container for thread messages.
  *
@@ -111,15 +58,10 @@ ThreadPrimitiveViewportScrollable.displayName =
  * </ThreadPrimitive.Viewport>
  * ```
  */
-export const ThreadPrimitiveViewport = forwardRef<
-  ThreadPrimitiveViewport.Element,
-  ThreadPrimitiveViewport.Props
->(({ turnAnchor, ...props }, ref) => {
+export const ThreadPrimitiveViewport = (({ turnAnchor, children}:ThreadPrimitiveViewport.Props) => {
   return (
     <ThreadPrimitiveViewportProvider options={{ turnAnchor }}>
-      <ThreadPrimitiveViewportScrollable {...props} ref={ref} />
+      {children}
     </ThreadPrimitiveViewportProvider>
   );
 });
-
-ThreadPrimitiveViewport.displayName = "ThreadPrimitive.Viewport";

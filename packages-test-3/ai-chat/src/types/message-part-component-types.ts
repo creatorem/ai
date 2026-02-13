@@ -3,7 +3,6 @@ import type {
   MessagePartStatus,
   ToolCallMessagePartStatus,
 } from "./assistant-types";
-import { ToolResponse } from "@creatorem/stream";
 import {
   FileMessagePart,
   ImageMessagePart,
@@ -15,6 +14,7 @@ import {
   ThreadUserMessagePart,
   ThreadAssistantMessagePart,
 } from "./message-part-types";
+import { ToolResponse } from "../stream/tool-response";
 
 export type MessagePartState = (
   | ThreadUserMessagePart

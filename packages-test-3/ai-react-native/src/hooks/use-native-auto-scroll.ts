@@ -1,6 +1,6 @@
+import { AutoScrollConfig, AutoScrollResult } from '@creatorem/ai-chat/hook-types';
 import { useRef, useCallback } from 'react';
 import type { ScrollView } from 'react-native';
-import type { AutoScrollConfig, AutoScrollResult } from '@creatorem/ai-chat/runtime/context';
 
 export const useNativeAutoScroll = (config?: AutoScrollConfig): AutoScrollResult => {
   const scrollViewRef = useRef<ScrollView>(null);

@@ -27,8 +27,7 @@ export const AttachmentPrimitiveRoot = forwardRef<
   AttachmentPrimitiveRoot.Element,
   AttachmentPrimitiveRoot.Props
 >((props, ref) => {
-  const { components } = useRuntime();
-  const { Box } = components;
+  const { components: {Box} } = useRuntime();
 
   return <Box {...props} ref={ref} />;
 });

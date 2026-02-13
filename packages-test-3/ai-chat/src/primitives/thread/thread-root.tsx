@@ -17,12 +17,10 @@ import { useAiContext, useThreads } from "../../ai-provider";
 import { ComposerCtxType } from "../composer/composer-provider";
 import { MessageRepository } from "../../utils/message-repository";
 import { AttachmentsProvider } from "../attachment/attachment-by-index-provider";
-
-import { Tool } from "@creatorem/stream";
-import { toToolsJSONSchema } from "@creatorem/stream";
 import { ToolCallMessagePartComponent } from "../../types/message-part-component-types";
 import { Unsubscribe } from "../../types/unsuscribe";
-import { localStorageThreadAdapter } from "../../adapters";
+import { toToolsJSONSchema } from "../../stream/schema-utils";
+import { Tool } from "../../stream/tool-types";
 
 export type CustomUIDataTypes = {
     textDelta: string;
@@ -246,6 +244,7 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
     const transportRef = useRef<DefaultChatTransport<Thread['messages'][0]> | null>(null);
     if (transportRef.current === null) {
         transportRef.current = new DefaultChatTransport({
+            ...chatOptions?.transportOptions,
             prepareSendMessagesRequest: async (options) => {
                 const context = modelContextRef.current;
                 return {
@@ -273,14 +272,14 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
         setMessages,
         status: chatStatus,
         sendMessage,
+        stop,
         ...other
     } = useChat<Thread['messages'][0]>({
         generateId,
         transport: transportRef.current,
         ...chatOptions,
         onToolCall: async ({ toolCall }) => {
-            console.log('onToolCall')
-            console.log({ toolCall })
+            chatOptions?.onToolCall?.({ toolCall })
             const tool = toolsRef.current?.[toolCall.toolName];
             if (!tool?.execute) return;
             try {
@@ -306,10 +305,17 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
             }
         },
         onData: (dataPart) => {
+            chatOptions?.onData?.(dataPart)
             setDataStream((ds) => (ds ? [...ds, dataPart] : []));
+        },
+        'onError': (error) => {
+            chatOptions?.onError?.(error)
+            console.log(error)
         },
         // id: activeThreadId || undefined,
     });
+
+    console.log( {chatStatus} )
 
     const viewMessages = useMemo(
         () => convertMessages(messages as UIMessage[]),
@@ -386,7 +392,7 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
 
     useEffect(() => {
         let cancelled = false;
-        const threadAdapter = adapters?.thread ?? localStorageThreadAdapter;
+        const threadAdapter = adapters?.thread;
 
         (async function () {
             if (!activeThreadId) {
@@ -432,7 +438,7 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
     const prevActiveThreadIdRef = useRef(activeThreadId);
 
     useEffect(() => {
-        const threadAdapter = adapters?.thread ?? localStorageThreadAdapter;
+        const threadAdapter = adapters?.thread;
         
         if (!threadAdapter || !threadAdapter.save) return;
 
@@ -495,8 +501,6 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
         };
     }, [messages, activeThreadId, adapters, title, status, setThreadIds, setActiveThreadId]);
 
-
-
     const isRunningRef = useRef(false);
     useEffect(() => {
         if (chatStatus === 'streaming') {
@@ -508,6 +512,11 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
             eventHandler.trigger('thread.runEnd', { 'threadId': id })
         }
     }, [eventHandler, id, chatStatus])
+
+    const trytostop = useCallback(async () => {
+        console.log( 'trytostop' )
+        await stop()
+    }, [stop])
 
     // Create store once
     const storeRef = useRef<StoreApi<ThreadCtxType> | null>(null);
@@ -528,6 +537,7 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
             setDataStream,
             beginEdit,
             stopEdit,
+            stop: trytostop,
             // composerText,
             // setComposerText,
             send,
@@ -625,6 +635,7 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
             setDataStream,
             beginEdit,
             stopEdit,
+            stop: trytostop,
             // composerText,
             // setComposerText,
             send,

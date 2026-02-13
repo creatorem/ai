@@ -33,8 +33,7 @@ export const BranchPickerPrimitiveRoot = forwardRef<
   BranchPickerPrimitiveRoot.Element,
   BranchPickerPrimitiveRoot.Props
 >(({ hideWhenSingleBranch, ...rest }, ref) => {
-  const { components } = useRuntime();
-  const { Box } = components;
+  const { components: {Box} } = useRuntime();
 
   return (
     <MessagePrimitive.If hasBranches={hideWhenSingleBranch ? true : undefined}>

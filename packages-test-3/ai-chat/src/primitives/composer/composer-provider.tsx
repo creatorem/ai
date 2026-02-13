@@ -299,6 +299,7 @@ export function ComposerPrimitiveRoot({ children, id, defaultText = "", editMess
     }, [_cleanupDictation, editMessageId]);
 
     const cancel = useCallback((): void => {
+        console.log( 'cancel call here 2' )
         threadStore.getState().stop();
     }, [threadStore]);
 

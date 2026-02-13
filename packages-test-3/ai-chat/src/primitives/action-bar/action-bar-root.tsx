@@ -65,8 +65,7 @@ export const ActionBarPrimitiveRoot = forwardRef<
     autohideFloat,
   });
 
-  const { components } = useRuntime();
-  const { Box } = components;
+  const { components: {Box} } = useRuntime();
 
   if (hideAndfloatStatus === HideAndFloatStatus.Hidden) return null;
 

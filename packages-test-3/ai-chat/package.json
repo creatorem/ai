@@ -7,7 +7,6 @@
     ".": "./src/index.ts",
     "./ai-provider": "./src/ai-provider.tsx",
     "./primitives/action-bar": "./src/primitives/action-bar/index.ts",
-    "./primitives/action-bar-more": "./src/primitives/action-bar-more/index.ts",
     "./primitives/attachment": "./src/primitives/attachment/index.ts",
     "./primitives/branch-picker": "./src/primitives/branch-picker/index.ts",
     "./primitives/composer": "./src/primitives/composer/index.ts",
@@ -18,15 +17,13 @@
     "./primitives/thread": "./src/primitives/thread/index.ts",
     "./primitives/thread-list": "./src/primitives/thread-list/index.ts",
     "./primitives/thread-list-item": "./src/primitives/thread-list-item/index.ts",
-    "./primitives/thread-list-item-more": "./src/primitives/thread-list-item-more/index.ts",
     "./runtime": "./src/runtime.tsx",
     "./component-types": "./src/component-types.ts",
     "./component-type-check": "./src/component-type-check.ts",
     "./hook-types": "./src/hook-types.ts",
     "./utils": "./src/utils/index.ts",
     "./hooks": "./src/hooks/index.ts",
-    "./types/*": "./src/types/*.ts",
-    "./adapters/*": "./src/adapters/*.ts"
+    "./types/*": "./src/types/*.ts"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -43,7 +40,6 @@
   },
   "dependencies": {
     "@ai-sdk/react": "^3.0.52",
-    "@creatorem/stream": "workspace:*",
     "ai": "^6.0.50",
     "nanoid": "^5.1.6",
     "zod": "^4.3.6",
@@ -59,9 +55,8 @@
     }
   },
   "devDependencies": {
+    "@standard-schema/spec": "^1.1.0",
     "@tooling/tsconfig": "workspace:*",
-    "@types/json-schema": "^7.0.15",
-    "@types/react": "^19.1.0",
-    "react": "^19.1.0"
+    "@types/json-schema": "^7.0.15"
   }
 }

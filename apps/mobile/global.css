@@ -19,7 +19,7 @@
       --color-card-foreground: rgba(10, 10, 10, 1);
       --color-popover: rgb(255, 255, 255);
       --color-popover-foreground: rgba(10, 10, 10, 1);
-      --color-primary: #e98a0e;
+      --color-primary: #c6613f;
       --color-primary-foreground: rgba(250, 250, 250, 1);
       --color-secondary: #F5F5F5;
       --color-secondary-foreground: rgba(23, 23, 23, 1);
@@ -63,7 +63,7 @@
       --color-card-foreground: rgba(250, 250, 250, 1);
       --color-popover: rgba(22,22,22, 1);
       --color-popover-foreground: rgba(250, 250, 250, 1);
-      --color-primary: #e98a0e;
+      --color-primary: #c6613f;
       --color-primary-foreground: rgba(23, 23, 23, 1);
       --color-secondary: #262626;
       --color-secondary-foreground: rgba(250, 250, 250, 1);

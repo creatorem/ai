@@ -1,10 +1,18 @@
 "use client";
 
-// @ts-expect-error normal because we extends web specific types here
-import { RuntimeProvider, type RuntimeHooks } from "@creatorem/ai-chat/runtime";
+import { RuntimeFunctions, RuntimeProvider } from "@creatorem/ai-chat/runtime";
 import { useWebAutoScroll } from "./hooks/use-web-auto-scroll";
-import { useCallback, useRef, type ReactNode } from "react";
+import { useCallback, useMemo, useRef, type ReactNode } from "react";
 import { webComponents } from "./web-components";
+import { RuntimeComponents } from "@creatorem/ai-chat/component-types";
+import { RuntimeHooks } from "@creatorem/ai-chat/hook-types";
+import { useComposedRefs } from "@creatorem/ai-chat/utils";
+
+
+import { useThread, useThreadViewport } from "@creatorem/ai-chat/primitives/thread";
+import { useManagedRef } from "@creatorem/ai-chat/hooks";
+// import { useSizeHandle } from "../../hooks/use-size-handle";
+import { useMessage, useMessageStore } from "@creatorem/ai-chat/primitives/message";
 
 /**
  * Web-specific implementation of useMeasure using ResizeObserver.
@@ -44,35 +52,95 @@ const useWebMeasure = () => {
   return { ref, ...sizeRef.current };
 };
 
+
+
+const useIsHoveringRef = () => {
+    const messageStore = useMessageStore();
+
+    const callbackRef = useCallback(
+        (el: HTMLElement) => {
+            if (typeof window === "undefined" || !window.addEventListener || !el || !el.addEventListener) return () => {};
+
+            const handleMouseEnter = () => {
+                messageStore.getState().setIsHovering(true);
+            };
+            const handleMouseLeave = () => {
+                messageStore.getState().setIsHovering(false);
+            };
+
+            el.addEventListener("mouseenter", handleMouseEnter);
+            el.addEventListener("mouseleave", handleMouseLeave);
+
+            if (el.matches(":hover")) {
+                // TODO this is needed for SSR to work, figure out why
+                queueMicrotask(() => messageStore.getState().setIsHovering(true));
+            }
+
+            return () => {
+                el.removeEventListener("mouseenter", handleMouseEnter);
+                el.removeEventListener("mouseleave", handleMouseLeave);
+                messageStore.getState().setIsHovering(false);
+            };
+        },
+        [messageStore],
+    );
+
+    return useManagedRef(callbackRef);
+};
+
 /**
- * Web-specific implementation of useHover using mouseenter/mouseleave.
+ * Hook that registers the anchor user message as a content inset.
+ * Only registers if: user message, at index messages.length-2, and last message is assistant.
  */
-const useWebHover = (callback: (isHovering: boolean) => void) => {
-  const callbackRef = useRef(callback);
-  callbackRef.current = callback;
+const useMessageViewportRef = () => {
+    const turnAnchor = useThreadViewport((s) => s.turnAnchor);
+    const registerUserHeight = useThreadViewport(
+        (s) => s.registerUserMessageHeight,
+    );
 
-  const ref = useCallback((el: HTMLElement | null) => {
-    if (!el) return;
+    const messageRole = useMessage(s => s.role);
+    const messageIndex = useMessage(s => s.index);
+    const messagesLength = useThread(s => s.messages.length);
+    const lastMessageRole = useThread(s => s.messages.at(-1)?.role);
 
-    const handleMouseEnter = () => callbackRef.current(true);
-    const handleMouseLeave = () => callbackRef.current(false);
+    const shouldRegisterAsInset = useMemo(
+        () =>
+            turnAnchor === "top" &&
+            messageRole === "user" &&
+            messageIndex === messagesLength - 2 &&
+            lastMessageRole === "assistant",
+        [turnAnchor, messageRole, messageIndex, messagesLength, lastMessageRole]
+    );
 
-    el.addEventListener("mouseenter", handleMouseEnter);
-    el.addEventListener("mouseleave", handleMouseLeave);
+    // todo this is web specific, we should use the runtime to get the height
+    // const getHeight = useCallback((el: HTMLElement) => el.offsetHeight, []);
 
-    return () => {
-      el.removeEventListener("mouseenter", handleMouseEnter);
-      el.removeEventListener("mouseleave", handleMouseLeave);
-    };
-  }, []);
+    // return useSizeHandle(
+    //     shouldRegisterAsInset ? registerUserHeight : null,
+    //     getHeight,
+    // );
+    return {current: null};
+};
 
-  return ref;
+const useMessageRootRef = <T extends React.Ref<unknown>>(ref: T) => {
+    const isHoveringRef = useIsHoveringRef();
+    const anchorUserMessageRef = useMessageViewportRef();
+
+    return useComposedRefs(ref, isHoveringRef, anchorUserMessageRef);
 };
 
 const webHooks: RuntimeHooks = {
   useAutoScroll: useWebAutoScroll,
   useMeasure: useWebMeasure,
-  useHover: useWebHover,
+  useMessageRootRef: useMessageRootRef as RuntimeHooks['useMessageRootRef'],
+};
+
+const webFunctions: RuntimeFunctions = {
+  copyToClipboard: (value, callback) => {
+    navigator.clipboard.writeText(value).then(() => {
+      callback();
+    });
+  },
 };
 
 /**
@@ -97,9 +165,9 @@ const webHooks: RuntimeHooks = {
  * }
  * ```
  */
-export const AiChatWebProvider = ({ children }: { children: ReactNode }) => {
+export const AiChatWebProvider = ({ children, components, hooks, fn }: { children: ReactNode, components?: Partial<RuntimeComponents>, hooks?: Partial<RuntimeHooks>, fn?: Partial<RuntimeFunctions> }) => {
   return (
-    <RuntimeProvider hooks={webHooks} components={webComponents}>
+    <RuntimeProvider hooks={{ ...webHooks, ...hooks }} components={{ ...webComponents, ...components }} functions={{ ...webFunctions, ...fn }}>
       {children}
     </RuntimeProvider>
   );

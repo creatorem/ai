@@ -30,6 +30,6 @@ export interface AutoScrollResult {
 export interface RuntimeHooks {
   useAutoScroll: (config?: AutoScrollConfig) => AutoScrollResult;
   useMeasure: () => { ref: (node: any) => void; width: number; height: number };
-  useHover: (callback: (isHovering: boolean) => void) => (node: any) => void;
+  useMessageRootRef: <T extends React.Ref<unknown>>(ref: T) => T;
 }
 

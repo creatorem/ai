@@ -76,8 +76,7 @@ export const ThreadPrimitiveViewportSlack: FC<ThreadViewportSlackProps> = ({
 
   const threadViewportStore = useThreadViewportStore({ optional: true });
   const isNested = useContext(SlackNestingContext);
-  const { components } = useRuntime();
-  const { Box } = components;
+  const { components: {Box} } = useRuntime();
 
   const ref = useCallback(
     (el: HTMLElement | null) => {

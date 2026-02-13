@@ -1,6 +1,9 @@
 {
-  "extends": "@tooling/tsconfig/base.json",
+  "extends": "../../tooling/tsconfig/base.json",
   "compilerOptions": {
+    "paths": {
+      "@creatorem/ai-chat/component-types": ["./@types/components.d.ts"],
+    },
     "outDir": "dist",
     "rootDir": "src",
     "jsx": "react-native",

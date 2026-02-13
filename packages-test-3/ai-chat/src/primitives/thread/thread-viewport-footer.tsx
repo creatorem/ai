@@ -6,7 +6,7 @@ import {
   useCallback,
 } from "react";
 import { useThreadViewport } from "./thread-viewport-context";
-import { useSizeHandle } from "../../hooks/use-size-handle";
+// import { useSizeHandle } from "../../hooks/use-size-handle";
 import { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 import { useRuntime } from "@creatorem/ai-chat/runtime";
 import { useComposedRefs } from "@creatorem/ai-chat/utils";
@@ -42,19 +42,19 @@ export const ThreadPrimitiveViewportFooter = forwardRef<
   ThreadPrimitiveViewportFooter.Props
 >((props, forwardedRef) => {
   const {components: {Box}} = useRuntime();
-  const register = useThreadViewport((s) => s.registerContentInset);
+  // const register = useThreadViewport((s) => s.registerContentInset);
   
-  // todo this is web specific, we should use the runtime to get the height
-  const getHeight = useCallback((el: HTMLElement) => {
-    const marginTop = parseFloat(getComputedStyle(el).marginTop) || 0;
-    return el.offsetHeight + marginTop;
-  }, []);
+  // // todo this is web specific, we should use the runtime to get the height
+  // const getHeight = useCallback((el: HTMLElement) => {
+  //   const marginTop = parseFloat(getComputedStyle(el).marginTop) || 0;
+  //   return el.offsetHeight + marginTop;
+  // }, []);
 
-  const resizeRef = useSizeHandle(register, getHeight);
+  // const resizeRef = useSizeHandle(register, getHeight);
 
-  const ref = useComposedRefs(forwardedRef, resizeRef);
+  // const ref = useComposedRefs(forwardedRef, resizeRef);
 
-  return <Box {...props} ref={ref} />;
+  return <Box {...props} ref={forwardedRef} />;
 });
 
 ThreadPrimitiveViewportFooter.displayName = "ThreadPrimitive.ViewportFooter";

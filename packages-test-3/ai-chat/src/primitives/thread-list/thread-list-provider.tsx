@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createStore, useStore, type StoreApi } from 'zustand';
 import { useAiContext, useThreads, useThreadsStore } from "../../ai-provider";
-import { localStorageThreadAdapter, saveThread, deleteThread as deleteStoredThread, archiveThread as archiveStoredThread, unarchiveThread as unarchiveStoredThread, renameThread as renameStoredThread } from "@creatorem/ai-chat/adapters/local-storage-adapter";
+import { emptyStorageThreadAdapter, saveThread, deleteThread as deleteStoredThread, archiveThread as archiveStoredThread, unarchiveThread as unarchiveStoredThread, renameThread as renameStoredThread } from "../../adapters/empty-storage-adapter";
 import { generateId } from "ai";
 
 export type ThreadListItem = {
@@ -56,7 +56,7 @@ export function ThreadListProvider({ children }: { children: React.ReactNode }) 
     const threadsIsLoading = useThreads(s => s.isLoading);
     const activeThreadId = useThreads(s => s.activeThreadId);
     
-    const threadAdapter = adapters?.thread ?? localStorageThreadAdapter;
+    const threadAdapter = adapters?.thread ?? emptyStorageThreadAdapter;
     
     const [isLoading, setIsLoading] = useState(true);
     const [threads, setThreads] = useState<ThreadListItem[]>([]);

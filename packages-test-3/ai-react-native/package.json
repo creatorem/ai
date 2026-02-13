@@ -7,8 +7,23 @@
     "types": "./src/index.ts",
     "exports": {
         ".": "./src/index.ts",
-        "./native-provider": "./src/AiChatNativeProvider.tsx",
-        "./hooks/*": "./src/hooks/*.ts"
+        "./ai-provider": "./src/ai-provider.tsx",
+        "./primitives/action-bar": "./src/primitives/action-bar.ts",
+        "./primitives/attachment": "./src/primitives/attachment.ts",
+        "./primitives/branch-picker": "./src/primitives/branch-picker.ts",
+        "./primitives/composer": "./src/primitives/composer/index.ts",
+        "./primitives/error": "./src/primitives/error.ts",
+        "./primitives/message": "./src/primitives/message.ts",
+        "./primitives/message-part": "./src/primitives/message-part.ts",
+        "./primitives/suggestion": "./src/primitives/suggestion.ts",
+        "./primitives/thread": "./src/primitives/thread.ts",
+        "./primitives/thread-list": "./src/primitives/thread-list.ts",
+        "./primitives/thread-list-item": "./src/primitives/thread-list-item.ts",
+        "./primitives/reasoning": "./src/primitives/reasoning/index.ts",
+        "./markdown": "./src/markdown/index.ts",
+        "./markdown/index": "./src/markdown/index.ts",
+        "./markdown/renderer": "./src/markdown/renderer/index.ts",
+        "./native-components": "./src/native-components.tsx"
     },
     "files": [
         "dist",
@@ -22,14 +37,23 @@
     },
     "peerDependencies": {
         "@creatorem/ai-chat": "workspace:*",
+        "@react-native-async-storage/async-storage": "^2",
+        "@react-native-clipboard/clipboard": "^1",
         "@types/react": "*",
+        "expo-document-picker": "^14",
+        "expo-image-picker": "^17",
         "react": "^18 || ^19",
-        "react-native": "*"
+        "react-native": "0.81.5"
     },
     "devDependencies": {
         "@tooling/tsconfig": "workspace:*",
-        "@types/react": "^19.1.0",
-        "react": "^19.1.0",
-        "react-native": "0.76.1"
+        "@types/hast": "^3.0.4"
+    },
+    "dependencies": {
+        "ai": "^6.0.50",
+        "unified": "^11.0.5",
+        "remark-parse": "^11.0.0",
+        "remark-rehype": "^11.1.1",
+        "remark-gfm": "^4.0.0"
     }
 }

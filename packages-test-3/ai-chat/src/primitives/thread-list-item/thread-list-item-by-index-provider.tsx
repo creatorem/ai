@@ -3,6 +3,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createStore, useStore, type StoreApi } from "zustand";
 import { useAiContext, useThreads } from "../../ai-provider";
+import { emptyStorageThreadAdapter } from "../../adapters/empty-storage-adapter";
 
 export type ThreadListItemMethods = {
   switchToThread(): void;
@@ -39,8 +40,6 @@ export function useThreadListItemStore(): StoreApi<ThreadListItemState> {
 const removeFromList = (list: string[], id: string) => list.filter((value) => value !== id);
 const addUnique = (list: string[], id: string) => (list.includes(id) ? list : [...list, id]);
 
-import { localStorageThreadAdapter } from "../../adapters/local-storage-adapter";
-
 export const ThreadListItemByIndexProvider: React.FC<
   React.PropsWithChildren<{ index: number; archived?: boolean }>
 > = ({ index, archived = false, children }) => {
@@ -54,7 +53,7 @@ export const ThreadListItemByIndexProvider: React.FC<
   const setArchivedThreadIds = useThreads((threads) => threads.setArchivedThreadIds);
   const activeThreadId = useThreads((threads) => threads.activeThreadId);
 
-  const adapter = useAiContext((ctx) => ctx.adapters?.thread) ?? localStorageThreadAdapter;
+  const adapter = useAiContext((ctx) => ctx.adapters?.thread) ?? emptyStorageThreadAdapter;
   const eventHandler = useAiContext((ctx) => ctx.eventHandler);
 
   const [title, setTitle] = useState("New thread");

@@ -1,5 +1,5 @@
-import { ReadonlyJSONObject } from "@creatorem/stream/utils";
 import { Thread } from "./entities";
+import { ReadonlyJSONObject } from "../stream/tool-response";
 
 export type TextMessagePart = {
   readonly type: "text";

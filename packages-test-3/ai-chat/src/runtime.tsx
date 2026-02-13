@@ -3,9 +3,14 @@ import { RuntimeComponents } from './component-types';
 import { RuntimeHooks, AutoScrollConfig, AutoScrollResult } from './hook-types';
 export type { AutoScrollConfig, AutoScrollResult };
 
+export type RuntimeFunctions = {
+  copyToClipboard: (value:string, callback: () => void) => void
+}
+
 export interface RuntimeContextValue {
   components: RuntimeComponents;
   hooks: RuntimeHooks;
+  fn: RuntimeFunctions;
 }
 
 const defaultComponents: RuntimeComponents = {
@@ -14,24 +19,7 @@ const defaultComponents: RuntimeComponents = {
   Text: React.Fragment,
   Button: ({ children, variant, size, ...props }) => <button {...props}>{children}</button>,
   ScrollArea: ({ children, ...props }) => <div {...props} style={{ overflow: 'auto', ...props.style }}>{children}</div>,
-  Input: (props) => <input {...props} />,
-  Textarea: (props) => <textarea {...props} />,
-  
-  // Action bar
-  ActionBarRoot: ({children}) => <>{children}</>,
-  ActionBarPortal: ({children}) => <>{children}</>,
-  ActionBarContent: ({children}) => <>{children}</>,
-  ActionBarItem: ({children}) => <>{children}</>,
-  ActionBarSeparator: ({children}) => <>{children}</>,
-  ActionBarTrigger: ({children}) => <>{children}</>,
-  
-  // Thread List Item More
-  ThreadListItemMoreRoot: ({children}) => <>{children}</>,
-  ThreadListItemMorePortal: ({children}) => <>{children}</>,
-  ThreadListItemMoreContent: ({children}) => <>{children}</>,
-  ThreadListItemMoreItem: ({children}) => <>{children}</>,
-  ThreadListItemMoreSeparator: ({children}) => <>{children}</>,
-  ThreadListItemMoreTrigger: ({children}) => <>{children}</>,
+  Input: ({onChange: onChangeProp, ...props}) => <textarea {...props} onChange={(e) => onChangeProp?.(e.target.value, e)} />,
   
   // Content Components
   Markdown: ({ content }) => <pre>{content}</pre>,
@@ -58,21 +46,28 @@ const defaultComponents: RuntimeComponents = {
 const defaultHooks: RuntimeHooks = {
   useAutoScroll: () => ({ scrollToBottom: () => {}, ref: () => {} }),
   useMeasure: () => ({ ref: () => {}, width: 0, height: 0 }),
-  useHover: () => () => {},
+  useMessageRootRef: (ref) => ref,
+};
+
+const defaultFunctions: RuntimeFunctions = {
+  copyToClipboard: () => {},
 };
 
 const RuntimeContext = createContext<RuntimeContextValue>({
   components: defaultComponents,
   hooks: defaultHooks,
+  fn: defaultFunctions,
 });
 
 export const RuntimeProvider = ({
   components,
   hooks,
+  functions,
   children,
 }: {
-  components?: Partial<RuntimeComponents>;
-  hooks?: Partial<RuntimeHooks>;
+  components: RuntimeComponents;
+  hooks: RuntimeHooks;
+  functions: RuntimeFunctions;
   children: ReactNode;
 }) => {
   return (
@@ -80,6 +75,7 @@ export const RuntimeProvider = ({
       value={{
         components: { ...defaultComponents, ...components },
         hooks: { ...defaultHooks, ...hooks },
+        fn: { ...defaultFunctions, ...functions },
       }}
     >
       {children}

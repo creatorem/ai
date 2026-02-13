@@ -6,10 +6,9 @@ import { ThreadPrimitiveViewportSlack } from "../../ai-chat/src/primitives/threa
 import { Primitive } from "@radix-ui/react-primitive";
 import TextareaAutosize from "react-textarea-autosize";
 import { ComposerPrimitiveAddAttachment } from "./primitives/composer/composer-add-attachment";
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { type ReactNode } from "react";
+import React, { type ReactNode } from "react";
 
-export const webComponents = {
+export const webComponents: RuntimeComponents = {
   Box: Primitive.div,
   Form: Primitive.form,
   Text: Primitive.p,
@@ -19,25 +18,20 @@ export const webComponents = {
       {children}
     </div>
   ),
-  Input: Primitive.input,
-  Textarea: TextareaAutosize,
+  Input: ({ onChange: onChangeProp, ...props }: Omit<React.ComponentPropsWithoutRef<
+    typeof TextareaAutosize
+  >, 'onChange'> & {
+    onChange?: (
+      value: string,
+      event: React.ChangeEvent<HTMLTextAreaElement>
+    ) => void;
+  }) => (
+    <TextareaAutosize
+      {...props}
+      onChange={(e) => onChangeProp?.(e.target.value, e)}
+    />
+  ),
 
-  // Action bar
-  ActionBarRoot: DropdownMenuPrimitive.Root,
-  ActionBarPortal: DropdownMenuPrimitive.Portal,
-  ActionBarContent: DropdownMenuPrimitive.Content,
-  ActionBarItem: DropdownMenuPrimitive.Item,
-  ActionBarSeparator: DropdownMenuPrimitive.Separator,
-  ActionBarTrigger: DropdownMenuPrimitive.Trigger,
-
-  // Thread list item more
-  ThreadListItemMoreRoot: DropdownMenuPrimitive.Root,
-  ThreadListItemMorePortal: DropdownMenuPrimitive.Portal,
-  ThreadListItemMoreContent: DropdownMenuPrimitive.Content,
-  ThreadListItemMoreItem: DropdownMenuPrimitive.Item,
-  ThreadListItemMoreSeparator: DropdownMenuPrimitive.Separator,
-  ThreadListItemMoreTrigger: DropdownMenuPrimitive.Trigger,
-  
   // Content component
   Markdown: ({ content, className }: { content: string; className?: string }) => (
     <div className={className}>
@@ -64,4 +58,4 @@ export const webComponents = {
 
   // Logic/Wrappers
   MessageSpacer: ThreadPrimitiveViewportSlack,
-} satisfies RuntimeComponents;
+};

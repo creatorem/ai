@@ -6,7 +6,7 @@ import {
   createActionButton,
 } from "../../utils/create-action-button";
 import { useCallback } from "react";
-import { useAttachmentStore } from "../attachment";
+import { useAttachmentStore } from "../attachment/attachment-by-index-provider";
 
 const useAttachmentRemove = () => {
   const attachmentStore = useAttachmentStore();

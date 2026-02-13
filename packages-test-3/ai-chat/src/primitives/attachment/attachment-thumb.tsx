@@ -1,7 +1,7 @@
 "use client";
 
 import { ComponentPropsWithoutRef, forwardRef, useMemo } from "react";
-import { useAttachment } from "../attachment";
+import { useAttachment } from "../attachment/attachment-by-index-provider";
 import { useRuntime } from "@creatorem/ai-chat/runtime";
 import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 
@@ -20,8 +20,7 @@ export const AttachmentPrimitiveThumb = forwardRef<
     return parts.length > 1 ? parts.pop()! : "";
   }, [name]);
 
-  const { components } = useRuntime();
-  const { Box } = components;
+  const { components: {Box} } = useRuntime();
 
   return (
     <Box {...props} ref={ref}>

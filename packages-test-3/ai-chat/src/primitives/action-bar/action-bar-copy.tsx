@@ -41,6 +41,7 @@ const useActionBarPrimitiveCopy = ({
   const messageStatus = useMessage(s => s.status);
   const messageParts = useMessage(s => s.parts);
   const messageStore = useMessageStore();
+  const { copyToClipboard } = useRuntime().fn
   // const messageId = useMessage(s => s.id);
   // const { editingComposers } = useThread()
 
@@ -58,11 +59,10 @@ const useActionBarPrimitiveCopy = ({
 
     if (!valueToCopy) return;
 
-    navigator.clipboard.writeText(valueToCopy).then(() => {
+    copyToClipboard(valueToCopy, () => {
       msg.setIsCopied(true);
       setTimeout(() => messageStore.getState().setIsCopied(false), copiedDuration);
-    });
-    // }, [messageStore, editingComposers, messageId, copiedDuration]);
+    })
   }, [messageStore, copiedDuration]);
 
   if (!hasCopyableContent) return null;

@@ -13,7 +13,7 @@ export namespace BranchPickerPrimitiveCount {
    * Props for the BranchPickerPrimitive.Count component.
    * This component takes no props.
    */
-  export type Props = Record<string, never>;
+  export type Props = React.ComponentPropsWithRef<RuntimeComponents['Text']>
 }
 
 /**
@@ -31,10 +31,10 @@ export namespace BranchPickerPrimitiveCount {
  */
 export const BranchPickerPrimitiveCount: FC<
   BranchPickerPrimitiveCount.Props
-> = () => {
+> = (props) => {
     const { components: {Text} } = useRuntime();
   const branchCount = useBranchPickerCount();
-  return <Text>{branchCount}</Text>;
+  return <Text {...props}>{branchCount}</Text>;
 };
 
 BranchPickerPrimitiveCount.displayName = "BranchPickerPrimitive.Count";
