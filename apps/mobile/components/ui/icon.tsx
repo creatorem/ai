@@ -43,6 +43,7 @@ import {
   Share2Icon,
   ArrowDownIcon,
   ChevronDownIcon,
+  ArchiveIcon,
   LockIcon,
   UnlockIcon,
   EyeIcon,
@@ -94,6 +95,7 @@ const lucideIcons = {
   File: FileIcon,
   Globe: GlobeIcon,
   Telescope: TelescopeIcon,
+  Archive: ArchiveIcon,
   MoreHorizontal: MoreHorizontalIcon,
   Download: DownloadIcon,
   Mic: MicIcon,
@@ -181,7 +183,6 @@ interface IconProps extends VariantProps<typeof iconVariants> {
   onPress?: () => void;
   disabled?: boolean;
   className?: string;
-  colorClassName?: string;
   strokeWidth?: number;
   fill?: string;
 }
@@ -196,7 +197,6 @@ export const Icon: React.FC<IconProps> = ({
   onPress,
   disabled = false,
   className,
-  colorClassName,
   strokeWidth = 2,
   fill = "none",
 }) => {
