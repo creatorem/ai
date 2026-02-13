@@ -43,6 +43,7 @@
     "@react-navigation/elements": "^2.6.3",
     "@react-navigation/native": "^7.1.8",
     "@react-navigation/routers": "^7.5.3",
+    "@rn-primitives/accordion": "^1.2.0",
     "@rn-primitives/slot": "^1.2.0",
     "@shopify/react-native-skia": "^2.4.19",
     "@tanstack/react-query": "5.90.12",
