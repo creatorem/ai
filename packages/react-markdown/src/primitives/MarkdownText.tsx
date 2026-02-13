@@ -123,6 +123,15 @@ const MarkdownTextInner: FC<MarkdownTextPrimitiveProps> = ({
   );
 };
 
+// function BlinkingCursor() {
+//   return (
+//     <span className="ml-1 inline-block w-2 animate-pulse bg-neutral-400">
+//       &nbsp;
+//     </span>
+//   );
+// }
+
+
 const MarkdownTextPrimitiveImpl: ForwardRefExoticComponent<MarkdownTextPrimitiveProps> &
   RefAttributes<MarkdownTextPrimitiveElement> = forwardRef<
   MarkdownTextPrimitiveElement,

@@ -1,27 +1,32 @@
 "use client";
 
-import "@creatorem/ai-assistant-react-markdown/styles/dot.css";
+import "@creatorem/ai-react/shimmer.css";
 
-import remarkGfm from "remark-gfm";
-import { type FC, memo, useState } from "react";
-import { CheckIcon, CopyIcon } from "lucide-react";
-
-import { TooltipIconButton } from "@/components/ai-chat/tooltip-icon-button";
-import { cn } from "@/lib/utils";
+import * as MessagePartPrimitive from "@creatorem/ai-chat/primitives/message-part";
 import {
 	type CodeHeaderProps,
 	MarkdownTextPrimitive,
 	unstable_memoizeMarkdownComponents as memoizeMarkdownComponents,
 	useIsMarkdownCodeBlock,
 } from "@creatorem/ai-react/markdown";
+import { CheckIcon, CopyIcon } from "lucide-react";
+import { type FC, memo, useState } from "react";
+import remarkGfm from "remark-gfm";
+import { TooltipIconButton } from "@/components/ai-chat/tooltip-icon-button";
+import { cn } from "@/lib/utils";
 
 const MarkdownTextImpl = () => {
 	return (
-		<MarkdownTextPrimitive
-			remarkPlugins={[remarkGfm]}
-			className="aui-md"
-			components={defaultComponents}
-		/>
+		<>
+			<MarkdownTextPrimitive
+				remarkPlugins={[remarkGfm]}
+				className="aui-md"
+				components={defaultComponents}
+			/>
+			{/* <MessagePartPrimitive.BeforeStream>
+				<span className="shimmer text-foreground/60">Typing ...</span>
+			</MessagePartPrimitive.BeforeStream> */}
+		</>
 	);
 };
 

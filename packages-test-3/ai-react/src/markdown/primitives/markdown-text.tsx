@@ -1,6 +1,5 @@
 "use client";
 
-// import { INTERNAL, useMessagePartText } from "../../../assistant-react/src";
 import {
   ComponentRef,
   ElementType,
@@ -26,8 +25,7 @@ import { Primitive } from "@radix-ui/react-primitive";
 import classNames from "classnames";
 import { useMessagePartText } from "@creatorem/ai-chat/primitives/message-part";
 import { useCallbackRef } from "@creatorem/ai-chat/hooks";
-
-// const { useSmooth, useSmoothStatus, withSmoothContextProvider } = INTERNAL;
+import { useSmoothStream } from "@creatorem/ai-chat/utils";
 
 type MarkdownTextPrimitiveElement = ComponentRef<typeof Primitive.div>;
 type PrimitiveDivProps = ComponentPropsWithoutRef<typeof Primitive.div>;
@@ -83,8 +81,7 @@ const MarkdownTextInner: FC<MarkdownTextPrimitiveProps> = ({
     };
   }, [messagePartText, preprocess]);
 
-  // const { text } = useSmooth(processedMessagePart, smooth);
-  const { text } = processedMessagePart
+  const { text } = useSmoothStream(processedMessagePart, smooth);
 
   const {
     pre = DefaultPre,
@@ -139,23 +136,18 @@ const MarkdownTextPrimitiveImpl: ForwardRefExoticComponent<MarkdownTextPrimitive
     },
     forwardedRef,
   ) => {
-    // const status = useSmoothStatus();
     return (
       <Container
-        // data-status={status.type}
         {...containerProps}
         className={classNames(className, containerProps?.className)}
         ref={forwardedRef}
       >
         <MarkdownTextInner {...rest}></MarkdownTextInner>
       </Container>
-    );
+    )
   },
 );
 
 MarkdownTextPrimitiveImpl.displayName = "MarkdownTextPrimitive";
 
-// export const MarkdownTextPrimitive = withSmoothContextProvider(
-//   MarkdownTextPrimitiveImpl,
-// );
 export const MarkdownTextPrimitive = MarkdownTextPrimitiveImpl

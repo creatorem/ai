@@ -8,6 +8,7 @@ import {
 import { useMessagePartText } from "./use-message-part-text";
 import { useRuntime } from "@creatorem/ai-chat/runtime";
 import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
+import { useSmoothStream } from "../../utils/smooth-stream";
 
 export namespace MessagePartPrimitiveText {
   export type Element = ComponentRef<RuntimeComponents['Text'] >;
@@ -44,8 +45,7 @@ export const MessagePartPrimitiveText = forwardRef<
   MessagePartPrimitiveText.Element,
   MessagePartPrimitiveText.Props
 >(({ smooth = true, ...rest }, forwardedRef) => {
-  // const { text, status } = useSmooth(useMessagePartText(), smooth);
-  const { text, status } = useMessagePartText();
+  const { text, status } = useSmoothStream(useMessagePartText(), smooth);
   const { components: { Text } } = useRuntime();
 
   return (

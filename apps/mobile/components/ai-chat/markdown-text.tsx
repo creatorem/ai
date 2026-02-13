@@ -7,6 +7,7 @@ import {
   type RenderersMap,
   MarkdownTextPrimitive,
 } from "@creatorem/ai-react-native/markdown";
+import * as MessagePartPrimitive from "@creatorem/ai-chat/primitives/message-part";
 import Clipboard from "@react-native-clipboard/clipboard";
 import { Text } from "../ui/text";
 import { View } from "react-native";
@@ -14,18 +15,24 @@ import { Button } from "../ui/button";
 import { Icon } from "../ui/icon";
 import { cn } from "~/utils/cn";
 import { useCSSVariable } from "uniwind";
+// import { ShimmerText } from "../shimmer-text";
 
 const MarkdownTextImpl = () => {
   const textColor = useCSSVariable("--color-foreground");
   const textSecondaryColor = useCSSVariable("--color-secondary");
 
   return (
-    <MarkdownTextPrimitive
-      textColor={textColor}
-      textSecondaryColor={textSecondaryColor}
-      className="aui-md"
-      renderers={defaultComponents as unknown as Partial<RenderersMap>}
-    />
+    <>
+      <MarkdownTextPrimitive
+        textColor={textColor}
+        textSecondaryColor={textSecondaryColor}
+        className="aui-md"
+        renderers={defaultComponents as unknown as Partial<RenderersMap>}
+      />
+      {/* <MessagePartPrimitive.BeforeStream>
+        <ShimmerText text="Typing ..." />
+      </MessagePartPrimitive.BeforeStream> */}
+    </>
   );
 };
 

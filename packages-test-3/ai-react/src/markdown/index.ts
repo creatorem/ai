@@ -1,7 +1,7 @@
 export {
   MarkdownTextPrimitive,
   type MarkdownTextPrimitiveProps,
-} from "./primitives/MarkdownText";
+} from "./primitives/markdown-text";
 
 export type {
   CodeHeaderProps,

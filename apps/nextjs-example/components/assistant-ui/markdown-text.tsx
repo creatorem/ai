@@ -9,6 +9,7 @@ import {
   useIsMarkdownCodeBlock,
 } from "@creatorem/ai-assistant-react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
 import { type FC, memo, useState } from "react";
 import { CheckIcon, CopyIcon } from "lucide-react";
 
@@ -19,6 +20,7 @@ const MarkdownTextImpl = () => {
   return (
     <MarkdownTextPrimitive
       remarkPlugins={[remarkGfm]}
+      rehypePlugins={[rehypeHighlight]}
       className="aui-md"
       components={defaultComponents}
     />

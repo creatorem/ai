@@ -25,6 +25,7 @@ type Event = {
 export interface RuntimeComponents {
   Box: ComponentType<BaseComponentPropsWithChildren>
   Text: ComponentType<BaseComponentPropsWithChildren>
+  Shimmering: ComponentType<BaseComponentPropsWithChildren>
   Form: ComponentType<BaseComponentPropsWithChildren & { onSubmit?: (e: Event) => void; }>
   Button: ButtonComponent
   ScrollArea: ComponentType<BaseComponentPropsWithChildren>

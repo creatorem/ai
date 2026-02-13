@@ -7,3 +7,4 @@ export * from './id-utils';
 export * from './message-repository';
 export * from './readonly-store';
 export * from './require-at-least-one';
+export * from './smooth-stream'

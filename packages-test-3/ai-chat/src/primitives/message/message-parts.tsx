@@ -9,7 +9,7 @@ import {
 } from "react";
 import { MessagePartPrimitiveText } from "../message-part/message-part-text";
 import { MessagePartPrimitiveImage } from "../message-part/message-part-image";
-import { MessagePartPrimitiveInProgress } from "../message-part/message-part-in-progress";
+// import { MessagePartPrimitiveInProgress } from "../message-part/message-part-before-stream";
 import { PartByIndexProvider, usePart } from "../message-part/part-by-index-provider";
 import { TextMessagePartProvider } from "./text-message-part-provider";
 import { useMessage } from "./message-by-index-provider";
@@ -28,6 +28,7 @@ import type {
 } from "../../types/message-part-component-types";
 import { MessagePartStatus } from "../../types/assistant-types";
 import { useRuntime } from "@creatorem/ai-chat/runtime";
+import { MessagePartPrimitiveInProgress } from "../message-part/message-part-in-progress";
 
 type MessagePartRange =
   | { type: "single"; index: number }

@@ -33,7 +33,8 @@
         "./primitives/thread-list-item-more": "./src/primitives/thread-list-item-more.ts",
         "./primitives/reasoning": "./src/primitives/reasoning/index.ts",
         "./web-components": "./src/web-components.tsx",
-        "./markdown": "./src/markdown/index.ts"
+        "./markdown": "./src/markdown/index.ts",
+        "./shimmer.css": "./src/shimmer.css"
     },
     "peerDependencies": {
         "@creatorem/ai-chat": "workspace:*",
