@@ -5,18 +5,17 @@ import {
   forwardRef,
   ComponentPropsWithoutRef,
 } from "react";
-import { useComposerSend } from "./composer-send";
 import { composeEventHandlers } from "@creatorem/ai-chat/utils";
-import { RuntimeComponents } from "@creatorem/ai-chat/component-types";
-import { useRuntime } from "@creatorem/ai-chat/runtime";
+import { Primitive } from "@radix-ui/react-primitive";
+import { useComposerSend } from "@creatorem/ai-chat/primitives/composer";
 
 export namespace ComposerPrimitiveRoot {
-  export type Element = ComponentRef<RuntimeComponents['Form']>;
+  export type Element = ComponentRef<typeof Primitive.form>;
   /**
    * Props for the ComposerPrimitive.Root component.
    * Accepts all standard form element props.
    */
-  export type Props = ComponentPropsWithoutRef<RuntimeComponents['Form']>;
+  export type Props = ComponentPropsWithoutRef<typeof Primitive.form>;
 }
 
 /**
@@ -38,7 +37,6 @@ export const ComposerPrimitiveForm = forwardRef<
   ComposerPrimitiveRoot.Element,
   ComposerPrimitiveRoot.Props
 >(({ onSubmit, ...rest }, forwardedRef) => {
-  const { components: { Form } } = useRuntime();
   const send = useComposerSend();
 
   const handleSubmit: ComposerPrimitiveRoot.Props['onSubmit'] = (e) => {
@@ -49,7 +47,7 @@ export const ComposerPrimitiveForm = forwardRef<
   };
 
   return (
-    <Form
+    <Primitive.form
       {...rest}
       ref={forwardedRef}
       onSubmit={composeEventHandlers(onSubmit, handleSubmit)}

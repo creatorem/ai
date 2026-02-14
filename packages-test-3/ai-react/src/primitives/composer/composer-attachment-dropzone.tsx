@@ -2,9 +2,9 @@
 
 import { forwardRef, useCallback, useState } from "react";
 import React from "react";
-import { useComposerStore } from "./composer-provider";
 import { useRuntime } from "@creatorem/ai-chat/runtime";
 import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
+import { useComposerStore } from "@creatorem/ai-chat/primitives/composer";
 
 export namespace ComposerPrimitiveAttachmentDropzone {
   export type Element = RuntimeComponents['Box'];

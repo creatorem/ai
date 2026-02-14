@@ -37,13 +37,14 @@ export const MessagePrimitiveRoot = forwardRef<
     MessagePrimitiveRoot.Props
 >((props, forwardRef) => {
     const { hooks: {useMessageRootRef}, components: { Box, MessageSpacer } } = useRuntime();
-    const ref = useMessageRootRef(forwardRef);
+    const {ref, ...otherProps} = useMessageRootRef(forwardRef);
 
     return (
         <MessageSpacer>
             <Box 
                 {...props} 
                 ref={ref} 
+                {...otherProps}
             />
         </MessageSpacer>
     );

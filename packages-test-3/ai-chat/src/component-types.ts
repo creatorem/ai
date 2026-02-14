@@ -25,10 +25,10 @@ type Event = {
 export interface RuntimeComponents {
   Box: ComponentType<BaseComponentPropsWithChildren>
   Text: ComponentType<BaseComponentPropsWithChildren>
-  Shimmering: ComponentType<BaseComponentPropsWithChildren>
-  Form: ComponentType<BaseComponentPropsWithChildren & { onSubmit?: (e: Event) => void; }>
+  // Shimmering: ComponentType<BaseComponentPropsWithChildren>
+  // Form: ComponentType<BaseComponentPropsWithChildren & { onSubmit?: (e: Event) => void; }>
   Button: ButtonComponent
-  ScrollArea: ComponentType<BaseComponentPropsWithChildren>
+  // ScrollArea: ComponentType<BaseComponentPropsWithChildren>
   Input: ComponentType<BaseComponentProps & {
     autoFocus?: boolean;
     disabled?: boolean;
@@ -54,15 +54,6 @@ export interface RuntimeComponents {
   
   // Attachments
   ComposerPrimitiveAddAttachment: ButtonComponent;
-
-  Attachment: ComponentType<{ 
-    name: string; 
-    contentType?: string; 
-    url?: string; 
-    size?: number;
-    onRemove?: () => void;
-    className?: string 
-  }>
 
   // Layout
   Separator: ComponentType<BaseComponentProps & { orientation?: 'horizontal' | 'vertical' }>

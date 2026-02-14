@@ -26,6 +26,7 @@
     "@expo-google-fonts/outfit": "^0.3.0",
     "@expo/config": "~12.0.13",
     "@expo/metro-runtime": "~6.1.2",
+    "@expo/ui": "0.2.0-beta.9",
     "@expo/vector-icons": "^15.0.3",
     "@hookform/resolvers": "^4.1.3",
     "@radix-ui/react-slot": "^1.2.4",

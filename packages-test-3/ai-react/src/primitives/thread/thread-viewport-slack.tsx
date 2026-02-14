@@ -8,9 +8,9 @@ import {
   useContext,
   useMemo,
 } from "react";
-import { useThreadViewportStore } from "./thread-viewport-context";
+import { useThreadViewportStore } from "@creatorem/ai-chat/primitives/thread";
 import { useThread } from "@creatorem/ai-chat/primitives/thread";
-import { useMessage } from "../message/message-by-index-provider";
+import { useMessage } from "@creatorem/ai-chat/primitives/message";
 import { useRuntime } from "@creatorem/ai-chat/runtime";
 
 const SlackNestingContext = createContext(false);

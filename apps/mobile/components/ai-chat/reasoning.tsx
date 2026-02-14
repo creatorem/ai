@@ -15,7 +15,12 @@ import type {
   ReasoningMessagePartComponent,
 } from "@creatorem/ai-chat/types/message-part-component-types";
 import { useMessage } from "@creatorem/ai-chat/primitives/message";
-import { Accordion, AccordionContent, AccordionTrigger } from "../ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../ui/accordion";
 import { View } from "react-native";
 import { cn } from "~/utils/cn";
 import { Icon } from "../ui/icon";
@@ -226,10 +231,12 @@ const ReasoningGroupImpl: ReasoningGroupComponent = ({
 
   return (
     <ReasoningRoot defaultOpen={isReasoningStreaming}>
-      <ReasoningTrigger active={isReasoningStreaming} />
-      <ReasoningContent aria-busy={isReasoningStreaming}>
-        <ReasoningText>{children}</ReasoningText>
-      </ReasoningContent>
+      <AccordionItem value="reasoning">
+        <ReasoningTrigger active={isReasoningStreaming} />
+        <ReasoningContent aria-busy={isReasoningStreaming}>
+          <ReasoningText>{children}</ReasoningText>
+        </ReasoningContent>
+      </AccordionItem>
     </ReasoningRoot>
   );
 };

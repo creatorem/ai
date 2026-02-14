@@ -124,7 +124,4 @@ export const appNativeComponents = {
       ]}
     />
   ),
-
-  // Logic/Wrappers
-  MessageSpacer: ({ children, ...props }) => <View {...props}>{children}</View>,
 } satisfies RuntimeComponents;

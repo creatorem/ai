@@ -1,6 +1,6 @@
 {
   "extends": "@tooling/tsconfig/base.json",
-  "include": ["src"],
+  "include": ["src", "../ai-react/src/primitives/thread/thread-viewport-slack.tsx", "../ai-react/src/primitives/thread/thread-viewport-scrollable.tsx", "../ai-react/src/hooks/use-size-handle.ts", "../ai-react/src/primitives/thread/thread-viewport-footer.tsx", "../ai-react/src/primitives/composer/composer-form.tsx"],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {

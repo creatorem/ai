@@ -81,7 +81,8 @@ const MarkdownTextInner: FC<MarkdownTextPrimitiveProps> = ({
     };
   }, [messagePartText, preprocess]);
 
-  const { text } = useSmoothStream(processedMessagePart, smooth);
+  // const { text } = useSmoothStream(processedMessagePart, smooth);
+  const { text } = processedMessagePart;
 
   const {
     pre = DefaultPre,

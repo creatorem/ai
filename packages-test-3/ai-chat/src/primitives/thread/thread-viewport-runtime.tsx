@@ -71,13 +71,13 @@ export type ThreadViewportState = {
   };
 
   /** Register a viewport and get a handle to update its height */
-  readonly registerViewport: () => SizeHandle;
+  // readonly registerViewport: () => SizeHandle;
 
-  /** Register a content inset (footer, anchor message, etc.) and get a handle to update its height */
-  readonly registerContentInset: () => SizeHandle;
+  // /** Register a content inset (footer, anchor message, etc.) and get a handle to update its height */
+  // readonly registerContentInset: () => SizeHandle;
 
-  /** Register the anchor user message height */
-  readonly registerUserMessageHeight: () => SizeHandle;
+  // /** Register the anchor user message height */
+  // readonly registerUserMessageHeight: () => SizeHandle;
 };
 
 export type ThreadViewportStoreOptions = {
@@ -91,30 +91,30 @@ export const makeThreadViewportStore = (
     (config: { behavior: ScrollBehavior }) => void
   >();
 
-  const viewportRegistry = createSizeRegistry((total) => {
-    store.setState({
-      height: {
-        ...store.getState().height,
-        viewport: total,
-      },
-    });
-  });
-  const insetRegistry = createSizeRegistry((total) => {
-    store.setState({
-      height: {
-        ...store.getState().height,
-        inset: total,
-      },
-    });
-  });
-  const userMessageRegistry = createSizeRegistry((total) => {
-    store.setState({
-      height: {
-        ...store.getState().height,
-        userMessage: total,
-      },
-    });
-  });
+  // const viewportRegistry = createSizeRegistry((total) => {
+  //   store.setState({
+  //     height: {
+  //       ...store.getState().height,
+  //       viewport: total,
+  //     },
+  //   });
+  // });
+  // const insetRegistry = createSizeRegistry((total) => {
+  //   store.setState({
+  //     height: {
+  //       ...store.getState().height,
+  //       inset: total,
+  //     },
+  //   });
+  // });
+  // const userMessageRegistry = createSizeRegistry((total) => {
+  //   store.setState({
+  //     height: {
+  //       ...store.getState().height,
+  //       userMessage: total,
+  //     },
+  //   });
+  // });
 
   const store = create<ThreadViewportState>(() => ({
     isAtBottom: true,
@@ -138,9 +138,34 @@ export const makeThreadViewportStore = (
       userMessage: 0,
     },
 
-    registerViewport: viewportRegistry.register,
-    registerContentInset: insetRegistry.register,
-    registerUserMessageHeight: userMessageRegistry.register,
+    setViewportHeight: (height: number) => {
+      store.setState({
+        height: {
+          ...store.getState().height,
+          viewport: height,
+        },
+      });
+    },
+    setInsetHeight: (height: number) => {
+      store.setState({
+        height: {
+          ...store.getState().height,
+          inset: height,
+        },
+      });
+    },
+    setUserMessageHeight: (height: number) => {
+      store.setState({
+        height: {
+          ...store.getState().height,
+          userMessage: height,
+        },
+      });
+    },
+
+    // registerViewport: viewportRegistry.register,
+    // registerContentInset: insetRegistry.register,
+    // registerUserMessageHeight: userMessageRegistry.register,
   }));
 
   return store;

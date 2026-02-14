@@ -1,5 +1,13 @@
+import { RuntimeComponents } from "./component-types";
 
 export interface AutoScrollConfig {
+  /**
+   * Controls scroll anchoring behavior for new messages.
+   * - "bottom" (default): Messages anchor at the bottom, classic chat behavior.
+   * - "top": New user messages anchor at the top of the viewport for a focused reading experience.
+   */
+  turnAnchor?: "top" | "bottom" | undefined;
+
   /**
    * Whether to automatically scroll to the bottom when new messages are added.
    * Default false if `turnAnchor` is "top", otherwise defaults to true.
@@ -22,14 +30,6 @@ export interface AutoScrollConfig {
   scrollToBottomOnThreadSwitch?: boolean | undefined;
 }
 
-export interface AutoScrollResult {
-  scrollToBottom: () => void;
-  ref: (node: any) => void;
-}
-
 export interface RuntimeHooks {
-  useAutoScroll: (config?: AutoScrollConfig) => AutoScrollResult;
-  useMeasure: () => { ref: (node: any) => void; width: number; height: number };
-  useMessageRootRef: <T extends React.Ref<unknown>>(ref: T) => T;
+  useMessageRootRef: <T extends React.Ref<unknown>>(ref: T) => {ref: T} & React.ComponentPropsWithRef<RuntimeComponents['Box']>;
 }
-

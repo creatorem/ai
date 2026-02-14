@@ -11,12 +11,12 @@ import { createContextHook } from "../../utils/create-context-hook";
 // import { createContextStoreHook } from "./utils/create-context-store-hook";
 // import { ThreadViewportState } from "../stores";
 
-type SizeHandle = {
-  /** Update the height */
-  setHeight: (height: number) => void;
-  /** Unregister this handle */
-  unregister: Unsubscribe;
-};
+// type SizeHandle = {
+//   /** Update the height */
+//   setHeight: (height: number) => void;
+//   /** Unregister this handle */
+//   unregister: Unsubscribe;
+// };
 
 export type ThreadViewportState = {
   readonly isAtBottom: boolean;
@@ -40,14 +40,18 @@ export type ThreadViewportState = {
     readonly userMessage: number;
   };
 
+  setViewportHeight: (height: number) => void;
+  setInsetHeight: (height: number) => void;
+  setUserMessageHeight: (height: number) => void;
+
   /** Register a viewport and get a handle to update its height */
-  readonly registerViewport: () => SizeHandle;
+  // readonly registerViewport: () => SizeHandle;
 
-  /** Register a content inset (footer, anchor message, etc.) and get a handle to update its height */
-  readonly registerContentInset: () => SizeHandle;
+  // /** Register a content inset (footer, anchor message, etc.) and get a handle to update its height */
+  // readonly registerContentInset: () => SizeHandle;
 
-  /** Register the anchor user message height */
-  readonly registerUserMessageHeight: () => SizeHandle;
+  // /** Register the anchor user message height */
+  // readonly registerUserMessageHeight: () => SizeHandle;
 };
 
 export type ThreadViewportContextValue = {

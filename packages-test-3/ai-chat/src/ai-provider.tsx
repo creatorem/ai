@@ -69,18 +69,11 @@ export const useAiEvent = <TEvent extends keyof AiChatEvents>(name: TEvent, p: (
 };
 
 export function AiProvider({ children, ...value }: { children: React.ReactNode } & Omit<AiContextType, 'eventHandler'>) {
-    const eventHandler = useMemo(() => new AiChatEventHandler(), []);
-
     // Create store once
     const storeRef = useRef<StoreApi<AiContextType> | null>(null);
     if (storeRef.current === null) {
-        storeRef.current = createStore<AiContextType>(() => ({ ...value, eventHandler }));
+        storeRef.current = createStore<AiContextType>(() => ({ ...value, eventHandler: new AiChatEventHandler() }));
     }
-
-    // Sync state after render (avoids "setState during render" warning)
-    useLayoutEffect(() => {
-        storeRef.current!.setState({ ...value, eventHandler });
-    });
 
     return <AiContextStoreCtx.Provider value={storeRef.current}>
         <ThreadsProvider>

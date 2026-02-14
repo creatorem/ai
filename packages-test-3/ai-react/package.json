@@ -27,7 +27,7 @@
         "./primitives/message": "./src/primitives/message.ts",
         "./primitives/message-part": "./src/primitives/message-part.ts",
         "./primitives/suggestion": "./src/primitives/suggestion.ts",
-        "./primitives/thread": "./src/primitives/thread.ts",
+        "./primitives/thread": "./src/primitives/thread/index.ts",
         "./primitives/thread-list": "./src/primitives/thread-list.ts",
         "./primitives/thread-list-item": "./src/primitives/thread-list-item.ts",
         "./primitives/thread-list-item-more": "./src/primitives/thread-list-item-more.ts",

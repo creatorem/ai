@@ -315,8 +315,6 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
         // id: activeThreadId || undefined,
     });
 
-    console.log( {chatStatus} )
-
     const viewMessages = useMemo(
         () => convertMessages(messages as UIMessage[]),
         [messages],
@@ -502,6 +500,7 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
     }, [messages, activeThreadId, adapters, title, status, setThreadIds, setActiveThreadId]);
 
     const isRunningRef = useRef(false);
+    console.log( {chatStatus} )
     useEffect(() => {
         if (chatStatus === 'streaming') {
             isRunningRef.current = true;

@@ -2,17 +2,18 @@ import React from 'react';
 import { View, Text, Pressable, ScrollView, TextInput, Image as NativeImage } from 'react-native';
 import type { RuntimeComponents } from "@creatorem/ai-chat/component-type-check";
 import { ComposerPrimitiveAddAttachmentFile } from "./primitives/composer/composer-add-attachment-file";
+import { ThreadPrimitiveViewportSlack } from './primitives/thread/thread-viewport-slack';
 
 export const nativeComponents: RuntimeComponents = {
   Box: ({ className, ...props }) => <View {...props} />,
   Text: ({ className, ...props }) => <Text {...props} />,
-  Form: ({ className, onSubmit, ...props }) => <View {...props} />,
+  // Form: ({ className, onSubmit, ...props }) => <View {...props} />,
   Button: ({ className, onClick, ...props }) => (
     <Pressable onPress={onClick} {...props}>
       {props.children}
     </Pressable>
   ),
-  ScrollArea: ({ className, ...props }) => <ScrollView {...props} />,
+  // ScrollArea: ({ className, ...props }) => <ScrollView {...props} />,
   Input: ({ className, onChange, minRows, maxRows, onHeightChange, cacheMeasurements, rowHeight, ...props }) => (
       <TextInput 
         multiline 
@@ -43,17 +44,6 @@ export const nativeComponents: RuntimeComponents = {
   // Attachments
   ComposerPrimitiveAddAttachment: ComposerPrimitiveAddAttachmentFile,
 
-  Attachment: ({ name, contentType, url, size, onRemove, className }) => (
-     <View style={{ flexDirection: 'row', alignItems: 'center', padding: 8, backgroundColor: '#f5f5f5', borderRadius: 4 }}>
-        <Text>{name}</Text>
-        {onRemove && (
-            <Pressable onPress={onRemove} style={{ marginLeft: 8 }}>
-                <Text>X</Text>
-            </Pressable>
-        )}
-     </View>
-  ),
-
   // Layout
   Separator: ({ orientation = 'horizontal', className, ...props }) => (
     <View 
@@ -67,5 +57,5 @@ export const nativeComponents: RuntimeComponents = {
   ),
   
   // Logic/Wrappers
-  MessageSpacer: ({ children, ...props }) => <View {...props}>{children}</View>,
+  MessageSpacer: ThreadPrimitiveViewportSlack,
 }

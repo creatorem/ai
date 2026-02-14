@@ -100,6 +100,7 @@ export const ComposerPrimitiveInput = forwardRef<
     const isThreadRunning = useThread(s => s.isRunning);
     const threadCapabilities = useThread(s => s.capabilities);
     const { components: { Input } } = useRuntime();
+    console.log( {composerType} )
 
     const value = useMemo(() => {
       return text;

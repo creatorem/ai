@@ -1,7 +1,7 @@
 import React, { createContext, useContext, type ReactNode } from 'react';
 import { RuntimeComponents } from './component-types';
-import { RuntimeHooks, AutoScrollConfig, AutoScrollResult } from './hook-types';
-export type { AutoScrollConfig, AutoScrollResult };
+import { RuntimeHooks, AutoScrollConfig } from './hook-types';
+export type { AutoScrollConfig };
 
 export type RuntimeFunctions = {
   copyToClipboard: (value:string, callback: () => void) => void
@@ -15,10 +15,10 @@ export interface RuntimeContextValue {
 
 const defaultComponents: RuntimeComponents = {
   Box: ({ children, ...props }) => <div {...props}>{children}</div>,
-  Form: ({ children, ...props }) => <div {...props}>{children}</div>,
+  // Form: ({ children, ...props }) => <div {...props}>{children}</div>,
   Text: React.Fragment,
   Button: ({ children, variant, size, ...props }) => <button {...props}>{children}</button>,
-  ScrollArea: ({ children, ...props }) => <div {...props} style={{ overflow: 'auto', ...props.style }}>{children}</div>,
+  // ScrollArea: ({ children, ...props }) => <div {...props} style={{ overflow: 'auto', ...props.style }}>{children}</div>,
   Input: ({onChange: onChangeProp, ...props}) => <textarea {...props} onChange={(e) => onChangeProp?.(e.target.value, e)} />,
   
   // Content Components
@@ -33,9 +33,6 @@ const defaultComponents: RuntimeComponents = {
   // Attachments
   ComposerPrimitiveAddAttachment: ({ children, variant, size, ...props }) => <button {...props}>{children}</button>,
 
-  // Attachments
-  Attachment: (props) => <div>{props.name}</div>,
-
   // Layout
   Separator: (props) => <hr {...props} />,
    
@@ -44,9 +41,7 @@ const defaultComponents: RuntimeComponents = {
  };
 
 const defaultHooks: RuntimeHooks = {
-  useAutoScroll: () => ({ scrollToBottom: () => {}, ref: () => {} }),
-  useMeasure: () => ({ ref: () => {}, width: 0, height: 0 }),
-  useMessageRootRef: (ref) => ref,
+  useMessageRootRef: (ref) => ({ref}),
 };
 
 const defaultFunctions: RuntimeFunctions = {

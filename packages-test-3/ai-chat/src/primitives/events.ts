@@ -11,7 +11,7 @@ export interface AiChatEvents {
 
 export class AiChatEventHandler {
     private eventCallback: {
-        [K in keyof AiChatEvents]?: (p: AiChatEvents[K]) => void;
+        [K in keyof AiChatEvents]?: ((p: AiChatEvents[K]) => void)[];
     }
 
     constructor() {
@@ -21,7 +21,7 @@ export class AiChatEventHandler {
     trigger<TEvent extends keyof AiChatEvents>(name: TEvent, p: AiChatEvents[TEvent]) {
         const callback = this.eventCallback[name];
         if (callback) {
-            (callback as (args: AiChatEvents[TEvent]) => void)(p);
+            callback.forEach(cb => cb(p));
         }
     }
 
@@ -29,11 +29,9 @@ export class AiChatEventHandler {
         name: TEvent,
         callback: (p: AiChatEvents[TEvent]) => void,
     ): Unsubscribe {
-        this.eventCallback[name] = callback;
+        this.eventCallback[name] = [...(this.eventCallback[name] ?? []), callback];
         return () => {
-            if (this.eventCallback[name] === callback) {
-                delete this.eventCallback[name];
-            }
+            this.eventCallback[name] = this.eventCallback[name]?.filter(cb => cb !== callback);
         };
     }
 };

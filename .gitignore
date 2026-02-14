@@ -68,3 +68,10 @@ public
 pnpm-lock.yaml
 
 *.mdx
+
+# expo
+
+.expo
+expo-env.d.ts
+/android
+/ios

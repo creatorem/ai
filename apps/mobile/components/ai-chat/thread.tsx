@@ -10,8 +10,12 @@ import {
   ActionSheetTrigger,
 } from "../ui/action-sheet";
 import { Button } from "../ui/button";
-import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
-
+import Animated, {
+  FadeIn,
+  FadeOut,
+  FadeInDown,
+  FadeOutDown,
+} from "react-native-reanimated";
 import * as ComposerPrimitive from "@creatorem/ai-react-native/primitives/composer";
 import * as ErrorPrimitive from "@creatorem/ai-react-native/primitives/error";
 import * as ActionBarPrimitive from "@creatorem/ai-react-native/primitives/action-bar";
@@ -24,6 +28,7 @@ import { MarkdownText } from "./markdown-text";
 import { useCSSVariable } from "uniwind";
 import { ComposerAddAttachment } from "./attachment";
 import { WeatherToolRegistration } from "../tools/weather-tool-ui";
+import { Reasoning, ReasoningGroup } from "./reasoning";
 
 export const Thread: React.FC = () => {
   return (
@@ -32,7 +37,7 @@ export const Thread: React.FC = () => {
       <View className="flex-1">
         <ThreadPrimitive.Viewport turnAnchor="top">
           <ThreadPrimitive.ViewportScrollable
-            className="relative flex flex-1 flex-col px-4 pt-4"
+            className="relative flex flex-1 flex-col px-4"
             contentContainerStyle={{ flexGrow: 1 }}
           >
             <ThreadPrimitive.If empty={true}>
@@ -46,15 +51,12 @@ export const Thread: React.FC = () => {
                 AssistantMessage,
               }}
             />
-            <View className="h-20" />
           </ThreadPrimitive.ViewportScrollable>
 
-          <ThreadPrimitive.ViewportFooter className="absolute bottom-0 mx-auto flex w-full flex-col gap-4 overflow-visible px-6">
-            <View className="rounded-t-4xl bg-background pb-6">
-              <ThreadScrollToBottom />
-              <Composer />
-            </View>
-          </ThreadPrimitive.ViewportFooter>
+          <View className="mx-auto flex w-full flex-col gap-4 overflow-visible border-border border-t bg-transparent px-6 pt-2 pb-6">
+            <ThreadScrollToBottom />
+            <Composer />
+          </View>
         </ThreadPrimitive.Viewport>
       </View>
     </ThreadPrimitive.Root>
@@ -63,19 +65,22 @@ export const Thread: React.FC = () => {
 
 const ThreadScrollToBottom: FC = () => {
   return (
-    <ThreadPrimitive.ScrollToBottom
-      size="icon"
-      className="absolute -top-12 z-10 mx-auto self-center rounded-full p-4 disabled:invisible dark:bg-background dark:hover:bg-accent"
-      // className="-top-12 z-10 mx-auto self-center rounded-full p-4 disabled:invisible dark:bg-background dark:hover:bg-accent"
-    >
-      {/* <TooltipIconButton
-        tooltip="Scroll to bottom"
-        variant="outline"
-        className="aui-thread-scroll-to-bottom absolute -top-12 z-10 self-center rounded-full p-4 disabled:invisible dark:bg-background dark:hover:bg-accent"
-      > */}
-      <Icon name="ArrowDown" />
-      {/* </TooltipIconButton> */}
-    </ThreadPrimitive.ScrollToBottom>
+    <ThreadPrimitive.ShowScrollToBottom>
+      <Animated.View
+        entering={FadeInDown.duration(220)}
+        exiting={FadeOutDown.duration(120)}
+        className="absolute -top-12 mx-auto self-center"
+      >
+        <ThreadPrimitive.ScrollToBottom
+          noAutoHide
+          size="icon"
+          className="flex items-center justify-center rounded-full border border-border bg-background hover:bg-accent"
+        >
+          <Icon name="ArrowDown" className="m-auto" />
+          {/* </TooltipIconButton> */}
+        </ThreadPrimitive.ScrollToBottom>
+      </Animated.View>
+    </ThreadPrimitive.ShowScrollToBottom>
   );
 };
 
@@ -166,19 +171,17 @@ const ThreadSuggestions: FC = () => {
 const Composer: React.FC = () => {
   return (
     <ComposerPrimitive.Root>
-      <ComposerPrimitive.AttachmentDropzone className="flex-row items-end gap-2">
+      <View className="flex-row items-end gap-2">
         {/* <ComposerAttachments /> */}
         <ComposerAction />
         <ComposerPrimitive.Input
           placeholder="Send a message..."
-          // className="my-auto mb-1 flex min-h-10 w-full flex-1 resize-none flex-row items-center rounded-3xl border border-input bg-secondary p-0.5 px-4 pt-2 pb-3 text-sm outline-none transition-shadow placeholder:text-muted-foreground"
           className="my-auto flex max-h-40 min-h-12 w-full flex-1 flex-row items-center rounded-3xl bg-secondary px-3 py-2 text-base outline-none transition-shadow placeholder:text-muted-foreground"
-          // rows={1}
           autoFocus
           aria-label="Message input"
         />
         <ComposerSubmit />
-      </ComposerPrimitive.AttachmentDropzone>
+      </View>
     </ComposerPrimitive.Root>
   );
 };
@@ -262,8 +265,8 @@ const AssistantMessage: FC = () => {
         <MessagePrimitive.Parts
           components={{
             Text: MarkdownText,
-            // Reasoning,
-            // ReasoningGroup,
+            Reasoning,
+            ReasoningGroup,
             tools: { Fallback: ToolFallback },
           }}
         />
@@ -387,8 +390,8 @@ const UserActionBar: FC = () => {
 
 const EditComposer: FC = () => {
   return (
-    <MessagePrimitive.Root className="mx-auto flex w-full max-w-(--thread-max-width) flex-col px-2 py-3">
-      <ComposerPrimitive.Form className="ml-auto flex w-full max-w-[85%] flex-col rounded-2xl bg-muted">
+    <MessagePrimitive.Root className="mx-auto flex w-full flex-col px-2 py-3">
+      <View className="ml-auto flex w-full max-w-[85%] flex-col rounded-2xl bg-muted">
         <ComposerPrimitive.Input
           className="min-h-12 w-full resize-none bg-transparent p-4 text-foreground text-sm outline-none"
           autoFocus
@@ -401,7 +404,7 @@ const EditComposer: FC = () => {
             <Text>Update</Text>
           </ComposerPrimitive.Send>
         </View>
-      </ComposerPrimitive.Form>
+      </View>
     </MessagePrimitive.Root>
   );
 };

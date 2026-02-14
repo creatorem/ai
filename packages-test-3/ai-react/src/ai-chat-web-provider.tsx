@@ -1,58 +1,15 @@
 "use client";
 
 import { RuntimeFunctions, RuntimeProvider } from "@creatorem/ai-chat/runtime";
-import { useWebAutoScroll } from "./hooks/use-web-auto-scroll";
 import { useCallback, useMemo, useRef, type ReactNode } from "react";
 import { webComponents } from "./web-components";
 import { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 import { RuntimeHooks } from "@creatorem/ai-chat/hook-types";
 import { useComposedRefs } from "@creatorem/ai-chat/utils";
-
-
 import { useThread, useThreadViewport } from "@creatorem/ai-chat/primitives/thread";
 import { useManagedRef } from "@creatorem/ai-chat/hooks";
-// import { useSizeHandle } from "../../hooks/use-size-handle";
 import { useMessage, useMessageStore } from "@creatorem/ai-chat/primitives/message";
-
-/**
- * Web-specific implementation of useMeasure using ResizeObserver.
- */
-const useWebMeasure = () => {
-  const sizeRef = useRef({ width: 0, height: 0 });
-  const elRef = useRef<HTMLElement | null>(null);
-  const roRef = useRef<ResizeObserver | null>(null);
-
-  const ref = useCallback((node: HTMLElement | null) => {
-    if (roRef.current) {
-      roRef.current.disconnect();
-      roRef.current = null;
-    }
-
-    if (node) {
-      elRef.current = node;
-      const ro = new ResizeObserver((entries) => {
-        const entry = entries[0];
-        if (entry) {
-          sizeRef.current = {
-            width: entry.contentRect.width,
-            height: entry.contentRect.height,
-          };
-        }
-      });
-      ro.observe(node);
-      roRef.current = ro;
-      // Initial measurement
-      sizeRef.current = {
-        width: node.offsetWidth,
-        height: node.offsetHeight,
-      };
-    }
-  }, []);
-
-  return { ref, ...sizeRef.current };
-};
-
-
+import { useSizeHandle } from "./hooks/use-size-handle";
 
 const useIsHoveringRef = () => {
     const messageStore = useMessageStore();
@@ -94,8 +51,8 @@ const useIsHoveringRef = () => {
  */
 const useMessageViewportRef = () => {
     const turnAnchor = useThreadViewport((s) => s.turnAnchor);
-    const registerUserHeight = useThreadViewport(
-        (s) => s.registerUserMessageHeight,
+    const setUserMessageHeight = useThreadViewport(
+        (s) => s.setUserMessageHeight,
     );
 
     const messageRole = useMessage(s => s.role);
@@ -113,25 +70,23 @@ const useMessageViewportRef = () => {
     );
 
     // todo this is web specific, we should use the runtime to get the height
-    // const getHeight = useCallback((el: HTMLElement) => el.offsetHeight, []);
+    const getHeight = useCallback((el: HTMLElement) => el.offsetHeight, []);
 
-    // return useSizeHandle(
-    //     shouldRegisterAsInset ? registerUserHeight : null,
-    //     getHeight,
-    // );
-    return {current: null};
+    return useSizeHandle(
+        shouldRegisterAsInset ? setUserMessageHeight : null,
+        getHeight,
+    );  
 };
 
-const useMessageRootRef = <T extends React.Ref<unknown>>(ref: T) => {
+const useMessageRootRef = <T extends React.Ref<unknown>>(argRef: T) => {
     const isHoveringRef = useIsHoveringRef();
     const anchorUserMessageRef = useMessageViewportRef();
 
-    return useComposedRefs(ref, isHoveringRef, anchorUserMessageRef);
+    const ref = useComposedRefs(argRef, isHoveringRef, anchorUserMessageRef);
+    return {ref}
 };
 
 const webHooks: RuntimeHooks = {
-  useAutoScroll: useWebAutoScroll,
-  useMeasure: useWebMeasure,
   useMessageRootRef: useMessageRootRef as RuntimeHooks['useMessageRootRef'],
 };
 

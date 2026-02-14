@@ -2,40 +2,70 @@
 
 import {
   ActionButtonElement,
-  ActionButtonProps,
-  createActionButton,
 } from "../../utils/create-action-button";
-import { useCallback } from "react";
-import { useThreadViewport, useThreadViewportStore } from "./thread-viewport-context";
+import { ComponentProps, forwardRef, useContext } from "react";
+import { ThreadViewportContext } from "./thread-viewport-context";
+import { useRuntime } from "../../runtime";
+import { composeEventHandlers } from "../../utils/compose-event-handlers";
 
-export namespace useThreadScrollToBottom {
-  export type Options = {
-    behavior?: ScrollBehavior | undefined;
-  };
-}
 
-const useThreadScrollToBottom = ({
-  behavior,
-}: useThreadScrollToBottom.Options = {}) => {
-  const isAtBottom = useThreadViewport((s) => s.isAtBottom);
+export const ThreadPrimitiveShowScrollToBottom: React.FC<{children:React.ReactNode}> = (({ children }) => {
+  const viewportContext = useContext(ThreadViewportContext);
+  if (!viewportContext) {
+    throw new Error(
+      "This component must be used within ThreadPrimitive.Viewport.",
+    );
+  }
+  const viewportStore = viewportContext.useThreadViewport;
+  const isAtBottom = viewportStore((s) => s.isAtBottom);
 
-  const threadViewportStore = useThreadViewportStore();
-
-  const handleScrollToBottom = useCallback(() => {
-    threadViewportStore.getState().scrollToBottom({ behavior });
-  }, [threadViewportStore, behavior]);
-
-  if (isAtBottom) return null;
-  return handleScrollToBottom;
-};
+  return !isAtBottom ? children : null;
+});
 
 export namespace ThreadPrimitiveScrollToBottom {
   export type Element = ActionButtonElement;
-  export type Props = ActionButtonProps<typeof useThreadScrollToBottom>;
+  export type Props = ComponentProps<ActionButtonElement>
 }
 
-export const ThreadPrimitiveScrollToBottom = createActionButton(
-  "ThreadPrimitive.ScrollToBottom",
-  useThreadScrollToBottom,
-  ["behavior"],
-);
+export const ThreadPrimitiveScrollToBottom = forwardRef<
+  ThreadPrimitiveScrollToBottom.Element,
+  ThreadPrimitiveScrollToBottom.Props & {
+    behavior?: ScrollBehavior | undefined;
+    noAutoHide?:boolean
+  }
+>(({ behavior = 'smooth', disabled, onClick, noAutoHide = false, ...props }, forwardedRef) => {
+  const {
+    components: { Button },
+  } = useRuntime();
+
+  const viewportContext = useContext(ThreadViewportContext);
+  if (!viewportContext) {
+    throw new Error(
+      "This component must be used within ThreadPrimitive.Viewport.",
+    );
+  }
+  const viewportStore = viewportContext.useThreadViewport;
+  const isAtBottom = viewportStore((s) => s.isAtBottom);
+
+  if(isAtBottom && !noAutoHide) {
+    return null;
+  }
+  return (
+    <Button
+      type="button"
+      {...props}
+      ref={forwardedRef}
+      disabled={disabled}
+      onClick={composeEventHandlers(
+        onClick as ((...params: unknown[]) => void) | undefined,
+        isAtBottom
+          ? undefined
+          : () => {
+              viewportStore.getState().scrollToBottom({ behavior });
+            },
+      )}
+    />
+  );
+});
+
+ThreadPrimitiveScrollToBottom.displayName = "ThreadPrimitive.ScrollToBottom";

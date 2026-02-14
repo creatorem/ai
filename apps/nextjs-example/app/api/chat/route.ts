@@ -1,5 +1,5 @@
 import { createOpenAI } from "@ai-sdk/openai";
-import { streamText, convertToModelMessages, type UIMessage } from "ai";
+import { streamText, convertToModelMessages, type UIMessage, smoothStream } from "ai";
 import { weatherTool } from "../../../lib/tools/weather-tool";
 
 const groq = createOpenAI({
@@ -110,6 +110,10 @@ export async function POST(req: Request) {
     tools: {
       weather: weatherTool,
     },
+    experimental_transform: smoothStream({
+      delayInMs: 30, // optional: defaults to 10ms
+      chunking: 'line', // optional: defaults to 'word'
+    }),
   });
 
   // const slowStream = throttleStream(

@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { cn } from "~/utils/cn";
 import { TextClassContext } from "./text";
+import * as Slot from "@rn-primitives/slot";
 import { useCSSVariable } from "uniwind";
 
 const buttonVariants = cva(
@@ -127,6 +128,7 @@ type ButtonProps = React.ComponentProps<typeof Pressable> &
     loading?: boolean;
     style?: PressableProps["style"];
     children?: React.ReactNode;
+    asChild?: boolean;
   };
 
 function Button({
@@ -138,16 +140,22 @@ function Button({
   onPress,
   style,
   children,
+  asChild = false,
   ...props
 }: ButtonProps) {
   const foregroundColor = useCSSVariable("--color-foreground");
 
+  const Component = asChild ? Slot.Pressable : Pressable;
+
   return (
     <TextClassContext.Provider value={buttonTextVariants({ variant, size })}>
-      <Pressable
+      <Component
         className={cn(
           buttonVariants({ variant, size }),
-          props.disabled && ["opacity-50", variant === 'default' ? 'bg-muted-foreground/50' : ''],
+          props.disabled && [
+            "opacity-50",
+            variant === "default" ? "bg-muted-foreground/50" : "",
+          ],
           className,
         )}
         role="button"
@@ -161,7 +169,7 @@ function Button({
       >
         {loading && <ActivityIndicator color={foregroundColor} />}
         {children}
-      </Pressable>
+      </Component>
     </TextClassContext.Provider>
   );
 }

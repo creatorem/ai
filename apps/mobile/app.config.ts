@@ -4,11 +4,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   runtimeVersion: "1.0.0",
   name: "Creatorem AI",
-  slug: "creatorem-ai-chat",
+  slug: "creatorem.ai.chat",
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/pwa-logo/apple-icon-180.png",
-  scheme: "creatorem-ai-chat-demo",
+  scheme: "creatorem.ai.chat.demo",
   userInterfaceStyle: "automatic",
   newArchEnabled: true,
   jsEngine: "hermes",
@@ -23,7 +23,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     jsEngine: "jsc",
     supportsTablet: true,
-    bundleIdentifier: "com.creatorem.ai-chat-demo",
+    bundleIdentifier: "com.creatorem.ai.chat.demo",
   },
   android: {
     // for native tabs
@@ -32,7 +32,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
    foregroundImage: './assets/pwa-logo/apple-icon-180.png',
       backgroundColor: "#ffffff",
     },
-    package: "com.creatorem.ai-chat-demo",
+    package: "com.creatorem.ai.chat.demo",
     edgeToEdgeEnabled: true,
   },
   web: {

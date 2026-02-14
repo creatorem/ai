@@ -45,7 +45,8 @@ export const MessagePartPrimitiveText = forwardRef<
   MessagePartPrimitiveText.Element,
   MessagePartPrimitiveText.Props
 >(({ smooth = true, ...rest }, forwardedRef) => {
-  const { text, status } = useSmoothStream(useMessagePartText(), smooth);
+  // const { text, status } = useSmoothStream(useMessagePartText(), smooth);
+  const { text, status } = useMessagePartText()
   const { components: { Text } } = useRuntime();
 
   return (
