@@ -60,7 +60,7 @@ const defaultComponents = {
   h1: ({ children }) => (
     <Text
       className={cn(
-        "mb-8 scroll-m-20 font-extrabold text-4xl tracking-tight last:mb-0",
+        "mb-6 scroll-m-20 bg-red-400 font-extrabold text-4xl tracking-tight last:mb-0",
       )}
     >
       {children}
@@ -69,7 +69,7 @@ const defaultComponents = {
   h2: ({ children }) => (
     <Text
       className={cn(
-        "mt-8 mb-4 scroll-m-20 font-semibold text-3xl tracking-tight first:mt-0 last:mb-0",
+        "mt-8 mb-3 scroll-m-20 bg-red-400 font-semibold text-3xl tracking-tight first:mt-0 last:mb-0",
       )}
     >
       {children}
@@ -78,7 +78,7 @@ const defaultComponents = {
   h3: ({ children }) => (
     <Text
       className={cn(
-        "mt-6 mb-4 scroll-m-20 font-semibold text-2xl tracking-tight first:mt-0 last:mb-0",
+        "mt-6 mb-2 scroll-m-20 font-semibold text-2xl tracking-tight first:mt-0 last:mb-0",
       )}
     >
       {children}
@@ -87,14 +87,14 @@ const defaultComponents = {
   h4: ({ children }) => (
     <Text
       className={cn(
-        "mt-6 mb-4 scroll-m-20 font-semibold text-xl tracking-tight first:mt-0 last:mb-0",
+        "mt-6 mb-2 scroll-m-20 font-semibold text-xl tracking-tight first:mt-0 last:mb-0",
       )}
     >
       {children}
     </Text>
   ),
   h5: ({ children }) => (
-    <Text className={cn("my-4 font-semibold text-lg first:mt-0 last:mb-0")}>
+    <Text className={cn("mt-4 mb-2 font-semibold text-lg first:mt-0 last:mb-0")}>
       {children}
     </Text>
   ),
