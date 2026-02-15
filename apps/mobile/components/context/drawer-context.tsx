@@ -9,8 +9,8 @@ import { Pressable, View } from "react-native";
 import { Icon } from "~/components/ui/icon";
 import {
   DrawerActions,
-  useNavigation,
   NavigationProp,
+  useNavigation,
 } from "@react-navigation/native";
 import { useCSSVariable } from "uniwind";
 
@@ -48,6 +48,7 @@ export const OpenDrawerButton = () => {
 
   const openDrawer = useCallback(() => {
     setOpen(true);
+    navigation.dispatch(DrawerActions.openDrawer());
   }, [setOpen]);
 
   useEffect(() => {

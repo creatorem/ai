@@ -7,9 +7,11 @@ import {
   AttachmentByIndexProvider,
   useAttachment,
 } from "../attachment/attachment-by-index-provider";
+import { useRuntime } from "@creatorem/ai-chat/runtime";
+import { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 
 export namespace MessagePrimitiveAttachments {
-  export type Props = {
+  export type Props = React.ComponentProps<RuntimeComponents['Box']> & {
     components:
       | {
           Image?: ComponentType | undefined;
@@ -82,13 +84,14 @@ MessagePrimitiveAttachmentByIndex.displayName =
 
 export const MessagePrimitiveAttachments: FC<
   MessagePrimitiveAttachments.Props
-> = ({ components, componentProps }) => {
+> = ({ components, componentProps, ...props }) => {
   const role = useMessage(s => s.role);
   const attachments = useMessage(s => s.attachments);
+  const {components: {Box}} = useRuntime()
   if (role !== "user") return null;
 
-  return (
-    <>
+  return attachments.length > 0 ? (
+    <Box {...props}>
       {attachments.map((attachment, index) => (
         <MessagePrimitiveAttachmentByIndex
           key={attachment.id ?? index}
@@ -98,8 +101,8 @@ export const MessagePrimitiveAttachments: FC<
           componentProps={componentProps}
         />
       ))}
-    </>
-  );
+    </Box>
+  ) : null;
 };
 
 MessagePrimitiveAttachments.displayName = "MessagePrimitive.Attachments";

@@ -1,9 +1,9 @@
-import { UIMessage } from "ai";
-import { Attachment } from "./attachment-types";
+import type { UIMessage } from "ai";
+import type { Attachment } from "./attachment-types";
 import type { DictationState } from "./adapters";
-import { ThreadAssistantMessagePart, ThreadUserMessagePart } from "./message-part-types";
-import { MessagePartStatus, ToolCallMessagePartStatus } from "./assistant-types";
-import { CustomUIDataTypes } from '../primitives/thread/thread-root';
+import type { ThreadAssistantMessagePart, ThreadUserMessagePart } from "./message-part-types";
+import type { MessagePartStatus, ToolCallMessagePartStatus } from "./assistant-types";
+import type { CustomUIDataTypes } from '../primitives/thread/thread-root';
 
 export type Threads = {
     isLoading: boolean;

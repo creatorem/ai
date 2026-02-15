@@ -186,12 +186,11 @@ const AttachmentRemove: FC = () => {
 
 export const UserMessageAttachments: FC = () => {
 	return (
-		<div className="aui-user-message-attachments-end col-span-full col-start-1 row-start-1 flex w-full flex-row justify-end gap-2">
-			<MessagePrimitive.Attachments
-				components={{ Attachment: AttachmentUI }}
-				componentProps={{ noRemoveButton: true }}
-			/>
-		</div>
+		<MessagePrimitive.Attachments
+			className="aui-user-message-attachments-end col-span-full col-start-1 row-start-1 flex w-full flex-row justify-end gap-2"
+			components={{ Attachment: AttachmentUI }}
+			componentProps={{ noRemoveButton: true }}
+		/>
 	);
 };
 

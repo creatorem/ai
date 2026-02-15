@@ -74,12 +74,11 @@ const AttachmentUI: FC<{ noRemoveButton?: boolean }> = ({ noRemoveButton }) => {
 
 export const UserMessageAttachments: FC = () => {
   return (
-    <View className="col-span-full col-start-1 row-start-1 mb-2 flex h-32 w-full flex-row justify-end gap-2">
       <MessagePrimitive.Attachments
+        className="col-span-full col-start-1 row-start-1 mb-2 flex h-32 w-full flex-row justify-end gap-2"
         components={{ Attachment: AttachmentUI }}
         componentProps={{ noRemoveButton: true }}
       />
-    </View>
   );
 };
 

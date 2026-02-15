@@ -74,7 +74,7 @@ export const useAiEvent = <TEvent extends keyof AiChatEvents>(name: TEvent, p: (
     }, [eventHandler, name, p])
 };
 
-export function AiProvider({ children, ...value }: { children: React.ReactNode } & Omit<AiContextType, 'eventHandler' | 'selectedModel' | 'tools' | 'upsertTool'>) {
+export function AiProvider({ children, ...value }: { children: React.ReactNode } & Omit<AiContextType, 'eventHandler' | 'selectedModel' | 'tools' | 'upsertTool' | 'setSelectedModel'>) {
     // Create store once
     const storeRef = useRef<StoreApi<AiContextType> | null>(null);
     if (storeRef.current === null) {

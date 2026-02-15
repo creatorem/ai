@@ -1,4 +1,4 @@
-import { ReadonlyJSONValue } from "./tool-response";
+import type { ReadonlyJSONValue } from "./tool-response";
 import type { CompleteAttachment } from "./attachment-types";
 import type {
   TextMessagePart,

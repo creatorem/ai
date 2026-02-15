@@ -1,7 +1,7 @@
 "use client";
 
 import type { UIMessage } from "ai";
-import { CustomUIDataTypes } from "../primitives/thread";
+import { CustomUIDataTypes } from "@creatorem/ai-chat/primitives/thread";
 import type { ThreadAdapter } from "@creatorem/ai-chat/types/adapters";
 import { Thread, Threads } from "@creatorem/ai-chat/types/entities";
 

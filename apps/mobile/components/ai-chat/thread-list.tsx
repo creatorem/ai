@@ -32,8 +32,8 @@ const ThreadListNew: FC = () => {
   const { setOpen: setDrawerOpen } = useDrawer();
   return (
     <ThreadListPrimitive.New
-      variant="outline"
-      className="mb-4 h-9 justify-start gap-2 rounded-lg px-3 text-sm hover:bg-muted data-active:bg-muted"
+      variant="ghost"
+      className="mb-4 h-12 bg-muted justify-start gap-2 rounded-xl px-3 text-sm hover:bg-background data-active:bg-muted"
       onPress={() => {
         setDrawerOpen(false);
       }}

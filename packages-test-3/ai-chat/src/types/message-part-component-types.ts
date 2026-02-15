@@ -3,7 +3,7 @@ import type {
   MessagePartStatus,
   ToolCallMessagePartStatus,
 } from "./assistant-types";
-import {
+import type {
   FileMessagePart,
   ImageMessagePart,
   ReasoningMessagePart,
@@ -14,7 +14,7 @@ import {
   ThreadUserMessagePart,
   ThreadAssistantMessagePart,
 } from "./message-part-types";
-import { ToolResponse } from "./tool-response";
+import type { ToolResponse } from "./tool-response";
 
 export type MessagePartState = (
   | ThreadUserMessagePart

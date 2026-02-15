@@ -16,38 +16,45 @@ import { useMessage } from "@creatorem/ai-chat/primitives/message";
 
 const SlackNestingContext = createContext(false);
 
-const BASE_FONT_SIZE = 16;
+// const BASE_FONT_SIZE = 16;
 
-const parseLength = (value: string | number): number => {
-  if (typeof value === "number") return value;
+// const parseLength = (value: string | number): number => {
+//   if (typeof value === "number") return value;
 
-  const match = value.trim().match(/^([\d.]+)(em|px|rem)?$/);
-  if (!match) return 0;
+//   const match = value.trim().match(/^([\d.]+)(em|px|rem)?$/);
+//   if (!match) return 0;
 
-  const num = parseFloat(match[1] ?? "0");
-  const unit = match[2] ?? "px";
+//   const num = parseFloat(match[1] ?? "0");
+//   const unit = match[2] ?? "px";
 
-  if (unit === "px") return num;
-  if (unit === "em" || unit === "rem") return num * BASE_FONT_SIZE;
-  return 0;
-};
+//   if (unit === "px") return num;
+//   if (unit === "em" || unit === "rem") return num * BASE_FONT_SIZE;
+//   return 0;
+// };
 
 export type ThreadViewportSlackProps = {
-  fillClampThreshold?: string | number;
-  fillClampOffset?: string | number;
+  // fillClampThreshold?: string | number;
+  // fillClampOffset?: string | number;
   children?: ReactNode;
 };
 
 const useSlackConfig = (
-  fillClampThreshold: string | number,
-  fillClampOffset: string | number,
+  // fillClampThreshold: string | number,
+  // fillClampOffset: string | number,
 ) => {
+  // const parts = useMessage((s) => s.parts);
+  // const text = parts?.[0]?.type === 'text' ? parts?.[0]?.text : '';
+  // console.log( {text} )
   const messageIsLast = useMessage((s) => s.isLast);
   const messageRole = useMessage((s) => s.role);
   const messageIndex = useMessage((s) => s.index);
   const prevMessageRole = useThread((s) =>
     messageIndex >= 1 ? s.messages[messageIndex - 1]?.role : undefined,
   );
+
+  // if(text === 'again '){
+  //   console.log( {messageIsLast, messageRole, messageIndex, prevMessageRole} )
+  // }
 
   const shouldApplySlack = useMemo(
     () =>
@@ -58,25 +65,29 @@ const useSlackConfig = (
     [messageIsLast, messageRole, messageIndex, prevMessageRole],
   );
 
-  const threshold = useMemo(
-    () => parseLength(fillClampThreshold),
-    [fillClampThreshold],
-  );
-  const offset = useMemo(() => parseLength(fillClampOffset), [fillClampOffset]);
+  // console.log( {shouldApplySlack} )
 
-  return { shouldApplySlack, threshold, offset };
+  // const threshold = useMemo(
+  //   () => parseLength(fillClampThreshold),
+  //   [fillClampThreshold],
+  // );
+  // const offset = useMemo(() => parseLength(fillClampOffset), [fillClampOffset]);
+
+  // return { shouldApplySlack, threshold, offset };
+  return { shouldApplySlack };
 };
 
-const ThreadPrimitiveViewportSlackFallback: FC<ThreadViewportSlackProps> = ({
+export const ThreadPrimitiveViewportSlack: FC<ThreadViewportSlackProps> = ({
   children,
-  fillClampThreshold = "10em",
-  fillClampOffset = "6em",
+  // fillClampThreshold = "10em",
+  // fillClampOffset = "6em",
 }) => {
   const threadViewportStore = useThreadViewportStore({ optional: true });
   const isNested = useContext(SlackNestingContext);
-  const { shouldApplySlack, threshold, offset } = useSlackConfig(
-    fillClampThreshold,
-    fillClampOffset,
+  // const { shouldApplySlack, threshold, offset } = useSlackConfig(
+  const { shouldApplySlack } = useSlackConfig(
+    // fillClampThreshold,
+    // fillClampOffset,
   );
   const [minHeight, setMinHeight] = useState(0); 
 
@@ -92,8 +103,9 @@ const ThreadPrimitiveViewportSlackFallback: FC<ThreadViewportSlackProps> = ({
 
       if (state.turnAnchor === "top" && shouldApplySlack) {
         const { viewport, inset, userMessage } = state.height;
-        const clampAdjustment = userMessage <= threshold ? userMessage : offset;
-        nextMinHeight = Math.max(0, viewport - inset - clampAdjustment);
+        // const clampAdjustment = userMessage <= threshold ? userMessage : offset;
+        // nextMinHeight = Math.max(0, viewport - inset - clampAdjustment);
+        nextMinHeight = Math.max(0, viewport - inset - userMessage);
       }
 
       setMinHeight(nextMinHeight);
@@ -101,21 +113,22 @@ const ThreadPrimitiveViewportSlackFallback: FC<ThreadViewportSlackProps> = ({
 
     updateMinHeight();
     return threadViewportStore.subscribe(updateMinHeight);
-  }, [threadViewportStore, isNested, shouldApplySlack, threshold, offset]);
+  // }, [threadViewportStore, isNested, shouldApplySlack, threshold, offset]);
+  }, [threadViewportStore, isNested, shouldApplySlack]);
+
+  //   const parts = useMessage((s) => s.parts);
+  // const text = parts?.[0]?.type === 'text' ? parts?.[0]?.text : '';
+  // console.log( {text} )
+  // console.log( {minHeight} )
 
   return (
     <SlackNestingContext.Provider value={true}>
+      {/* <View style={{ minHeight, backgroundColor: 'red', borderTopColor: 'blue', borderTopWidth: 1 }}> */}
       <View style={{ minHeight }}>
         {children}
       </View>
     </SlackNestingContext.Provider>
   );
-};
-
-export const ThreadPrimitiveViewportSlack: FC<ThreadViewportSlackProps> = (
-  props,
-) => {
-  return <ThreadPrimitiveViewportSlackFallback {...props} />;
 };
 
 ThreadPrimitiveViewportSlack.displayName = "ThreadPrimitive.ViewportSlack";
