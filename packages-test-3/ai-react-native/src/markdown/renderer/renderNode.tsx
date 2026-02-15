@@ -6,6 +6,7 @@ import type { Element, Text as HastText } from "hast";
 const BLOCK_TAGS = new Set([
   "div",
   "ul",
+  "strong",
   "ol",
   "li",
   "blockquote",
@@ -128,6 +129,12 @@ export function renderNode(
         <Renderer key={key} node={node} {...(props as any)}>
           {children}
         </Renderer>
+      );
+    }
+
+    if (__DEV__) {
+      console.warn(
+        `[MarkdownRenderer] Missing renderer for tag <${node.tagName}>. Falling back to Text wrapper.`,
       );
     }
 

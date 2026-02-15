@@ -112,14 +112,23 @@ const defaultComponents = {
       {children}
     </Link>
   ),
+  strong: ({ children }) => (
+      <Text className={cn("font-bold")}>{children}</Text>
+  ),
   blockquote: ({ children }) => (
     <Text className={cn("border-l-2 pl-6 italic")}>{children}</Text>
   ),
   ul: ({ children }) => (
-    <Text className={cn("my-5 ml-6 list-disc [&>li]:mt-2")}>{children}</Text>
+    <View className={cn("my-5 flex gap-4 flex-col")}>{children}</View>
+  ),
+  li: ({ children }) => (
+    <View className="flex flex-row items-start gap-4">
+      <View className="bg-foreground mt-2.5 h-2 w-2 rounded-full" />
+      <Text className="leading-7">{children}</Text>
+    </View>
   ),
   ol: ({ children }) => (
-    <Text className={cn("my-5 ml-6 list-decimal [&>li]:mt-2")}>{children}</Text>
+    <Text className={cn("my-5 flex gap-4 flex-col")}>{children}</Text>
   ),
   hr: () => <View className={cn("my-5 border-b")} />,
   table: ({ children }) => (
@@ -160,11 +169,13 @@ const defaultComponents = {
   code: ({ children, node }) => {
     const isCodeBlock = (node as any)?.__parent?.tagName === "pre";
     return (
-      <Text
-        className={cn(!isCodeBlock && "rounded border bg-muted font-semibold")}
-      >
-        {children}
-      </Text>
+      <View className="translate-y-[15px]">
+        <Text
+          className={cn(!isCodeBlock && "rounded-lg border px-1 border-input leading-6 bg-muted font-semibold")}
+        >
+          {children}
+        </Text>
+      </View>
     );
   },
   CodeHeader: ({ language, code }: CodeHeaderProps) => {
