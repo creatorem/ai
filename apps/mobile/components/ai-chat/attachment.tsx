@@ -1,15 +1,7 @@
 "use client";
 
-import { type FC, useCallback, useMemo } from "react";
-import {
-  Image as NativeImage,
-  Pressable,
-  ScrollView,
-  View,
-} from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import * as DocumentPicker from "expo-document-picker";
-import { Alert } from "react-native";
+import { type FC, useMemo } from "react";
+import { Image as NativeImage, ScrollView, View } from "react-native";
 import { Icon } from "../ui/icon";
 import { Text } from "../ui/text";
 import { cn } from "~/utils/cn";
@@ -18,87 +10,7 @@ import * as AttachmentPrimitive from "@creatorem/ai-react-native/primitives/atta
 import { useAttachment } from "@creatorem/ai-react-native/primitives/attachment";
 import * as ComposerPrimitive from "@creatorem/ai-react-native/primitives/composer";
 import * as MessagePrimitive from "@creatorem/ai-react-native/primitives/message";
-import { useComposerStore } from "@creatorem/ai-chat/primitives/composer";
-
-const uriToFile = async (
-  uri: string,
-  name: string,
-  type: string,
-): Promise<File> => {
-  const response = await fetch(uri);
-  const blob = await response.blob();
-  return new File([blob], name, { type });
-};
-
-const isImageOnlyAccept = (accept: string): boolean => {
-  if (accept === "*") return false;
-  return accept.split(",").every((item) => item.trim().startsWith("image"));
-};
-
-const useComposerAddAttachment = ({
-  multiple = true,
-}: {
-  multiple?: boolean;
-} = {}) => {
-  const composerStore = useComposerStore();
-
-  return useCallback(async () => {
-    const { attachmentAccept, addAttachment } = composerStore.getState();
-
-    try {
-      if (isImageOnlyAccept(attachmentAccept)) {
-        const { status } =
-          await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== "granted") {
-          Alert.alert(
-            "Permission required",
-            "Please grant media library access to add attachments.",
-          );
-          return;
-        }
-
-        const result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ["images"],
-          allowsMultipleSelection: multiple,
-          quality: 1,
-        });
-
-        if (result.canceled || !result.assets?.length) return;
-
-        for (const asset of result.assets) {
-          const file = await uriToFile(
-            asset.uri,
-            asset.fileName || `image-${Date.now()}.jpg`,
-            asset.mimeType || "image/jpeg",
-          );
-          await addAttachment(file);
-        }
-        return;
-      }
-
-      const result = await DocumentPicker.getDocumentAsync({
-        multiple,
-        type:
-          attachmentAccept !== "*"
-            ? attachmentAccept.split(",").map((item) => item.trim())
-            : undefined,
-      });
-
-      if (result.canceled || !result.assets?.length) return;
-
-      for (const asset of result.assets) {
-        const file = await uriToFile(
-          asset.uri,
-          asset.name,
-          asset.mimeType || "application/octet-stream",
-        );
-        await addAttachment(file);
-      }
-    } catch {
-      Alert.alert("Error", "Failed to add attachment. Please try again.");
-    }
-  }, [composerStore, multiple]);
-};
+import { useActionSheet } from "../ui/action-sheet";
 
 const useAttachmentImageSrc = () => {
   const attachment = useAttachment();
@@ -133,95 +45,67 @@ const AttachmentThumb: FC = () => {
   );
 };
 
-const AttachmentRemove: FC = () => {
-  return (
-    <View className="absolute top-1 right-1 z-10">
-      <AttachmentPrimitive.Remove
-        size="icon"
-        variant="ghost"
-        className="h-6 w-6 rounded-full bg-background/90 p-1"
-        aria-label="Remove attachment"
-      >
-        <Icon name="X" size={12} />
-      </AttachmentPrimitive.Remove>
-    </View>
-  );
-};
-
-const AttachmentUI: FC = () => {
-  const attachment = useAttachment();
-  const isComposerAttachment = attachment.status.type !== "complete";
-  const tileSizeClass =
-    isComposerAttachment && attachment.type === "image"
-      ? "h-24 w-24"
-      : "h-14 w-14";
-
+const AttachmentUI: FC<{ noRemoveButton?: boolean }> = ({ noRemoveButton }) => {
   return (
     <AttachmentPrimitive.Root className="relative">
       <View
         className={cn(
-          "overflow-hidden rounded-xl border border-border bg-secondary",
-          tileSizeClass,
+          "aspect-square flex-1 overflow-hidden rounded-xl border border-input",
         )}
       >
         <AttachmentThumb />
       </View>
 
-      {isComposerAttachment && <AttachmentRemove />}
-
-      <View className="mt-1 max-w-24">
-        <Text className="text-muted-foreground text-xs" numberOfLines={1}>
-          <AttachmentPrimitive.Name />
-        </Text>
-      </View>
+      {!noRemoveButton && (
+        <View className="absolute top-1.5 right-1.5 z-20">
+          <AttachmentPrimitive.Remove
+            size="icon"
+            variant="ghost"
+            className="size-5 rounded-full bg-background p-0 text-foreground"
+            aria-label="Remove attachment"
+          >
+            <Icon name="X" size={14} strokeWidth={3} />
+          </AttachmentPrimitive.Remove>
+        </View>
+      )}
     </AttachmentPrimitive.Root>
   );
 };
 
 export const UserMessageAttachments: FC = () => {
   return (
-    <View className="col-span-full col-start-1 row-start-1 mb-2 flex w-full flex-row justify-end gap-2">
-      <MessagePrimitive.Attachments components={{ Attachment: AttachmentUI }} />
+    <View className="col-span-full col-start-1 row-start-1 mb-2 flex h-32 w-full flex-row justify-end gap-2">
+      <MessagePrimitive.Attachments
+        components={{ Attachment: AttachmentUI }}
+        componentProps={{ noRemoveButton: true }}
+      />
     </View>
   );
 };
 
 export const ComposerAttachments: FC = () => {
-  return (
+  const attachments = ComposerPrimitive.useComposer((s) => s.attachments);
+  return attachments.length > 0 ? (
     <ScrollView
       horizontal
-      showsHorizontalScrollIndicator={false}
       contentContainerStyle={{ gap: 8, paddingHorizontal: 6, paddingBottom: 4 }}
-      className="mb-2 w-full"
+      className="h-32 w-full p-2"
     >
       <ComposerPrimitive.Attachments
         components={{ Attachment: AttachmentUI }}
       />
     </ScrollView>
-  );
+  ) : null;
 };
 
-// export const ComposerAddAttachment: FC<{ multiple?: boolean }> = ({
-//   multiple = true,
-// }) => {
-//   const onAddAttachment = useComposerAddAttachment({ multiple });
-
-//   return (
-//     <Pressable
-//       onPress={onAddAttachment}
-//       className="size-8 items-center justify-center rounded-full"
-//       accessibilityLabel="Add attachment"
-//     >
-//       <Icon name="Plus" size={18} />
-//     </Pressable>
-//   );
-// };
-
-const ComposerAddAttachmentTakePhoto: FC = () => {
+const ComposerAddAttachmentTakePhoto: FC<{ onAddAttachment?: () => void }> = ({
+  onAddAttachment,
+}) => {
   return (
     <ComposerPrimitive.AddAttachmentTakePhoto
       variant="secondary"
       className="flex h-20 flex-1 flex-col rounded-2xl p-2"
+      onAddAttachment={onAddAttachment}
     >
       <Icon name="Camera" size={20} />
       <Text>Take photo</Text>
@@ -229,11 +113,14 @@ const ComposerAddAttachmentTakePhoto: FC = () => {
   );
 };
 
-const ComposerAddAttachmentImage: FC = () => {
+const ComposerAddAttachmentImage: FC<{ onAddAttachment?: () => void }> = ({
+  onAddAttachment,
+}) => {
   return (
     <ComposerPrimitive.AddAttachmentImage
       variant="secondary"
       className="flex h-20 flex-1 flex-col rounded-2xl p-2"
+      onAddAttachment={onAddAttachment}
     >
       <Icon name="Image" size={20} />
       <Text>Image</Text>
@@ -241,11 +128,14 @@ const ComposerAddAttachmentImage: FC = () => {
   );
 };
 
-const ComposerAddAttachmentFile: FC = () => {
+const ComposerAddAttachmentFile: FC<{ onAddAttachment?: () => void }> = ({
+  onAddAttachment,
+}) => {
   return (
     <ComposerPrimitive.AddAttachmentFile
       variant="secondary"
       className="flex h-20 flex-1 flex-col rounded-2xl p-2"
+      onAddAttachment={onAddAttachment}
     >
       <Icon name="Paperclip" size={20} />
       <Text>Files</Text>
@@ -253,12 +143,18 @@ const ComposerAddAttachmentFile: FC = () => {
   );
 };
 
-export const ComposerAddAttachment: FC = () => {
+export const ComposerAddAttachmentSheet: FC = () => {
+  const { setOpen } = useActionSheet();
+
+  const handleAddAttachment = () => {
+    setOpen(false);
+  };
+
   return (
     <View className="flex flex-row gap-4 p-6 pt-2">
-      <ComposerAddAttachmentTakePhoto />
-      <ComposerAddAttachmentImage />
-      <ComposerAddAttachmentFile />
+      <ComposerAddAttachmentTakePhoto onAddAttachment={handleAddAttachment} />
+      <ComposerAddAttachmentImage onAddAttachment={handleAddAttachment} />
+      <ComposerAddAttachmentFile onAddAttachment={handleAddAttachment} />
     </View>
   );
 };

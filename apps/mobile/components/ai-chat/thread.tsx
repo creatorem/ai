@@ -26,7 +26,11 @@ import { ScrollView } from "react-native-gesture-handler";
 import { ToolFallback } from "./tool-fallback";
 import { MarkdownText } from "./markdown-text";
 import { useCSSVariable } from "uniwind";
-import { ComposerAddAttachment } from "./attachment";
+import {
+  ComposerAddAttachmentSheet,
+  ComposerAttachments,
+  UserMessageAttachments,
+} from "./attachment";
 import { WeatherToolRegistration } from "../tools/weather-tool-ui";
 import { Reasoning, ReasoningGroup } from "./reasoning";
 
@@ -53,7 +57,7 @@ export const Thread: React.FC = () => {
             />
           </ThreadPrimitive.ViewportScrollable>
 
-          <View className="mx-auto flex w-full flex-col gap-4 overflow-visible border-border border-t bg-transparent px-6 pt-2 pb-6">
+          <View className="mx-auto flex w-full flex-col gap-4 overflow-visible bg-transparent px-6 pt-2 pb-6">
             <ThreadScrollToBottom />
             <Composer />
           </View>
@@ -172,14 +176,16 @@ const Composer: React.FC = () => {
   return (
     <ComposerPrimitive.Root>
       <View className="flex-row items-end gap-2">
-        {/* <ComposerAttachments /> */}
         <ComposerAction />
-        <ComposerPrimitive.Input
-          placeholder="Send a message..."
-          className="my-auto flex max-h-40 min-h-12 w-full flex-1 flex-row items-center rounded-3xl bg-secondary px-3 py-2 text-base outline-none transition-shadow placeholder:text-muted-foreground"
-          autoFocus
-          aria-label="Message input"
-        />
+        <View className="flex flex-1 items-start rounded-3xl bg-secondary">
+          <ComposerAttachments />
+          <ComposerPrimitive.Input
+            placeholder="Send a message..."
+            className="my-auto flex max-h-40 min-h-12 w-full flex-1 flex-row items-center rounded-3xl bg-secondary px-3 py-2 text-base outline-none transition-shadow placeholder:text-muted-foreground"
+            autoFocus
+            aria-label="Message input"
+          />
+        </View>
         <ComposerSubmit />
       </View>
     </ComposerPrimitive.Root>
@@ -205,7 +211,7 @@ const ComposerAction: FC = () => {
           backgroundColor: backgroundColor,
         }}
       >
-        <ComposerAddAttachment />
+        <ComposerAddAttachmentSheet />
         {/* <View className="h-40 px-4">
           <ComposerAddAttachmentFile />
           <ComposerAddAttachmentImage />
@@ -354,7 +360,7 @@ const UserMessage: FC = () => {
       className="fade-in slide-in-from-bottom-1 mx-auto grid w-full max-w-(--thread-max-width) animate-in auto-rows-auto grid-cols-[minmax(72px,1fr)_auto] content-start gap-y-2 px-2 py-3 duration-150 [&:where(>*)]:col-start-2"
       data-role="user"
     >
-      {/* <UserMessageAttachments /> */}
+      <UserMessageAttachments />
 
       <Animated.View
         entering={FadeIn.duration(320)}

@@ -18,6 +18,7 @@ export namespace MessagePrimitiveAttachments {
           Attachment?: ComponentType | undefined;
         }
       | undefined;
+      componentProps?: Record<string, unknown>;
   };
 }
 
@@ -40,12 +41,13 @@ const getComponent = (
 
 const AttachmentComponent: FC<{
   components: MessagePrimitiveAttachments.Props["components"];
-}> = ({ components }) => {
+  componentProps?: Record<string, unknown>;
+}> = ({ components, componentProps }) => {
   const attachment = useAttachment();
 
   const Component = getComponent(components, attachment as CompleteAttachment);
   if (!Component) return null;
-  return <Component />;
+  return <Component {...componentProps} />;
 };
 
 export namespace MessagePrimitiveAttachmentByIndex {
@@ -53,15 +55,16 @@ export namespace MessagePrimitiveAttachmentByIndex {
     index: number;
     attachment?: Attachment;
     components?: MessagePrimitiveAttachments.Props["components"];
+    componentProps?: Record<string, unknown>;
   };
 }
 
 export const MessagePrimitiveAttachmentByIndex: FC<MessagePrimitiveAttachmentByIndex.Props> =
   memo(
-    ({ index, attachment, components }) => {
+    ({ index, attachment, components, componentProps }) => {
       return (
         <AttachmentByIndexProvider index={index} attachment={attachment}>
-          <AttachmentComponent components={components} />
+          <AttachmentComponent components={components} componentProps={componentProps} />
         </AttachmentByIndexProvider>
       );
     },
@@ -79,7 +82,7 @@ MessagePrimitiveAttachmentByIndex.displayName =
 
 export const MessagePrimitiveAttachments: FC<
   MessagePrimitiveAttachments.Props
-> = ({ components }) => {
+> = ({ components, componentProps }) => {
   const role = useMessage(s => s.role);
   const attachments = useMessage(s => s.attachments);
   if (role !== "user") return null;
@@ -92,6 +95,7 @@ export const MessagePrimitiveAttachments: FC<
           index={index}
           attachment={attachment}
           components={components}
+          componentProps={componentProps}
         />
       ))}
     </>

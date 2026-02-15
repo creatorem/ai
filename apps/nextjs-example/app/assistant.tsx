@@ -29,8 +29,6 @@ export const Assistant = () => {
     }),
   });
 
-  console.log( {runtime} )
-
   return (
     <AssistantRuntimeProvider runtime={runtime}>
       <SidebarProvider>

@@ -59,11 +59,9 @@ const MarkdownTextInner: FC<MarkdownTextPrimitiveProps> = ({
     };
   }, [messagePartText, preprocess]);
 
-  const { text: smoothText } = useSmoothStream(processedMessagePart, smooth);
+  // const { text: smoothText } = useSmoothStream(processedMessagePart, smooth);
   // const { text } = useSmoothStream(processedMessagePart, smooth);
   const text = processedMessagePart.text;
-  console.log( {text} )
-  console.log( {smoothText} )
 
   const colors = useMemo(
     () => ({ textColor, textSecondaryColor }),

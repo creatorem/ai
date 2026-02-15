@@ -13,11 +13,6 @@ import { View } from "react-native";
 import { useThreadViewportStore } from "@creatorem/ai-chat/primitives/thread";
 import { useThread } from "@creatorem/ai-chat/primitives/thread";
 import { useMessage } from "@creatorem/ai-chat/primitives/message";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
 
 const SlackNestingContext = createContext(false);
 
@@ -83,12 +78,10 @@ const ThreadPrimitiveViewportSlackFallback: FC<ThreadViewportSlackProps> = ({
     fillClampThreshold,
     fillClampOffset,
   );
-  // const minHeight = useSharedValue(0);
   const [minHeight, setMinHeight] = useState(0); 
 
   useEffect(() => {
     if (!threadViewportStore || isNested) {
-      // minHeight.value = withTiming(0, { duration: 140 });
       setMinHeight(0);
       return undefined;
     }
@@ -103,7 +96,6 @@ const ThreadPrimitiveViewportSlackFallback: FC<ThreadViewportSlackProps> = ({
         nextMinHeight = Math.max(0, viewport - inset - clampAdjustment);
       }
 
-      // minHeight.value = withTiming(nextMinHeight, { duration: 140 });
       setMinHeight(nextMinHeight);
     };
 
@@ -111,18 +103,8 @@ const ThreadPrimitiveViewportSlackFallback: FC<ThreadViewportSlackProps> = ({
     return threadViewportStore.subscribe(updateMinHeight);
   }, [threadViewportStore, isNested, shouldApplySlack, threshold, offset]);
 
-  // const animatedStyle = useAnimatedStyle(() => {
-  //   return {
-  //     minHeight: minHeight.value,
-  //     flexShrink: 0,
-  //   };
-  // });
-
-  console.log( {minHeight} )
-
   return (
     <SlackNestingContext.Provider value={true}>
-      {/* <Animated.View style={animatedStyle}> */}
       <View style={{ minHeight }}>
         {children}
       </View>

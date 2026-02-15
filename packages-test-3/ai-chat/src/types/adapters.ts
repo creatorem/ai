@@ -38,7 +38,9 @@ export type ThreadAdapter = {
 
 export type AttachmentAdapter = {
   accept: string;
-  add(state: { file: File }): Promise<PendingAttachment> | AsyncGenerator<PendingAttachment, void>;
+  add(
+    attachment: Omit<Attachment, "id">,
+  ): Promise<PendingAttachment> | AsyncGenerator<PendingAttachment, void>;
   remove(attachment: Attachment): Promise<void>;
   send(attachment: PendingAttachment): Promise<CompleteAttachment>;
 };

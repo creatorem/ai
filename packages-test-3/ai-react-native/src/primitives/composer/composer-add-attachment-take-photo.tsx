@@ -7,18 +7,13 @@ import {
 import { useComposerStore } from "@creatorem/ai-chat/primitives/composer";
 import * as ImagePicker from "expo-image-picker";
 import { Alert } from "react-native";
+import { fileToNativeAttachment, uriToFile } from "../../utils";
 
-const uriToFile = async (
-  uri: string,
-  name: string,
-  type: string,
-): Promise<File> => {
-  const response = await fetch(uri);
-  const blob = await response.blob();
-  return new File([blob], name, { type });
-};
-
-const useComposerAddAttachmentTakePhoto = () => {
+const useComposerAddAttachmentTakePhoto = ({
+  onAddAttachment,
+}: {
+  onAddAttachment?: () => void;
+}) => {
   const composerStore = useComposerStore();
 
   const callback = useCallback(() => {
@@ -51,14 +46,19 @@ const useComposerAddAttachmentTakePhoto = () => {
           asset.mimeType || "image/jpeg",
         );
 
-        await addAttachment(file);
+        await addAttachment(
+          fileToNativeAttachment(file as File & { uri?: string }, {
+            type: "image",
+          }),
+        );
+        onAddAttachment?.();
       } catch {
         Alert.alert("Error", "Failed to take photo. Please try again.");
       }
     };
 
     takePhoto();
-  }, [composerStore]);
+  }, [composerStore, onAddAttachment]);
 
   return callback;
 };
@@ -71,4 +71,5 @@ export namespace ComposerPrimitiveAddAttachmentTakePhoto {
 export const ComposerPrimitiveAddAttachmentTakePhoto = createActionButton(
   "ComposerPrimitive.AddAttachmentTakePhoto",
   useComposerAddAttachmentTakePhoto,
+  ["onAddAttachment"]
 );

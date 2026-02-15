@@ -7,22 +7,15 @@ import {
 import { useComposerStore } from "@creatorem/ai-chat/primitives/composer";
 import * as DocumentPicker from "expo-document-picker";
 import { Alert } from "react-native";
-
-const uriToFile = async (
-  uri: string,
-  name: string,
-  type: string,
-): Promise<File> => {
-  const response = await fetch(uri);
-  const blob = await response.blob();
-  return new File([blob], name, { type });
-};
+import { fileToNativeAttachment, uriToFile } from "../../utils";
 
 const useComposerAddAttachmentFile = ({
   multiple = true,
+  onAddAttachment,
 }: {
   /** allow selecting multiple files */
   multiple?: boolean | undefined;
+  onAddAttachment?: () => void;
 } = {}) => {
   const composerStore = useComposerStore();
 
@@ -41,13 +34,20 @@ const useComposerAddAttachmentFile = ({
 
         if (result.canceled || !result.assets?.length) return;
 
+                let addedCount = 0;
+
         for (const asset of result.assets) {
           const file = await uriToFile(
             asset.uri,
             asset.name,
             asset.mimeType || "application/octet-stream",
           );
-          await addAttachment(file);
+          await addAttachment(fileToNativeAttachment(file as File & { uri?: string }));
+          addedCount += 1;
+        }
+
+        if (addedCount > 0) {
+          onAddAttachment?.();
         }
       } catch (error) {
         Alert.alert("Error", "Failed to pick attachment. Please try again.");
@@ -55,7 +55,7 @@ const useComposerAddAttachmentFile = ({
     };
 
     pickAttachment();
-  }, [composerStore, multiple]);
+  }, [composerStore, multiple, onAddAttachment]);
 
   return callback;
 };
@@ -68,5 +68,5 @@ export namespace ComposerPrimitiveAddAttachmentFile {
 export const ComposerPrimitiveAddAttachmentFile = createActionButton(
   "ComposerPrimitive.AddAttachmentFile",
   useComposerAddAttachmentFile,
-  ["multiple"],
+  ["multiple", "onAddAttachment"],
 );

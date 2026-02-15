@@ -115,8 +115,8 @@ export const ActionSheetClose: React.FC<
 interface ThemedActionSheetProps extends RNActionSheetProps {}
 
 const defaultHeaderComponent = (
-  <View className="w-full flex h-4">
-    <View className="h-1 w-10 mx-auto mt-1 rounded-full bg-input" />
+  <View className="flex h-4 w-full">
+    <View className="mx-auto mt-1 h-1 w-10 rounded-full bg-input" />
   </View>
 );
 

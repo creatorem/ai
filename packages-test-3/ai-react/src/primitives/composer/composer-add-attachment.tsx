@@ -7,6 +7,7 @@ import {
   createActionButton,
 } from "@creatorem/ai-chat/utils";
 import { useComposerStore } from "@creatorem/ai-chat/primitives/composer";
+import { fileToAttachment } from "@creatorem/ai-chat/utils";
 
 const useComposerAddAttachment = ({
   multiple = true,
@@ -33,7 +34,7 @@ const useComposerAddAttachment = ({
       const fileList = (e.target as HTMLInputElement).files;
       if (!fileList) return;
       for (const file of fileList) {
-        addAttachment(file);
+        addAttachment(fileToAttachment(file));
       }
 
       document.body.removeChild(input);

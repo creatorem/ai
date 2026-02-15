@@ -48,10 +48,6 @@ const useThreadViewportAutoScroll = (
         contentOffset.y + layoutMeasurement.height >=
         contentSize.height - PADDING_TO_BOTTOM;
 
-      // writableStore(threadViewportStore).setState({
-      //   isAtBottom: newIsAtBottom,
-      // });
-
     if (!newIsAtBottom && lastScrollTop.current < contentOffset.y) {
       // ignore scroll down
     } else {
@@ -88,10 +84,7 @@ const useThreadViewportAutoScroll = (
   });
 
   useAiEvent("thread.runStart", () => {
-    console.log( 'thread.runStart is called here' )
-    console.warn( 'hlloe' )
-    // if (!scrollToBottomOnRunStart) return;
-    // console.log( 'scroll to bottom' )
+    if (!scrollToBottomOnRunStart) return;
     scrollToBottom("smooth");
   });
 
@@ -118,7 +111,6 @@ const useViewportSizeRef = () => {
   const setViewportHeight = useThreadViewport((s) => s.setViewportHeight);
 
     const handleLayout = (event: LayoutChangeEvent) => {
-      // console.log( 'scroll height ' + event.nativeEvent.layout.height )
       setViewportHeight(event.nativeEvent.layout.height);
     }
     return { onLayout: handleLayout };

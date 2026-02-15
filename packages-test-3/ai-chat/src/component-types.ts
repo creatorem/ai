@@ -13,7 +13,8 @@ type TextareaStyle = Omit<NonNullable<React.CSSProperties>, 'maxHeight' | 'minHe
     height?: number;
 };
 
-type ButtonProps = Partial<Pick<React.ComponentProps<'button'>, 'disabled' | 'type'>> & BaseComponentPropsWithChildren & { variant?: 'ghost' | 'outline' | 'default'; size?: 'icon' | 'default'; onClick?: (e: Event) => void; }
+// type ButtonProps = Partial<Pick<React.ComponentProps<'button'>, 'disabled' | 'type'>> & BaseComponentPropsWithChildren & { variant?: 'ghost' | 'outline' | 'default'; size?: 'icon' | 'default'; onClick?: (e: Event) => void; }
+type ButtonProps = Partial<Pick<React.ComponentProps<'button'>, 'disabled' | 'type'>> & BaseComponentPropsWithChildren & { onClick?: (e: Event) => void; }
 type ButtonComponent = ComponentType<ButtonProps>
 
 type Event = {

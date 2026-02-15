@@ -40,10 +40,6 @@ const useThreadSuggestion = ({
     const { isRunning, composerStore, send: sendThread } = threadStore.getState();
     const composerText = composerStore!.getState().text
 
-    console.log( 'sendThread' )
-    console.log( resolvedSend && !isRunning )
-    console.log( {prompt} )
-
     if (resolvedSend && !isRunning) {
       sendThread({ clearText: clearComposer, prompt })
     } else {

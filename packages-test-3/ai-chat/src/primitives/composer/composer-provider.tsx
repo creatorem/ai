@@ -8,12 +8,12 @@ import type { Attachment, CompleteAttachment, PendingAttachment } from "../../ty
 import type { DictationAdapter, DictationState } from "../../types/adapters";
 import type { Unsubscribe } from "../../types/unsuscribe";
 import { useAiContext } from "../../ai-provider";
-import { ThreadCtxType, useThread, useThreadStore } from "../thread/thread-root";
+import { useThread, useThreadStore } from "../thread/thread-root";
 
 type ComposerMethods = {
     setText(text: string): void;
     setRole(role: Composer['role']): void;
-    addAttachment(file: File): Promise<void>;
+    addAttachment(attachment: Omit<Attachment, 'id'>): Promise<void>;
     removeAttachment(index: number): Promise<void>;
     clearAttachments(): Promise<void>;
     // attachment(selector: { index: number } | { id: string }): AttachmentMethods;
@@ -179,19 +179,15 @@ export function ComposerPrimitiveRoot({ children, id, defaultText = "", editMess
         setRoleState(newRole);
     }, []);
 
-    const addAttachment = useCallback(async (file: File): Promise<void> => {
+    const addAttachment = useCallback(async (newAttachment: Omit<Attachment, 'id'>): Promise<void> => {
         const adapter = _adaptersRef.current?.attachment;
 
         if (!adapter) {
-            // No adapter: hold the file in memory as a complete attachment
             const attachment: CompleteAttachment = {
                 id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
-                type: file.type.startsWith('image/') ? 'image' : 'file',
-                name: file.name,
-                contentType: file.type,
-                file,
                 content: [],
-                status: { type: 'complete' },
+                ...newAttachment,
+                status: { ...newAttachment.status, type: 'complete' },
             };
             setAttachments(prev => [...prev, attachment]);
             return;
@@ -207,7 +203,7 @@ export function ComposerPrimitiveRoot({ children, id, defaultText = "", editMess
             });
         };
 
-        const promiseOrGenerator = adapter.add({ file });
+        const promiseOrGenerator = adapter.add(newAttachment);
         if (Symbol.asyncIterator in promiseOrGenerator) {
             for await (const r of promiseOrGenerator) {
                 upsertAttachment(r);
@@ -299,7 +295,6 @@ export function ComposerPrimitiveRoot({ children, id, defaultText = "", editMess
     }, [_cleanupDictation, editMessageId]);
 
     const cancel = useCallback((): void => {
-        console.log( 'cancel call here 2' )
         threadStore.getState().stop();
     }, [threadStore]);
 

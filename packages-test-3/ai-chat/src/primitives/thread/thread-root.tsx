@@ -386,8 +386,6 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
         setMessages(repositoryRef.current.getMessages() as ThreadMessage[]);
     }, [setMessages]);
 
-    // console.log({ messages })
-
     useEffect(() => {
         let cancelled = false;
         const threadAdapter = adapters?.thread;
@@ -500,7 +498,6 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
     }, [messages, activeThreadId, adapters, title, status, setThreadIds, setActiveThreadId]);
 
     const isRunningRef = useRef(false);
-    console.log( {chatStatus} )
     useEffect(() => {
         if (chatStatus === 'streaming') {
             isRunningRef.current = true;

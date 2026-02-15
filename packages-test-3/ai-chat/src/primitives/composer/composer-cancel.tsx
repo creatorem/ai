@@ -7,8 +7,6 @@ const useComposerCancel = () => {
   const canCancel = useComposer(s => s.canCancel);
   const cancel = useComposer(s => s.cancel);
 
-  console.log( {canCancel} )
-
   if (!canCancel) return null;
   return cancel;
 };

@@ -7,22 +7,15 @@ import {
 import { useComposerStore } from "@creatorem/ai-chat/primitives/composer";
 import * as ImagePicker from "expo-image-picker";
 import { Alert } from "react-native";
-
-const uriToFile = async (
-  uri: string,
-  name: string,
-  type: string,
-): Promise<File> => {
-  const response = await fetch(uri);
-  const blob = await response.blob();
-  return new File([blob], name, { type });
-};
+import { fileToNativeAttachment, uriToFile } from "../../utils";
 
 const useComposerAddAttachmentImage = ({
   multiple = true,
+  onAddAttachment,
 }: {
   /** allow selecting multiple images */
   multiple?: boolean | undefined;
+  onAddAttachment?: () => void;
 } = {}) => {
   const composerStore = useComposerStore();
 
@@ -50,13 +43,24 @@ const useComposerAddAttachmentImage = ({
 
         if (result.canceled || !result.assets?.length) return;
 
+        let addedCount = 0;
+
         for (const asset of result.assets) {
           const file = await uriToFile(
             asset.uri,
             asset.fileName || `image-${Date.now()}.jpg`,
             asset.mimeType || "image/jpeg",
           );
-          await addAttachment(file);
+          await addAttachment(
+            fileToNativeAttachment(file as File & { uri?: string }, {
+              type: "image",
+            }),
+          );
+          addedCount += 1;
+        }
+
+        if (addedCount > 0) {
+          onAddAttachment?.();
         }
       } catch (error) {
         Alert.alert("Error", "Failed to pick image. Please try again.");
@@ -64,7 +68,7 @@ const useComposerAddAttachmentImage = ({
     };
 
     pickImage();
-  }, [composerStore, multiple]);
+  }, [composerStore, multiple, onAddAttachment]);
 
   return callback;
 };
@@ -77,5 +81,5 @@ export namespace ComposerPrimitiveAddAttachmentImage {
 export const ComposerPrimitiveAddAttachmentImage = createActionButton(
   "ComposerPrimitive.AddAttachmentImage",
   useComposerAddAttachmentImage,
-  ["multiple"],
+  ["multiple", "onAddAttachment"],
 );

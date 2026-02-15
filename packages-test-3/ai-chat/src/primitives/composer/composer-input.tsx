@@ -18,6 +18,7 @@ import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 import { composeEventHandlers } from "../../utils/compose-event-handlers";
 import { useEscapeKeydown } from "../../hooks/use-escape-keydown";
 import { useComposedRefs } from "@creatorem/ai-chat/utils";
+import { fileToAttachment } from "../../utils/file-to-attachment";
 
 export namespace ComposerPrimitiveInput {
   export type Element = RuntimeComponents['Input'];
@@ -100,7 +101,6 @@ export const ComposerPrimitiveInput = forwardRef<
     const isThreadRunning = useThread(s => s.isRunning);
     const threadCapabilities = useThread(s => s.capabilities);
     const { components: { Input } } = useRuntime();
-    console.log( {composerType} )
 
     const value = useMemo(() => {
       return text;
@@ -153,7 +153,11 @@ export const ComposerPrimitiveInput = forwardRef<
         try {
           e.preventDefault();
           await Promise.all(
-            files.map((file) => composerStore.getState().addAttachment(file)),
+            files.map((file) =>
+              composerStore
+                .getState()
+                .addAttachment(fileToAttachment(file)),
+            ),
           );
         } catch (error) {
           console.error("Error adding attachment:", error);
@@ -202,8 +206,6 @@ export const ComposerPrimitiveInput = forwardRef<
 
       return eventHandler.on("threadListItem.switchedTo", focus);
     }, [unstable_focusOnThreadSwitched, eventHandler, focus, composerType]);
-
-    console.log( 'ComposerPrimitiveInput' )
 
     return (
       <Input
