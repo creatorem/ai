@@ -125,9 +125,9 @@ export const WeatherToolRegistration: FC = () => {
   useToolUI({
     toolName: "weather",
     display: {
-      icon: 'CloudSun' as IconName,
-      title: 'Weather',
-      description: 'Get the weather forecast for a location',
+      icon: "CloudSun" as IconName,
+      title: "Weather",
+      description: "Get the weather forecast for a location",
     },
     render: WeatherToolCard,
   });

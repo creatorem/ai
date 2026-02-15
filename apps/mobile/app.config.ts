@@ -29,7 +29,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     // for native tabs
     softwareKeyboardLayoutMode: "pan",
     adaptiveIcon: {
-   foregroundImage: './assets/pwa-logo/apple-icon-180.png',
+      foregroundImage: "./assets/pwa-logo/apple-icon-180.png",
       backgroundColor: "#ffffff",
     },
     package: "com.creatorem.ai.chat.demo",

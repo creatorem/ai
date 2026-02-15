@@ -13,7 +13,6 @@ import { useCSSVariable } from "uniwind";
 import { fetch as expoFetch } from "expo/fetch";
 import { appNativeComponents } from "~/components/ai-chat/components-provider";
 
-
 export const drawerRef = React.createRef();
 
 export default function RootLayout() {

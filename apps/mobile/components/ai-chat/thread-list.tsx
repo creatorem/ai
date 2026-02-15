@@ -33,7 +33,7 @@ const ThreadListNew: FC = () => {
   return (
     <ThreadListPrimitive.New
       variant="ghost"
-      className="mb-4 h-12 bg-muted justify-start gap-2 rounded-xl px-3 text-sm hover:bg-background data-active:bg-muted"
+      className="mb-4 h-12 justify-start gap-2 rounded-xl bg-muted px-3 text-sm hover:bg-background data-active:bg-muted"
       onPress={() => {
         setDrawerOpen(false);
       }}

@@ -91,7 +91,9 @@ const defaultComponents = {
     </Text>
   ),
   h5: ({ children }) => (
-    <Text className={cn("mt-4 mb-2 font-semibold text-lg first:mt-0 last:mb-0")}>
+    <Text
+      className={cn("mt-4 mb-2 font-semibold text-lg first:mt-0 last:mb-0")}
+    >
       {children}
     </Text>
   ),
@@ -109,23 +111,21 @@ const defaultComponents = {
       {children}
     </Link>
   ),
-  strong: ({ children }) => (
-      <Text className={cn("font-bold")}>{children}</Text>
-  ),
+  strong: ({ children }) => <Text className={cn("font-bold")}>{children}</Text>,
   blockquote: ({ children }) => (
     <Text className={cn("border-l-2 pl-6 italic")}>{children}</Text>
   ),
   ul: ({ children }) => (
-    <View className={cn("my-5 flex gap-4 flex-col")}>{children}</View>
+    <View className={cn("my-5 flex flex-col gap-4")}>{children}</View>
   ),
   li: ({ children }) => (
     <View className="flex flex-row items-start gap-4">
-      <View className="bg-foreground mt-2.5 h-2 w-2 rounded-full" />
+      <View className="mt-2.5 h-2 w-2 rounded-full bg-foreground" />
       <Text className="leading-7">{children}</Text>
     </View>
   ),
   ol: ({ children }) => (
-    <Text className={cn("my-5 flex gap-4 flex-col")}>{children}</Text>
+    <Text className={cn("my-5 flex flex-col gap-4")}>{children}</Text>
   ),
   hr: () => <View className={cn("my-5 border-b")} />,
   table: ({ children }) => (
@@ -168,7 +168,10 @@ const defaultComponents = {
     return (
       <View className="translate-y-[15px]">
         <Text
-          className={cn(!isCodeBlock && "rounded-lg border px-1 border-input leading-6 bg-muted font-semibold")}
+          className={cn(
+            !isCodeBlock &&
+              "rounded-lg border border-input bg-muted px-1 font-semibold leading-6",
+          )}
         >
           {children}
         </Text>

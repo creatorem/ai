@@ -127,25 +127,25 @@ const SUGGESTIONS: {
   prompt: string;
   icon: IconName;
 }[] = [
-    {
-      title: "Short prompt",
-      label: "like 100 words",
-      prompt: "Summarize the second world war in 100 words",
-      icon: "Bell",
-    },
-    {
-      title: "What's the weather",
-      label: "in San Francisco?",
-      prompt: "What's the weather in San Francisco?",
-      icon: "Bell",
-    },
-    {
-      title: "Explain React hooks",
-      label: "like useState and useEffect",
-      prompt: "Explain React hooks like useState and useEffect",
-      icon: "Code",
-    },
-  ];
+  {
+    title: "Short prompt",
+    label: "like 100 words",
+    prompt: "Summarize the second world war in 100 words",
+    icon: "Bell",
+  },
+  {
+    title: "What's the weather",
+    label: "in San Francisco?",
+    prompt: "What's the weather in San Francisco?",
+    icon: "Bell",
+  },
+  {
+    title: "Explain React hooks",
+    label: "like useState and useEffect",
+    prompt: "Explain React hooks like useState and useEffect",
+    icon: "Code",
+  },
+];
 
 const ThreadSuggestions: FC = () => {
   return (
@@ -300,9 +300,9 @@ const ModelSelector: React.FC = () => {
 };
 
 const ToolsSelector: React.FC = () => {
-	return (
+  return (
     <>
-      <ComposerPrimitive.SelectTools 
+      <ComposerPrimitive.SelectTools
         header={
           <>
             <Divider />
@@ -313,21 +313,36 @@ const ToolsSelector: React.FC = () => {
           <Pressable className="flex-1 active:opacity-50" onPress={toggle}>
             <View className="flex-1 p-2">
               <View className="mb-1 flex flex-row gap-2 text-lg">
-                <Text className={cn("font-bold", isEnabled ? "text-cyan-500" : "")}>{toolName.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</Text>
+                <Text
+                  className={cn("font-bold", isEnabled ? "text-cyan-500" : "")}
+                >
+                  {toolName
+                    .replace(/-/g, " ")
+                    .replace(/\b\w/g, (c) => c.toUpperCase())}
+                </Text>
                 <Icon name="Brain" size={20} />
               </View>
-              <Text className={cn("text-muted-foreground text-sm", isEnabled ? "text-cyan-500" : "")}>
+              <Text
+                className={cn(
+                  "text-muted-foreground text-sm",
+                  isEnabled ? "text-cyan-500" : "",
+                )}
+              >
                 Groundbreaking advancements in reasoning
               </Text>
             </View>
             {isEnabled && (
-              <Icon name="Check" size={20} color={isEnabled ? "#00b8db" : undefined} />
+              <Icon
+                name="Check"
+                size={20}
+                color={isEnabled ? "#00b8db" : undefined}
+              />
             )}
-            
           </Pressable>
-      )} />
+        )}
+      />
     </>
-	);
+  );
 };
 
 const ComposerAction: FC = () => {
