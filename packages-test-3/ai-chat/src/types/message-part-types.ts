@@ -1,5 +1,5 @@
 import { Thread } from "./entities";
-import { ReadonlyJSONObject } from "../stream/tool-response";
+import { ReadonlyJSONObject } from "./tool-response";
 
 export type TextMessagePart = {
   readonly type: "text";

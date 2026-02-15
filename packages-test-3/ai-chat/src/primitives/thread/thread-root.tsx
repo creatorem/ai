@@ -13,14 +13,11 @@ import {
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createStore, useStore, type StoreApi } from 'zustand';
 import { Thread, ThreadCapabilities } from '../../types/entities';
-import { useAiContext, useThreads } from "../../ai-provider";
+import { useAiContext, useAiContextStore, useThreads } from "../../ai-provider";
 import { ComposerCtxType } from "../composer/composer-provider";
 import { MessageRepository } from "../../utils/message-repository";
 import { AttachmentsProvider } from "../attachment/attachment-by-index-provider";
-import { ToolCallMessagePartComponent } from "../../types/message-part-component-types";
-import { Unsubscribe } from "../../types/unsuscribe";
-import { toToolsJSONSchema } from "../../stream/schema-utils";
-import { Tool } from "../../stream/tool-types";
+import { toToolsJSONSchema } from "../../utils/schema-utils";
 import { BODY_KEY } from "../../utils/request-keys";
 
 export type CustomUIDataTypes = {
@@ -41,22 +38,6 @@ export type CustomUIDataTypes = {
 export type ThreadMethods = {
 };
 
-export type ToolsState = {
-    tools: Record<string, ToolCallMessagePartComponent[]>;
-    registry: Record<string, Tool<any, any>>;
-};
-
-export type ToolsMethods = {
-    setToolUI(
-        toolName: string,
-        render: ToolCallMessagePartComponent,
-    ): Unsubscribe;
-    registerTool(
-        toolName: string,
-        tool: Tool<any, any>,
-    ): Unsubscribe;
-};
-
 export type ThreadCtxType = Thread & Omit<ReturnType<typeof useChat<Thread['messages'][0]>>, 'status' | 'setMessages' | 'sendMessage'> & {
     dataStream: DataUIPart<CustomUIDataTypes>[];
     setDataStream: React.Dispatch<
@@ -73,7 +54,6 @@ export type ThreadCtxType = Thread & Omit<ReturnType<typeof useChat<Thread['mess
     switchToBranch: (messageId: string) => void;
     /** The StoreApi of the first composer mounted within this thread. */
     composerStore: StoreApi<ComposerCtxType> | null,
-    tools: ToolsState & { methods: ToolsMethods };
 }
 
 function stripClosingDelimiters(json: string) {
@@ -186,13 +166,7 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
     const eventHandler = useAiContext(s => s.eventHandler);
     const adapters = useAiContext(s => s.adapters);
     const chatOptions = useAiContext(s => s.chatOptions);
-    const contextTools = useAiContext(s => s.tools);
-    const toolkit = useAiContext(s => s.toolkit);
-    const system = useAiContext(s => s.system);
-    const callSettings = useAiContext(s => s.callSettings);
-    const config = useAiContext(s => s.config);
-    const selectedModel = useAiContext(s => s.selectedModel);
-    const disabledTools = useAiContext(s => s.disabledTools);
+    const aiContextStore = useAiContextStore();
     const activeThreadId = useThreads(s => s.activeThreadId);
     const [title, setTitle] = useState('New thread');
     const [status, setStatus] = useState<Thread['status']>('regular');
@@ -200,16 +174,6 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
     const [isDisabled, setIsDisabled] = useState(false);
     const [editingComposers, setEditingComposers] = useState<string[]>([]);
     const [capabilities, setCapabilities] = useState<ThreadCapabilities>({
-        // switchToBranch: false,
-        // switchBranchDuringRun: false,
-        // edit: false,
-        // reload: false,
-        // cancel: false,
-        // unstable_copy: false,
-        // speech: false,
-        // dictation: false,
-        // attachments: false,
-        // feedback: false,
         switchToBranch: true,
         switchBranchDuringRun: true,
         edit: true,
@@ -225,33 +189,12 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
         []
     );
 
-    const toolsRef = useRef<Record<string, Tool<any, any>>>({});
-    const modelContextRef = useRef<{
-        tools: Record<string, Tool<any, any>>;
-        system?: string;
-        callSettings?: unknown;
-        config?: unknown;
-        selectedModel?: string;
-        disabledTools?: string[];
-    }>({ tools: {} });
-    const addToolOutputRef = useRef<
-        null | ((
-            args: {
-                tool: string;
-                toolCallId: string;
-                output?: unknown;
-                state?: "output-available" | "output-error";
-                errorText?: string;
-            }
-        ) => Promise<void>)
-    >(null);
-
     const transportRef = useRef<DefaultChatTransport<Thread['messages'][0]> | null>(null);
     if (transportRef.current === null) {
         transportRef.current = new DefaultChatTransport({
             ...chatOptions?.transportOptions,
             prepareSendMessagesRequest: async (options) => {
-                const context = modelContextRef.current;
+                const ctx = aiContextStore.getState();
                 return {
                     ...options,
                     body: {
@@ -261,12 +204,12 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
                         trigger: options.trigger,
                         messageId: options.messageId,
                         metadata: options.requestMetadata,
-                        ...(context.system ? { system: context.system } : {}),
-                        ...(context.callSettings ? { callSettings: context.callSettings } : {}),
-                        ...(context.config ? { config: context.config } : {}),
-                        [BODY_KEY.SELECTED_MODEL]: context.selectedModel ?? "",
-                        [BODY_KEY.DISABLED_TOOLS]: context.disabledTools ?? [],
-                        tools: toToolsJSONSchema(Object.values(toolsRef.current) as any) as any,
+                        ...(ctx.system ? { system: ctx.system } : {}),
+                        ...(ctx.callSettings ? { callSettings: ctx.callSettings } : {}),
+                        ...(ctx.config ? { config: ctx.config } : {}),
+                        [BODY_KEY.SELECTED_MODEL]: ctx.selectedModel ?? "",
+                        [BODY_KEY.DISABLED_TOOLS]: Object.entries(ctx.tools).map(([,t]) => t.disabled ? t.toolName : null).filter((t) => t !== null),
+                        [BODY_KEY.TOOLS]: toToolsJSONSchema(ctx.tools),
                     },
                 };
             },
@@ -287,28 +230,17 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
         ...chatOptions,
         onToolCall: async ({ toolCall }) => {
             chatOptions?.onToolCall?.({ toolCall })
-            const tool = toolsRef.current?.[toolCall.toolName];
+            const tool = aiContextStore.getState().tools?.[toolCall.toolName];
             if (!tool?.execute) return;
             try {
-                const result = await tool.execute(toolCall.input as any, {
+                await tool.execute(toolCall.input as any, {
                     toolCallId: toolCall.toolCallId,
                     abortSignal: new AbortController().signal,
                     human: async () => {
                         throw new Error("Human input is not supported in this runtime");
                     },
                 });
-                await addToolOutputRef.current?.({
-                    tool: toolCall.toolName as any,
-                    toolCallId: toolCall.toolCallId,
-                    output: result as any,
-                });
             } catch (err) {
-                await addToolOutputRef.current?.({
-                    tool: toolCall.toolName as any,
-                    toolCallId: toolCall.toolCallId,
-                    state: "output-error",
-                    errorText: err instanceof Error ? err.message : String(err),
-                });
             }
         },
         onData: (dataPart) => {
@@ -524,7 +456,7 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
     // Create store once
     const storeRef = useRef<StoreApi<ThreadCtxType> | null>(null);
     if (storeRef.current === null) {
-        storeRef.current = createStore<ThreadCtxType>((set) => ({
+        storeRef.current = createStore<ThreadCtxType>(() => ({
             id,
             isEmpty: viewMessages.length === 0,
             isDisabled,
@@ -548,78 +480,9 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
             getBranches,
             switchToBranch: switchToBranchFn,
             composerStore: null,
-            tools: {
-                tools: {},
-                registry: {},
-                methods: {
-                    setToolUI: (toolName, render) => {
-                        set((prev) => ({
-                            tools: {
-                                ...prev.tools,
-                                tools: {
-                                    ...prev.tools.tools,
-                                    [toolName]: [
-                                        ...(prev.tools.tools[toolName] ?? []),
-                                        render,
-                                    ],
-                                },
-                            },
-                        }));
-
-                        return () => {
-                            set((prev) => ({
-                                tools: {
-                                    ...prev.tools,
-                                    tools: {
-                                        ...prev.tools.tools,
-                                        [toolName]:
-                                            prev.tools.tools[toolName]?.filter(
-                                                (r) => r !== render,
-                                            ) ?? [],
-                                    },
-                                },
-                            }));
-                        };
-                    },
-                    registerTool: (toolName, tool) => {
-                        set((prev) => {
-                            const existing = prev.tools.registry[toolName];
-                            if (existing && existing !== tool) {
-                                throw new Error(
-                                    `Tool "${toolName}" is already registered.`,
-                                );
-                            }
-                            return {
-                                tools: {
-                                    ...prev.tools,
-                                    registry: {
-                                        ...prev.tools.registry,
-                                        [toolName]: tool,
-                                    },
-                                },
-                            };
-                        });
-
-                        return () => {
-                            set((prev) => {
-                                if (prev.tools.registry[toolName] !== tool) return prev;
-                                const { [toolName]: _, ...rest } = prev.tools.registry;
-                                return {
-                                    tools: {
-                                        ...prev.tools,
-                                        registry: rest,
-                                    },
-                                };
-                            });
-                        };
-                    },
-                },
-            },
             ...other
         }));
     }
-
-    addToolOutputRef.current = other.addToolOutput as any;
 
     // Sync state after render (avoids "setState during render" warning)
     useLayoutEffect(() => {
@@ -648,73 +511,6 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
             ...other
         });
     });
-
-    useLayoutEffect(() => {
-        toolsRef.current = storeRef.current!.getState().tools.registry;
-        modelContextRef.current = {
-            tools: toolsRef.current,
-            system,
-            callSettings,
-            config,
-            selectedModel: selectedModel ?? undefined,
-            disabledTools: disabledTools ?? [],
-        };
-    }, []);
-
-    useEffect(() => {
-        if (!storeRef.current) return;
-        const unsubscribe = storeRef.current.subscribe((state) => {
-            toolsRef.current = state.tools.registry;
-            modelContextRef.current = {
-                tools: toolsRef.current,
-                system,
-                callSettings,
-                config,
-                selectedModel: selectedModel ?? undefined,
-                disabledTools: disabledTools ?? [],
-            };
-        });
-        return unsubscribe;
-    }, [system, callSettings, config, selectedModel, disabledTools]);
-
-    useEffect(() => {
-        if (!storeRef.current) return;
-        const unsubs: Unsubscribe[] = [];
-        const toolkitEntries = Object.entries(toolkit ?? {});
-        const toolkitNames = new Set(toolkitEntries.map(([name]) => name));
-
-        for (const [toolName, toolDef] of toolkitEntries) {
-            if (toolDef.render) {
-                unsubs.push(
-                    storeRef.current.getState().tools.methods.setToolUI(
-                        toolName,
-                        toolDef.render,
-                    ),
-                );
-            }
-            const { render, ...rest } = toolDef;
-            unsubs.push(
-                storeRef.current.getState().tools.methods.registerTool(
-                    toolName,
-                    rest,
-                ),
-            );
-        }
-
-        for (const [toolName, tool] of Object.entries(contextTools ?? {})) {
-            if (toolkitNames.has(toolName)) continue;
-            unsubs.push(
-                storeRef.current.getState().tools.methods.registerTool(
-                    toolName,
-                    tool as any,
-                ),
-            );
-        }
-
-        return () => {
-            unsubs.forEach((fn) => fn());
-        };
-    }, [toolkit, contextTools]);
 
     return <ThreadStoreCtx.Provider value={storeRef.current}>
         <AttachmentsProvider attachments={[]} removeAttachment={_noopRemoveAttachment}>

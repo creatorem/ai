@@ -1,7 +1,7 @@
 import { createOpenAI } from "@ai-sdk/openai";
 import { streamText, convertToModelMessages, type UIMessage, smoothStream } from "ai";
 import { weatherTool } from "../../../lib/tools/weather-tool";
-import { getModel, getDisabledToolsFiter } from "@creatorem/ai-chat/server";
+import { getServerUtils } from "@creatorem/ai-chat/server";
 import { DEFAULT_AI_MODEL } from "@/lib/ai-constants";
 
 const groq = createOpenAI({
@@ -11,14 +11,15 @@ const groq = createOpenAI({
 
 export async function POST(req: Request) {
   const { messages, ...body }: { messages: UIMessage[] } = await req.json();
+  const { getModel, toolsFilter, frontendTools } = getServerUtils(body);
 
-  const model = groq(getModel(body) ?? DEFAULT_AI_MODEL)
-  const toolsFilter = getDisabledToolsFiter(body);
+  const model = groq(getModel() ?? DEFAULT_AI_MODEL)
 
   const result = streamText({
     model,
     messages: await convertToModelMessages(messages),
     tools: toolsFilter({
+      ...frontendTools,
       weather: weatherTool,
     }),
     experimental_transform: smoothStream({

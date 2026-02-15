@@ -6,9 +6,9 @@ import { createStore, useStore, type StoreApi } from 'zustand';
 import { ThreadAdapter, AttachmentAdapter, DictationAdapter } from "./types/adapters";
 import { emptyStorageThreadAdapter } from "./adapters/empty-storage-adapter";
 import { Thread, Threads } from "./types/entities";
-import { useChat, UseChatOptions } from "@ai-sdk/react";
+import { UseChatOptions } from "@ai-sdk/react";
 import { AiChatEventHandler, AiChatEvents } from "./primitives/events";
-import type { Toolkit } from "./types/toolbox";
+import { UITool } from "./types/tools-types";
 
 type LanguageModelV1CallSettings = {
     maxTokens?: number;
@@ -26,6 +26,7 @@ type LanguageModelConfig = {
     modelName?: string;
 };
 
+
 export type AiContextType = {
     adapters?: {
         attachment?: AttachmentAdapter;
@@ -34,18 +35,19 @@ export type AiContextType = {
     }
     priority?: number | undefined;
     system?: string | undefined;
-    tools?: Record<string, Tool<any, any>> | undefined;
-    toolkit?: Toolkit | undefined;
     callSettings?: LanguageModelV1CallSettings | undefined;
     config?: LanguageModelConfig | undefined;
     selectedModel: string | null;
     setSelectedModel: (selectedModel: string | null) => void;
-    disabledTools: string[];
-    setDisabledTools: (disabledTools: string[]) => void;
     chatOptions?: Omit<UseChatOptions<Thread['messages'][0]> & ChatInit<Thread['messages'][0]>, 'id' | 'transport'> & {
         transportOptions?: HttpChatTransportInitOptions<Thread['messages'][0]>
     }
     eventHandler: AiChatEventHandler
+    
+    tools: Record<string,UITool<any, any>>
+    upsertTool: (
+        tool: UITool<any, any>
+    ) => void;
 };
 
 const AiContextStoreCtx = React.createContext<StoreApi<AiContextType> | null>(null);
@@ -72,16 +74,24 @@ export const useAiEvent = <TEvent extends keyof AiChatEvents>(name: TEvent, p: (
     }, [eventHandler, name, p])
 };
 
-export function AiProvider({ children, ...value }: { children: React.ReactNode } & Omit<AiContextType, 'eventHandler' | 'selectedModel' | 'disabledTools' | 'setSelectedModel' | 'setDisabledTools'> & Partial<Pick<AiContextType, 'selectedModel' | 'disabledTools'>>) {
+export function AiProvider({ children, ...value }: { children: React.ReactNode } & Omit<AiContextType, 'eventHandler' | 'selectedModel' | 'tools' | 'upsertTool'>) {
     // Create store once
     const storeRef = useRef<StoreApi<AiContextType> | null>(null);
     if (storeRef.current === null) {
         storeRef.current = createStore<AiContextType>((set) => ({
             ...value,
-            selectedModel: value.selectedModel ?? null,
+            selectedModel: null,
             setSelectedModel: (selectedModel) => set({ selectedModel }),
-            disabledTools: value.disabledTools ?? [],
-            setDisabledTools: (disabledTools) => set({ disabledTools }),
+            tools: {},
+            upsertTool: (tool) => {
+                const toolName = tool.toolName;
+                set((prev) => ({
+                    tools: {
+                        ...prev.tools,
+                        [toolName]: tool,
+                    },
+                }));
+            },
             eventHandler: new AiChatEventHandler(),
         }));
     }

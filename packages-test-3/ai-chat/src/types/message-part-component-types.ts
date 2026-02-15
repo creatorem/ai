@@ -14,7 +14,7 @@ import {
   ThreadUserMessagePart,
   ThreadAssistantMessagePart,
 } from "./message-part-types";
-import { ToolResponse } from "../stream/tool-response";
+import { ToolResponse } from "./tool-response";
 
 export type MessagePartState = (
   | ThreadUserMessagePart

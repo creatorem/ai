@@ -1,6 +1,6 @@
 import type { JSONSchema7 } from "json-schema";
 import type { StandardSchemaV1 } from "@standard-schema/spec";
-import type { Tool } from "./tool-types";
+import { UITool } from "../types/tools-types";
 
 /**
  * Type for a tool definition with JSON Schema parameters.
@@ -8,14 +8,6 @@ import type { Tool } from "./tool-types";
 export type ToolJSONSchema = {
   description?: string;
   parameters: JSONSchema7;
-};
-
-export type ToToolsJSONSchemaOptions = {
-  /**
-   * Filter to determine which tools to include.
-   * Defaults to excluding disabled tools and backend tools.
-   */
-  filter?: (name: string, tool: Tool) => boolean;
 };
 
 function isStandardSchema(schema: unknown): schema is StandardSchemaV1 & {
@@ -82,31 +74,24 @@ export function toJSONSchema(
   return schema as JSONSchema7;
 }
 
-function defaultToolFilter(_name: string, tool: Tool): boolean {
-  return !tool.disabled && tool.type !== "backend";
-}
-
 /**
  * Converts a record of tools to a record of tool definitions with JSON Schema parameters.
  * By default, filters out disabled tools and backend tools.
  */
 export function toToolsJSONSchema(
-  tools: Record<string, Tool> | undefined,
-  options: ToToolsJSONSchemaOptions = {},
+  tools: Record<string, UITool<any, any>> | undefined,
 ): Record<string, ToolJSONSchema> {
   if (!tools) return {};
 
-  const filter = options.filter ?? defaultToolFilter;
-
   return Object.fromEntries(
     Object.entries(tools)
-      .filter(([name, tool]) => filter(name, tool) && tool.parameters)
-      .map(([name, tool]) => [
+      .map(([name, tool]) => tool.type === 'frontend' && tool.parameters ? [
         name,
         {
           ...(tool.description && { description: tool.description }),
           parameters: toJSONSchema(tool.parameters!),
         },
-      ]),
+      ] : null)
+      .filter((r) =>  r !== null)
   );
 }

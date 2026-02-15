@@ -1,5 +1,5 @@
 import { FC, useCallback, type ReactNode } from "react";
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 
 import { Icon, IconName } from "../ui/icon";
 import { Text } from "../ui/text";
@@ -299,6 +299,37 @@ const ModelSelector: React.FC = () => {
   );
 };
 
+const ToolsSelector: React.FC = () => {
+	return (
+    <>
+      <ComposerPrimitive.SelectTools 
+        header={
+          <>
+            <Divider />
+            <Text className="font-bold">Tools</Text>
+          </>
+        }
+        toolUI={({ toolName, toggle, isEnabled }) => (
+          <Pressable className="flex-1 active:opacity-50" onPress={toggle}>
+            <View className="flex-1 p-2">
+              <View className="mb-1 flex flex-row gap-2 text-lg">
+                <Text className={cn("font-bold", isEnabled ? "text-cyan-500" : "")}>{toolName.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</Text>
+                <Icon name="Brain" size={20} />
+              </View>
+              <Text className={cn("text-muted-foreground text-sm", isEnabled ? "text-cyan-500" : "")}>
+                Groundbreaking advancements in reasoning
+              </Text>
+            </View>
+            {isEnabled && (
+              <Icon name="Check" size={20} color={isEnabled ? "#00b8db" : undefined} />
+            )}
+            
+          </Pressable>
+      )} />
+    </>
+	);
+};
+
 const ComposerAction: FC = () => {
   const textMutedForeground = useCSSVariable("--color-muted-foreground");
   const borderColor = useCSSVariable("--color-border");
@@ -322,11 +353,8 @@ const ComposerAction: FC = () => {
           <ComposerAddAttachmentSheet />
           <Divider />
           <ModelSelector />
+          <ToolsSelector />
         </View>
-        {/* <View className="h-40 px-4">
-          <ComposerAddAttachmentFile />
-          <ComposerAddAttachmentImage />
-        </View> */}
       </ActionSheetContent>
     </ActionSheet>
   );

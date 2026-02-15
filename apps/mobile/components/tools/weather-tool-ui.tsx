@@ -1,9 +1,10 @@
 import { FC, useMemo } from "react";
 import { View } from "react-native";
-import { useAssistantToolUI } from "@creatorem/ai-chat";
+import { useToolUI } from "@creatorem/ai-chat";
 import type { ToolCallMessagePartProps } from "@creatorem/ai-chat/types/message-part-component-types";
 import { Text } from "../ui/text";
 import { cn } from "~/lib/cn";
+import { IconName } from "../ui/icon";
 
 const HOUR_LABELS = ["1PM", "2PM", "3PM", "4PM", "5PM"] as const;
 
@@ -121,8 +122,13 @@ const WeatherToolCard: FC<ToolCallMessagePartProps> = ({
 };
 
 export const WeatherToolRegistration: FC = () => {
-  useAssistantToolUI({
+  useToolUI({
     toolName: "weather",
+    display: {
+      icon: 'CloudSun' as IconName,
+      title: 'Weather',
+      description: 'Get the weather forecast for a location',
+    },
     render: WeatherToolCard,
   });
   return null;

@@ -16,6 +16,7 @@ import {
 	MoreHorizontalIcon,
 	PencilIcon,
 	RefreshCwIcon,
+	Settings2Icon,
 	SquareIcon,
 } from "lucide-react";
 import { TooltipIconButton } from "@/components/ai-chat/tooltip-icon-button";
@@ -62,8 +63,7 @@ import * as BranchPickerPrimitive from "@creatorem/ai-react/primitives/branch-pi
 import * as ThreadPrimitive from "@creatorem/ai-react/primitives/thread";
 import * as MessagePrimitive from "@creatorem/ai-react/primitives/message";
 import { AI_MODELS, DEFAULT_AI_MODEL } from "@/lib/ai-constants";
-import { useCallback } from "react";
-import { InputGroup } from "@/components/ui/input-group";
+import { Switch } from "@/components/ui/switch";
 
 export default function Chat() {
 	return (
@@ -321,11 +321,50 @@ const ModelSelector: React.FC = () => {
 	);
 };
 
+const ToolsSelector: React.FC = () => {
+	return (
+		<DropdownMenu>
+			<DropdownMenuTrigger asChild>
+				<Button variant="ghost">
+					<Settings2Icon className="size-4" />
+					Tools
+				</Button>
+			</DropdownMenuTrigger>
+			<DropdownMenuContent side="top" align="start" className="z-90 w-64 [--radius:0.95rem]">
+				<DropdownMenuLabel>AI Tools</DropdownMenuLabel>
+				<DropdownMenuSeparator />
+				<ComposerPrimitive.SelectTools empty={(
+					<DropdownMenuItem disabled>No tools available</DropdownMenuItem>
+				)} toolUI={({ toolName, toggle, isEnabled }) => (
+					<DropdownMenuItem
+						key={toolName}
+						onSelect={toggle}
+						className="flex cursor-pointer items-center justify-between gap-2"
+					>
+						<div className="flex flex-col items-start">
+							{toolName.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
+						</div>
+						{/* {isEnabled && (
+							<CheckIcon className="text-primary size-4" />
+						)} */}
+						<Switch
+							checked={isEnabled}
+							onCheckedChange={() => toggle()}
+							onClick={(e) => e.stopPropagation()}
+						/>
+					</DropdownMenuItem>
+				)} />
+			</DropdownMenuContent>
+		</DropdownMenu>
+	);
+};
+
 const ComposerAction: FC = () => {
 	return (
 		<div className="aui-composer-action-wrapper relative mx-2 mb-2 flex items-center justify-between">
 			<div className="flex">
 				<ComposerAddAttachment />
+				<ToolsSelector />
 			</div>
 
 			<div className="flex gap-2">

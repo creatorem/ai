@@ -3,6 +3,7 @@
 import type { FC } from "react";
 import { useMessage } from "../message";
 import { useRuntime } from "@creatorem/ai-chat/runtime";
+import { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 
 const useBranchPickerCount = () => {
   return useMessage(s => s.branchCount);

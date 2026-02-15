@@ -1,7 +1,7 @@
 "use client";
 
 import { FC } from "react";
-import { useAssistantToolUI } from "@creatorem/ai-react";
+import { useToolUI } from "@creatorem/ai-react";
 import type { ToolCallMessagePartProps } from "@creatorem/ai-chat/types/message-part-component-types";
 
 const HOUR_LABELS = ["1PM", "2PM", "3PM", "4PM", "5PM"] as const;
@@ -177,7 +177,7 @@ const WeatherToolCard: FC<ToolCallMessagePartProps> = ({
 };
 
 export const WeatherToolRegistration: FC = () => {
-  useAssistantToolUI({
+  useToolUI({
     toolName: "weather",
     render: WeatherToolCard,
   });

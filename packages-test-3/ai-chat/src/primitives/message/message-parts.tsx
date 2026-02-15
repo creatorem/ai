@@ -13,7 +13,7 @@ import { MessagePartPrimitiveImage } from "../message-part/message-part-image";
 import { PartByIndexProvider, usePart } from "../message-part/part-by-index-provider";
 import { TextMessagePartProvider } from "./text-message-part-provider";
 import { useMessage } from "./message-by-index-provider";
-import { useThread } from "../thread/thread-root";
+import { useAiContext } from "../../ai-provider";
 import type {
   Unstable_AudioMessagePartComponent,
   EmptyMessagePartComponent,
@@ -263,8 +263,8 @@ const ToolUIDisplay = ({
 }: {
   Fallback: ToolCallMessagePartComponent | undefined;
 } & ToolCallMessagePartProps) => {
-  const toolUIs = useThread((s) => s.tools.tools);
-  const Render = toolUIs[props.toolName] ?? Fallback;
+  const tools = useAiContext((s) => s.tools);
+  const Render = tools[props.toolName]?.render ?? Fallback;
   if (!Render) return null;
   const Resolved = Array.isArray(Render) ? (Render[0] ?? Fallback) : Render;
   if (!Resolved) return null;

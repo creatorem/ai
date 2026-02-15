@@ -17,7 +17,7 @@ const defaultComponents: RuntimeComponents = {
   Box: ({ children, ...props }) => <div {...props}>{children}</div>,
   // Form: ({ children, ...props }) => <div {...props}>{children}</div>,
   Text: React.Fragment,
-  Button: ({ children, variant, size, ...props }) => <button {...props}>{children}</button>,
+  Button: ({ children, ...props }) => <button {...props}>{children}</button>,
   // ScrollArea: ({ children, ...props }) => <div {...props} style={{ overflow: 'auto', ...props.style }}>{children}</div>,
   Input: ({onChange: onChangeProp, ...props}) => <textarea {...props} onChange={(e) => onChangeProp?.(e.target.value, e)} />,
   
@@ -31,7 +31,7 @@ const defaultComponents: RuntimeComponents = {
   Avatar: (props) => <img {...props} alt="Avatar" />,
   
   // Attachments
-  ComposerPrimitiveAddAttachment: ({ children, variant, size, ...props }) => <button {...props}>{children}</button>,
+  ComposerPrimitiveAddAttachment: ({ children, ...props }) => <button {...props}>{children}</button>,
 
   // Layout
   Separator: (props) => <hr {...props} />,
