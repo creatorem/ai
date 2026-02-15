@@ -127,25 +127,25 @@ const SUGGESTIONS: {
   prompt: string;
   icon: IconName;
 }[] = [
-  {
-    title: "Short prompt",
-    label: "like 100 words",
-    prompt: "Summarize the second world war in 100 words",
-    icon: "Bell",
-  },
-  {
-    title: "What's the weather",
-    label: "in San Francisco?",
-    prompt: "What's the weather in San Francisco?",
-    icon: "Bell",
-  },
-  {
-    title: "Explain React hooks",
-    label: "like useState and useEffect",
-    prompt: "Explain React hooks like useState and useEffect",
-    icon: "Code",
-  },
-];
+    {
+      title: "Short prompt",
+      label: "like 100 words",
+      prompt: "Summarize the second world war in 100 words",
+      icon: "Bell",
+    },
+    {
+      title: "What's the weather",
+      label: "in San Francisco?",
+      prompt: "What's the weather in San Francisco?",
+      icon: "Bell",
+    },
+    {
+      title: "Explain React hooks",
+      label: "like useState and useEffect",
+      prompt: "Explain React hooks like useState and useEffect",
+      icon: "Code",
+    },
+  ];
 
 const ThreadSuggestions: FC = () => {
   return (
@@ -225,7 +225,7 @@ const modelLabels: Record<(typeof AI_MODELS)[number], React.ReactNode> = {
   [DEFAULT_AI_MODEL]: (
     <View className="flex-1 p-2">
       <View className="mb-1 flex flex-row gap-2 text-lg">
-        <Text>{DEFAULT_AI_MODEL}</Text>
+        <Text>Llama 3.3 70B (Versatile)</Text>
         <Icon name="Gauge" size={20} />
       </View>
       <Text className="text-muted-foreground text-sm">
@@ -236,7 +236,7 @@ const modelLabels: Record<(typeof AI_MODELS)[number], React.ReactNode> = {
   "meta-llama/llama-4-scout-17b-16e-instruct": (
     <View className="flex-1 p-2">
       <View className="mb-1 flex flex-row gap-2 text-lg">
-        <Text>meta-llama/llama-4-scout-17b-16e-instruct</Text>
+        <Text>Llama 4 Scout 17B 16E</Text>
         <Icon name="Image" size={20} />
       </View>
       <Text className="text-muted-foreground text-sm">
@@ -247,7 +247,7 @@ const modelLabels: Record<(typeof AI_MODELS)[number], React.ReactNode> = {
   "openai/gpt-oss-120b": (
     <View className="flex-1 p-2">
       <View className="mb-1 flex flex-row gap-2 text-lg">
-        <Text>openai/gpt-oss-120b</Text>
+        <Text>GPT OSS 120B</Text>
         <Icon name="Brain" size={20} />
       </View>
       <Text className="text-muted-foreground text-sm">
@@ -258,7 +258,7 @@ const modelLabels: Record<(typeof AI_MODELS)[number], React.ReactNode> = {
   "qwen/qwen3-32b": (
     <View className="flex-1 p-2">
       <View className="mb-1 flex flex-row gap-2 text-lg">
-        <Text>qwen/qwen3-32b</Text>
+        <Text>Qwen 3 32B</Text>
         <Icon name="Brain" size={20} />
       </View>
       <Text className="text-muted-foreground text-sm">
@@ -269,20 +269,13 @@ const modelLabels: Record<(typeof AI_MODELS)[number], React.ReactNode> = {
 };
 
 const ModelSelector: React.FC = () => {
-  const aiContextStore = useAiContextStore();
   const selectedModel = useAiContext((s) => s.selectedModel);
-
-  const handleChange = useCallback(
-    (value: string) => {
-      aiContextStore.setState({ selectedModel: value });
-    },
-    [aiContextStore],
-  );
+  const setSelectedModel = useAiContext((s) => s.setSelectedModel);
 
   return (
     <ActionSheetSelect
       value={selectedModel}
-      onValueChange={handleChange}
+      onValueChange={setSelectedModel}
       labels={modelLabels}
     >
       <View className="flex gap-1">

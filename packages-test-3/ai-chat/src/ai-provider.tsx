@@ -39,7 +39,9 @@ export type AiContextType = {
     callSettings?: LanguageModelV1CallSettings | undefined;
     config?: LanguageModelConfig | undefined;
     selectedModel: string | null;
+    setSelectedModel: (selectedModel: string | null) => void;
     disabledTools: string[];
+    setDisabledTools: (disabledTools: string[]) => void;
     chatOptions?: Omit<UseChatOptions<Thread['messages'][0]> & ChatInit<Thread['messages'][0]>, 'id' | 'transport'> & {
         transportOptions?: HttpChatTransportInitOptions<Thread['messages'][0]>
     }
@@ -70,14 +72,16 @@ export const useAiEvent = <TEvent extends keyof AiChatEvents>(name: TEvent, p: (
     }, [eventHandler, name, p])
 };
 
-export function AiProvider({ children, ...value }: { children: React.ReactNode } & Omit<AiContextType, 'eventHandler' | 'selectedModel' | 'disabledTools'> & Partial<Pick<AiContextType, 'selectedModel' | 'disabledTools'>>) {
+export function AiProvider({ children, ...value }: { children: React.ReactNode } & Omit<AiContextType, 'eventHandler' | 'selectedModel' | 'disabledTools' | 'setSelectedModel' | 'setDisabledTools'> & Partial<Pick<AiContextType, 'selectedModel' | 'disabledTools'>>) {
     // Create store once
     const storeRef = useRef<StoreApi<AiContextType> | null>(null);
     if (storeRef.current === null) {
-        storeRef.current = createStore<AiContextType>(() => ({
+        storeRef.current = createStore<AiContextType>((set) => ({
             ...value,
             selectedModel: value.selectedModel ?? null,
+            setSelectedModel: (selectedModel) => set({ selectedModel }),
             disabledTools: value.disabledTools ?? [],
+            setDisabledTools: (disabledTools) => set({ disabledTools }),
             eventHandler: new AiChatEventHandler(),
         }));
     }

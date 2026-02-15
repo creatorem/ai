@@ -72,7 +72,7 @@ export default function Chat() {
 				<div className="flex h-dvh w-full pr-0.5">
 					<ThreadListSidebar />
 					<SidebarInset>
-						<header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+						<header className="flex h-16 shrink-0 items-center gap-2 font-medium border-b px-4">
 							<SidebarTrigger />
 							<Separator orientation="vertical" className="mr-2 h-4" />
 							<Breadcrumb>
@@ -234,98 +234,91 @@ const Composer: React.FC = () => {
 
 
 const modelLabels: Record<(typeof AI_MODELS)[number], React.ReactNode> = {
-  [DEFAULT_AI_MODEL]: (
-    <>
-      <div className="mb-1 flex items-center gap-2">
-        <span>{DEFAULT_AI_MODEL}</span>
-        <GaugeIcon />
-      </div>
-      <span className="text-muted-foreground text-sm">
-        Optimized for a wide range of natural language tasks.
-      </span>
-    </>
-  ),
-  "meta-llama/llama-4-scout-17b-16e-instruct": (
-    <>
-      <div className="mb-1 flex items-center gap-2">
-        <span>meta-llama/llama-4-scout-17b-16e-instruct</span>
-        <ImageIcon />
-      </div>
-      <span className="text-muted-foreground text-sm">
-        Designed for high-capability agentic use.
-      </span>
-    </>
-  ),
-  "openai/gpt-oss-120b": (
-    <>
-      <div className="mb-1 flex items-center gap-2">
-        <span>openai/gpt-oss-120b</span>
-        <BrainIcon />
-      </div>
-      <span className="text-muted-foreground text-sm">
-        Competitive math/coding performance
-      </span>
-    </>
-  ),
-  "qwen/qwen3-32b": (
-    <>
-      <div className="mb-1 flex items-center gap-2">
-        <span>qwen/qwen3-32b</span>
-        <BrainIcon />
-      </div>
-      <span className="text-muted-foreground text-sm">
-        Groundbreaking advancements in reasoning
-      </span>
-    </>
-  ),
+	[DEFAULT_AI_MODEL]: (
+		<>
+			<div className="mb-1 flex items-center gap-2 font-medium">
+				<span>Llama 3.3 70B (Versatile)</span>
+				<GaugeIcon />
+			</div>
+			<span className="text-muted-foreground text-sm">
+				Optimized for a wide range of natural language tasks.
+			</span>
+		</>
+	),
+	"meta-llama/llama-4-scout-17b-16e-instruct": (
+		<>
+			<div className="mb-1 flex items-center gap-2 font-medium">
+				<span>Llama 4 Scout 17B 16E</span>
+				<ImageIcon />
+			</div>
+			<span className="text-muted-foreground text-sm">
+				Designed for high-capability agentic use.
+			</span>
+		</>
+	),
+	"openai/gpt-oss-120b": (
+		<>
+			<div className="mb-1 flex items-center gap-2 font-medium">
+				<span>GPT OSS 120B</span>
+				<BrainIcon />
+			</div>
+			<span className="text-muted-foreground text-sm">
+				Competitive math/coding performance
+			</span>
+		</>
+	),
+	"qwen/qwen3-32b": (
+		<>
+			<div className="mb-1 flex items-center gap-2 font-medium">
+				<span>Qwen 3 32B</span>
+				<BrainIcon />
+			</div>
+			<span className="text-muted-foreground text-sm">
+				Groundbreaking advancements in reasoning
+			</span>
+		</>
+	),
 };
 
 const ModelSelector: React.FC = () => {
-  const aiContextStore = useAiContextStore();
-  const selectedModel = useAiContext((s) => s.selectedModel);
+	const selectedModel = useAiContext((s) => s.selectedModel);
+	const setSelectedModel = useAiContext((s) => s.setSelectedModel);
 
-  const handleChange = useCallback(
-    (value: string) => {
-      aiContextStore.setState({ selectedModel: value });
-    },
-    [aiContextStore],
-  );
-
-  return (
-	<DropdownMenu>
-		<DropdownMenuTrigger asChild>
-			<Button
-				variant="ghost"
-				className="text-muted-foreground"
-				size="sm"
-			>
-				{selectedModel ? selectedModel : "Select a model"}
-			</Button>
-		</DropdownMenuTrigger>
-		<DropdownMenuContent
-			side="top"
-			align="start"
-			className="z-90 w-96 [--radius:0.95rem]"
-		>
-			<DropdownMenuLabel>Models</DropdownMenuLabel>
-			<DropdownMenuSeparator />
-			{Object.entries(modelLabels).map(([model, label]) => (
-				<DropdownMenuItem
-					key={model}
-					onSelect={() => handleChange(model)}
-					className="flex cursor-pointer items-center justify-between gap-2"
+	return (
+		<DropdownMenu>
+			<DropdownMenuTrigger asChild>
+				<Button
+					variant="ghost"
+					className="text-muted-foreground cursor-pointer"
+					size="sm"
 				>
-					<div className="flex flex-col items-start">
-					{label}
-					</div>
-					{selectedModel === model && (
-						<CheckIcon className="text-primary size-4" />
-					)}
-				</DropdownMenuItem>
-			))}
-		</DropdownMenuContent>
-	</DropdownMenu>
-  );
+					{selectedModel ? selectedModel : "Select a model"}
+				</Button>
+			</DropdownMenuTrigger>
+			<DropdownMenuContent
+				side="top"
+				align="start"
+				className="z-90 w-96 [--radius:0.95rem]"
+			>
+				<DropdownMenuLabel>Models</DropdownMenuLabel>
+				<DropdownMenuSeparator />
+				{Object.entries(modelLabels).map(([model, label]) => (
+					<DropdownMenuItem
+						key={model}
+						onSelect={() => setSelectedModel(model)}
+						className="flex cursor-pointer items-center justify-between gap-2"
+					>
+						<div className="flex flex-col items-start">
+							{label}
+						</div>
+						{selectedModel === model && (
+							<CheckIcon className="text-primary size-4" />
+						)}
+					</DropdownMenuItem>
+				))}
+			</DropdownMenuContent>
+		</DropdownMenu>
+	);
 };
 
 const ComposerAction: FC = () => {
@@ -333,38 +326,41 @@ const ComposerAction: FC = () => {
 		<div className="aui-composer-action-wrapper relative mx-2 mb-2 flex items-center justify-between">
 			<div className="flex">
 				<ComposerAddAttachment />
-				<ModelSelector />
 			</div>
 
-			<ThreadPrimitive.If running={false}>
-				<ComposerPrimitive.Send asChild>
-					<TooltipIconButton
-						tooltip="Send message"
-						side="bottom"
-						type="submit"
-						variant="default"
-						size="icon"
-						className="aui-composer-send size-8 rounded-full"
-						aria-label="Send message"
-					>
-						<ArrowUpIcon className="aui-composer-send-icon size-4" />
-					</TooltipIconButton>
-				</ComposerPrimitive.Send>
-			</ThreadPrimitive.If>
+			<div className="flex gap-2">
+				<ModelSelector />
 
-			<ThreadPrimitive.If running={true}>
-				<ComposerPrimitive.Cancel asChild>
-					<Button
-						type="button"
-						variant="default"
-						size="icon"
-						className="aui-composer-cancel size-8 rounded-full"
-						aria-label="Stop generating"
-					>
-						<SquareIcon className="aui-composer-cancel-icon size-3 fill-current" />
-					</Button>
-				</ComposerPrimitive.Cancel>
-			</ThreadPrimitive.If>
+				<ThreadPrimitive.If running={false}>
+					<ComposerPrimitive.Send asChild>
+						<TooltipIconButton
+							tooltip="Send message"
+							side="bottom"
+							type="submit"
+							variant="default"
+							size="icon"
+							className="aui-composer-send size-8 rounded-full"
+							aria-label="Send message"
+						>
+							<ArrowUpIcon className="aui-composer-send-icon size-4" />
+						</TooltipIconButton>
+					</ComposerPrimitive.Send>
+				</ThreadPrimitive.If>
+
+				<ThreadPrimitive.If running={true}>
+					<ComposerPrimitive.Cancel asChild>
+						<Button
+							type="button"
+							variant="default"
+							size="icon"
+							className="aui-composer-cancel size-8 rounded-full"
+							aria-label="Stop generating"
+						>
+							<SquareIcon className="aui-composer-cancel-icon size-3 fill-current" />
+						</Button>
+					</ComposerPrimitive.Cancel>
+				</ThreadPrimitive.If>
+			</div>
 		</div>
 	);
 };
@@ -443,7 +439,7 @@ const AssistantActionBar: FC = () => {
 					className="aui-action-bar-more-content z-50 min-w-32 overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md"
 				>
 					<ActionBarPrimitive.ExportMarkdown asChild>
-						<DropdownMenuItem className="aui-action-bar-more-item flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+						<DropdownMenuItem className="aui-action-bar-more-item flex cursor-pointer select-none items-center gap-2 font-medium rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
 							<DownloadIcon className="size-4" />
 							Export as Markdown
 						</DropdownMenuItem>
@@ -500,7 +496,7 @@ const EditComposer: FC = () => {
 					className="aui-edit-composer-input min-h-14 w-full resize-none bg-transparent p-4 text-foreground text-sm outline-none"
 					autoFocus
 				/>
-				<div className="aui-edit-composer-footer mx-3 mb-3 flex items-center gap-2 self-end">
+				<div className="aui-edit-composer-footer mx-3 mb-3 flex items-center gap-2 font-medium self-end">
 					<ActionBarPrimitive.CancelEditing asChild>
 						<Button variant="ghost" size="sm">
 							Cancel
