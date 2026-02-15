@@ -5,18 +5,21 @@ import { Button } from "@/components/ui/button";
 import {
 	ArrowDownIcon,
 	ArrowUpIcon,
+	BrainIcon,
 	CheckIcon,
 	ChevronLeftIcon,
 	ChevronRightIcon,
 	CopyIcon,
 	DownloadIcon,
+	GaugeIcon,
+	ImageIcon,
 	MoreHorizontalIcon,
 	PencilIcon,
 	RefreshCwIcon,
 	SquareIcon,
 } from "lucide-react";
 import { TooltipIconButton } from "@/components/ai-chat/tooltip-icon-button";
-import { cn } from "@/lib/cn";
+import { cn } from "@/lib/utils";
 import {
 	SidebarInset,
 	SidebarProvider,
@@ -35,6 +38,8 @@ import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
@@ -49,13 +54,16 @@ import { MarkdownText } from "./markdown-text";
 import { ThreadListSidebar } from "./threadlist-sidebar";
 import { WeatherToolRegistration } from "./weather-tool-ui";
 
-import { AiProvider } from "@creatorem/ai-react/ai-provider";
+import { AiProvider, useAiContext, useAiContextStore } from "@creatorem/ai-react/ai-provider";
 import * as ComposerPrimitive from "@creatorem/ai-react/primitives/composer";
 import * as ErrorPrimitive from "@creatorem/ai-react/primitives/error";
 import * as ActionBarPrimitive from "@creatorem/ai-react/primitives/action-bar";
 import * as BranchPickerPrimitive from "@creatorem/ai-react/primitives/branch-picker";
 import * as ThreadPrimitive from "@creatorem/ai-react/primitives/thread";
 import * as MessagePrimitive from "@creatorem/ai-react/primitives/message";
+import { AI_MODELS, DEFAULT_AI_MODEL } from "@/lib/ai-constants";
+import { useCallback } from "react";
+import { InputGroup } from "@/components/ui/input-group";
 
 export default function Chat() {
 	return (
@@ -224,10 +232,109 @@ const Composer: React.FC = () => {
 	);
 };
 
+
+const modelLabels: Record<(typeof AI_MODELS)[number], React.ReactNode> = {
+  [DEFAULT_AI_MODEL]: (
+    <>
+      <div className="mb-1 flex items-center gap-2">
+        <span>{DEFAULT_AI_MODEL}</span>
+        <GaugeIcon />
+      </div>
+      <span className="text-muted-foreground text-sm">
+        Optimized for a wide range of natural language tasks.
+      </span>
+    </>
+  ),
+  "meta-llama/llama-4-scout-17b-16e-instruct": (
+    <>
+      <div className="mb-1 flex items-center gap-2">
+        <span>meta-llama/llama-4-scout-17b-16e-instruct</span>
+        <ImageIcon />
+      </div>
+      <span className="text-muted-foreground text-sm">
+        Designed for high-capability agentic use.
+      </span>
+    </>
+  ),
+  "openai/gpt-oss-120b": (
+    <>
+      <div className="mb-1 flex items-center gap-2">
+        <span>openai/gpt-oss-120b</span>
+        <BrainIcon />
+      </div>
+      <span className="text-muted-foreground text-sm">
+        Competitive math/coding performance
+      </span>
+    </>
+  ),
+  "qwen/qwen3-32b": (
+    <>
+      <div className="mb-1 flex items-center gap-2">
+        <span>qwen/qwen3-32b</span>
+        <BrainIcon />
+      </div>
+      <span className="text-muted-foreground text-sm">
+        Groundbreaking advancements in reasoning
+      </span>
+    </>
+  ),
+};
+
+const ModelSelector: React.FC = () => {
+  const aiContextStore = useAiContextStore();
+  const selectedModel = useAiContext((s) => s.selectedModel);
+
+  const handleChange = useCallback(
+    (value: string) => {
+      aiContextStore.setState({ selectedModel: value });
+    },
+    [aiContextStore],
+  );
+
+  return (
+	<DropdownMenu>
+		<DropdownMenuTrigger asChild>
+			<Button
+				variant="ghost"
+				className="text-muted-foreground"
+				size="sm"
+			>
+				{selectedModel ? selectedModel : "Select a model"}
+			</Button>
+		</DropdownMenuTrigger>
+		<DropdownMenuContent
+			side="top"
+			align="start"
+			className="z-90 w-96 [--radius:0.95rem]"
+		>
+			<DropdownMenuLabel>Models</DropdownMenuLabel>
+			<DropdownMenuSeparator />
+			{Object.entries(modelLabels).map(([model, label]) => (
+				<DropdownMenuItem
+					key={model}
+					onSelect={() => handleChange(model)}
+					className="flex cursor-pointer items-center justify-between gap-2"
+				>
+					<div className="flex flex-col items-start">
+					{label}
+					</div>
+					{selectedModel === model && (
+						<CheckIcon className="text-primary size-4" />
+					)}
+				</DropdownMenuItem>
+			))}
+		</DropdownMenuContent>
+	</DropdownMenu>
+  );
+};
+
 const ComposerAction: FC = () => {
 	return (
 		<div className="aui-composer-action-wrapper relative mx-2 mb-2 flex items-center justify-between">
-			<ComposerAddAttachment />
+			<div className="flex">
+				<ComposerAddAttachment />
+				<ModelSelector />
+			</div>
 
 			<ThreadPrimitive.If running={false}>
 				<ComposerPrimitive.Send asChild>

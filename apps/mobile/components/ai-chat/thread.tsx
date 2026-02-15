@@ -1,4 +1,4 @@
-import { FC, type ReactNode } from "react";
+import { FC, useCallback, type ReactNode } from "react";
 import { View } from "react-native";
 
 import { Icon, IconName } from "../ui/icon";
@@ -33,6 +33,19 @@ import {
 } from "./attachment";
 import { WeatherToolRegistration } from "../tools/weather-tool-ui";
 import { Reasoning, ReasoningGroup } from "./reasoning";
+import { Divider } from "../ui/divider";
+import {
+  ActionSheetSelect,
+  ActionSheetSelectContent,
+  ActionSheetSelectItem,
+  ActionSheetSelectTrigger,
+  ActionSheetSelectValue,
+} from "../ui/action-sheet-select";
+import { AI_MODELS, DEFAULT_AI_MODEL } from "~/lib/ai-constants";
+import {
+  useAiContext,
+  useAiContextStore,
+} from "@creatorem/ai-chat/ai-provider";
 
 export const Thread: React.FC = () => {
   return (
@@ -208,6 +221,91 @@ const Composer: React.FC = () => {
   );
 };
 
+const modelLabels: Record<(typeof AI_MODELS)[number], React.ReactNode> = {
+  [DEFAULT_AI_MODEL]: (
+    <View className="flex-1 p-2">
+      <View className="mb-1 flex flex-row gap-2 text-lg">
+        <Text>{DEFAULT_AI_MODEL}</Text>
+        <Icon name="Gauge" size={20} />
+      </View>
+      <Text className="text-muted-foreground text-sm">
+        Optimized for a wide range of natural language tasks.
+      </Text>
+    </View>
+  ),
+  "meta-llama/llama-4-scout-17b-16e-instruct": (
+    <View className="flex-1 p-2">
+      <View className="mb-1 flex flex-row gap-2 text-lg">
+        <Text>meta-llama/llama-4-scout-17b-16e-instruct</Text>
+        <Icon name="Image" size={20} />
+      </View>
+      <Text className="text-muted-foreground text-sm">
+        Designed for high-capability agentic use.
+      </Text>
+    </View>
+  ),
+  "openai/gpt-oss-120b": (
+    <View className="flex-1 p-2">
+      <View className="mb-1 flex flex-row gap-2 text-lg">
+        <Text>openai/gpt-oss-120b</Text>
+        <Icon name="Brain" size={20} />
+      </View>
+      <Text className="text-muted-foreground text-sm">
+        Competitive math/coding performance
+      </Text>
+    </View>
+  ),
+  "qwen/qwen3-32b": (
+    <View className="flex-1 p-2">
+      <View className="mb-1 flex flex-row gap-2 text-lg">
+        <Text>qwen/qwen3-32b</Text>
+        <Icon name="Brain" size={20} />
+      </View>
+      <Text className="text-muted-foreground text-sm">
+        Groundbreaking advancements in reasoning
+      </Text>
+    </View>
+  ),
+};
+
+const ModelSelector: React.FC = () => {
+  const aiContextStore = useAiContextStore();
+  const selectedModel = useAiContext((s) => s.selectedModel);
+
+  const handleChange = useCallback(
+    (value: string) => {
+      aiContextStore.setState({ selectedModel: value });
+    },
+    [aiContextStore],
+  );
+
+  return (
+    <ActionSheetSelect
+      value={selectedModel}
+      onValueChange={handleChange}
+      labels={modelLabels}
+    >
+      <View className="flex gap-1">
+        <Text className="font-bold">Model</Text>
+        <ActionSheetSelectTrigger className="border-none">
+          <ActionSheetSelectValue
+            placeholder={selectedModel ?? DEFAULT_AI_MODEL}
+          />
+        </ActionSheetSelectTrigger>
+      </View>
+      <ActionSheetSelectContent>
+        {Object.keys(modelLabels).map((model) => (
+          <ActionSheetSelectItem
+            key={model}
+            value={model}
+            checkClassName="absolute top-2 right-2"
+          />
+        ))}
+      </ActionSheetSelectContent>
+    </ActionSheetSelect>
+  );
+};
+
 const ComposerAction: FC = () => {
   const textMutedForeground = useCSSVariable("--color-muted-foreground");
   const borderColor = useCSSVariable("--color-border");
@@ -227,7 +325,11 @@ const ComposerAction: FC = () => {
           backgroundColor: backgroundColor,
         }}
       >
-        <ComposerAddAttachmentSheet />
+        <View className="flex gap-4 p-6 pt-2">
+          <ComposerAddAttachmentSheet />
+          <Divider />
+          <ModelSelector />
+        </View>
         {/* <View className="h-40 px-4">
           <ComposerAddAttachmentFile />
           <ComposerAddAttachmentImage />

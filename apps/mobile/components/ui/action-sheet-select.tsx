@@ -70,7 +70,7 @@ export const ActionSheetSelectTrigger: React.FC<
   return (
     <ActionSheetTrigger
       className={cn(
-        "h-12 flex-row items-center justify-between rounded-xl border px-3",
+        "min-h-12 flex-row items-center justify-between rounded-xl border px-3",
         open ? "border-black dark:border-white" : "border-input",
         className,
       )}
@@ -92,8 +92,10 @@ export const ActionSheetSelectValue: React.FC<ActionSheetSelectValueProps> = ({
 }) => {
   const { value, labels } = useActionSheetSelect();
   const label = labels[value] ?? null;
-  return (
+  return typeof label === "string" || !label ? (
     <Text className={className}>{label ?? placeholder ?? "Select..."}</Text>
+  ) : (
+    label
   );
 };
 
@@ -110,11 +112,13 @@ export const ActionSheetSelectContent: React.FC<
 interface ActionSheetSelectItemProps {
   className?: string;
   value: string;
+  checkClassName?: string;
 }
 
 export const ActionSheetSelectItem: React.FC<ActionSheetSelectItemProps> = ({
   className,
   value,
+  checkClassName,
   ...props
 }) => {
   const { value: controlledValue, setValue, labels } = useActionSheetSelect();
@@ -130,16 +134,24 @@ export const ActionSheetSelectItem: React.FC<ActionSheetSelectItemProps> = ({
     <Pressable
       {...props}
       className={cn(
-        "flex-row items-center gap-2 rounded-xl px-3 py-1.5",
+        "flex-row items-center gap-2 rounded-xl px-3 py-1.5 active:bg-accent",
         value === controlledValue ? "bg-accent" : "",
         className,
       )}
       onPress={handleChange}
     >
       <View className={"flex-row items-center gap-2"}>
-        <Text className="flex-1">{label}</Text>
+        {typeof label === "string" ? (
+          <Text className="flex-1">{label}</Text>
+        ) : (
+          label
+        )}
         {value === controlledValue && (
-          <Icon name="Check" className="h-4 w-4" size={20} />
+          <Icon
+            name="Check"
+            className={cn("h-4 w-4", checkClassName)}
+            size={20}
+          />
         )}
       </View>
     </Pressable>

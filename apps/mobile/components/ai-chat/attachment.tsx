@@ -157,7 +157,7 @@ export const ComposerAddAttachmentSheet: FC = () => {
   };
 
   return (
-    <View className="flex flex-row gap-4 p-6 pt-2">
+    <View className="flex flex-row gap-4">
       <ComposerAddAttachmentTakePhoto onAddAttachment={handleAddAttachment} />
       <ComposerAddAttachmentImage onAddAttachment={handleAddAttachment} />
       <ComposerAddAttachmentFile onAddAttachment={handleAddAttachment} />
