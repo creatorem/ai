@@ -29,9 +29,6 @@ const MarkdownTextImpl = () => {
         className="aui-md"
         renderers={defaultComponents as unknown as Partial<RenderersMap>}
       />
-      {/* <MessagePartPrimitive.BeforeStream>
-        <ShimmerText text="Typing ..." />
-      </MessagePartPrimitive.BeforeStream> */}
     </>
   );
 };
