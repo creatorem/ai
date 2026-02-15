@@ -4,7 +4,7 @@ import { type FC, useMemo } from "react";
 import { Image as NativeImage, ScrollView, View } from "react-native";
 import { Icon } from "../ui/icon";
 import { Text } from "../ui/text";
-import { cn } from "~/utils/cn";
+import { cn } from "~/lib/cn";
 
 import * as AttachmentPrimitive from "@creatorem/ai-react-native/primitives/attachment";
 import { useAttachment } from "@creatorem/ai-react-native/primitives/attachment";

@@ -6,7 +6,7 @@ import {
   Pressable,
   PressableProps,
 } from "react-native";
-import { cn } from "~/utils/cn";
+import { cn } from "~/lib/cn";
 import { TextClassContext } from "./text";
 import * as Slot from "@rn-primitives/slot";
 import { useCSSVariable } from "uniwind";

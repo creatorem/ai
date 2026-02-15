@@ -22,7 +22,7 @@ import {
   AccordionTrigger,
 } from "../ui/accordion";
 import { View } from "react-native";
-import { cn } from "~/utils/cn";
+import { cn } from "~/lib/cn";
 import { Icon } from "../ui/icon";
 import { Text } from "../ui/text";
 
@@ -118,13 +118,8 @@ function ReasoningTrigger({
       )}
       {...props}
     >
-      <Icon
-        name="Brain"
-        className="size-4 shrink-0"
-      />
-      <View
-        className="relative inline-block leading-none"
-      >
+      <Icon name="Brain" className="size-4 shrink-0" />
+      <View className="relative inline-block leading-none">
         <Text>Reasoning{durationText}</Text>
         {active ? (
           <Text

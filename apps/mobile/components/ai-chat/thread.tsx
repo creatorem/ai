@@ -3,7 +3,7 @@ import { View } from "react-native";
 
 import { Icon, IconName } from "../ui/icon";
 import { Text } from "../ui/text";
-import { cn } from "~/utils/cn";
+import { cn } from "~/lib/cn";
 import {
   ActionSheet,
   ActionSheetContent,

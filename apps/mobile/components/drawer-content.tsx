@@ -1,6 +1,6 @@
 import { ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { cn } from "~/utils/cn";
+import { cn } from "~/lib/cn";
 import { ThreadList } from "./ai-chat/thread-list";
 
 export function DrawerContent() {

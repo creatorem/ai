@@ -8,7 +8,7 @@ import {
 import type { RuntimeComponents } from "@creatorem/ai-chat/component-type-check";
 import { Text } from "../ui/text";
 import { Button } from "../ui/button";
-import { cn } from "~/utils/cn";
+import { cn } from "~/lib/cn";
 import { AutoResizeTextarea } from "../ui/autoresize-textarea";
 
 export const appNativeComponents = {

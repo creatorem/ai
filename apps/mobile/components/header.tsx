@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { cn } from "~/utils/cn";
+import { cn } from "~/lib/cn";
 import { Icon } from "./ui/icon";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

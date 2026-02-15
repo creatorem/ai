@@ -10,7 +10,7 @@ import Animated, {
   Easing,
 } from "react-native-reanimated";
 import { useCSSVariable } from "uniwind";
-import { cn } from "~/utils/cn";
+import { cn } from "~/lib/cn";
 
 type ShimmerTextProps = {
   text: string;
@@ -63,4 +63,3 @@ export const ShimmerText = ({
     </MaskedView>
   );
 };
-

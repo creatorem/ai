@@ -2,6 +2,7 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { streamText, convertToModelMessages, type UIMessage, smoothStream } from "ai";
 import { weatherTool } from "../../../lib/tools/weather-tool";
 import { getModel, getDisabledToolsFiter } from "@creatorem/ai-chat/server";
+import { DEFAULT_AI_MODEL } from "@/lib/ai-constants";
 
 const groq = createOpenAI({
   apiKey: process.env.GROQ_API_KEY ?? '',
@@ -11,7 +12,7 @@ const groq = createOpenAI({
 export async function POST(req: Request) {
   const { messages, ...body }: { messages: UIMessage[] } = await req.json();
 
-  const model = groq(getModel(body) ?? 'llama-3.3-70b-versatile')
+  const model = groq(getModel(body) ?? DEFAULT_AI_MODEL)
   const toolsFilter = getDisabledToolsFiter(body);
 
   const result = streamText({

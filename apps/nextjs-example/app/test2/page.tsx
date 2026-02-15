@@ -16,7 +16,7 @@ import {
 	SquareIcon,
 } from "lucide-react";
 import { TooltipIconButton } from "@/components/ai-chat/tooltip-icon-button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 import {
 	SidebarInset,
 	SidebarProvider,

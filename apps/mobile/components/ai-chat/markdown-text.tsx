@@ -13,7 +13,7 @@ import { Text } from "../ui/text";
 import { View } from "react-native";
 import { Button } from "../ui/button";
 import { Icon } from "../ui/icon";
-import { cn } from "~/utils/cn";
+import { cn } from "~/lib/cn";
 import { useCSSVariable } from "uniwind";
 // import { ShimmerText } from "../shimmer-text";
 

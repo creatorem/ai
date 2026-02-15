@@ -1,7 +1,7 @@
 import { View } from "react-native";
 import { useState } from "react";
 import { ToolCallMessagePartComponent } from "@creatorem/ai-chat/types/message-part-component-types";
-import { cn } from "~/utils/cn";
+import { cn } from "~/lib/cn";
 import { Button } from "../ui/button";
 import { Text } from "../ui/text";
 import { Icon } from "../ui/icon";

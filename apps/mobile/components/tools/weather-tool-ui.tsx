@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { useAssistantToolUI } from "@creatorem/ai-chat";
 import type { ToolCallMessagePartProps } from "@creatorem/ai-chat/types/message-part-component-types";
 import { Text } from "../ui/text";
-import { cn } from "~/utils/cn";
+import { cn } from "~/lib/cn";
 
 const HOUR_LABELS = ["1PM", "2PM", "3PM", "4PM", "5PM"] as const;
 

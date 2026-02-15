@@ -8,7 +8,7 @@ import {
   View,
   type TextInputProps,
 } from "react-native";
-import { cn } from "~/utils/cn";
+import { cn } from "~/lib/cn";
 import { Icon } from "./icon";
 import { Button } from "./button";
 import {

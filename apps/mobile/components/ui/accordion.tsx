@@ -8,7 +8,7 @@ import Animated, {
   useDerivedValue,
   withTiming,
 } from "react-native-reanimated";
-import { cn } from "~/utils/cn";
+import { cn } from "~/lib/cn";
 import { TextClassContext } from "./text";
 import { Icon } from "./icon";
 

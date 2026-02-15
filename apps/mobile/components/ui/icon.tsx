@@ -69,7 +69,7 @@ import type * as LucideIcons from "lucide-react-native";
 import React from "react";
 import { Pressable, View } from "react-native";
 import { useCSSVariable, withUniwind } from "uniwind";
-import { cn } from "~/utils/cn";
+import { cn } from "~/lib/cn";
 
 type AllLucideIconName = Exclude<
   keyof typeof LucideIcons,

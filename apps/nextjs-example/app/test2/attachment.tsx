@@ -19,7 +19,7 @@ import {
 	TooltipContent,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 
 const useFileSrc = (file: File | undefined) => {
 	const [src, setSrc] = useState<string | undefined>(undefined);
