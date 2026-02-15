@@ -38,6 +38,8 @@ export type AiContextType = {
     toolkit?: Toolkit | undefined;
     callSettings?: LanguageModelV1CallSettings | undefined;
     config?: LanguageModelConfig | undefined;
+    selectedModel: string | null;
+    disabledTools: string[];
     chatOptions?: Omit<UseChatOptions<Thread['messages'][0]> & ChatInit<Thread['messages'][0]>, 'id' | 'transport'> & {
         transportOptions?: HttpChatTransportInitOptions<Thread['messages'][0]>
     }
@@ -68,11 +70,16 @@ export const useAiEvent = <TEvent extends keyof AiChatEvents>(name: TEvent, p: (
     }, [eventHandler, name, p])
 };
 
-export function AiProvider({ children, ...value }: { children: React.ReactNode } & Omit<AiContextType, 'eventHandler'>) {
+export function AiProvider({ children, ...value }: { children: React.ReactNode } & Omit<AiContextType, 'eventHandler' | 'selectedModel' | 'disabledTools'> & Partial<Pick<AiContextType, 'selectedModel' | 'disabledTools'>>) {
     // Create store once
     const storeRef = useRef<StoreApi<AiContextType> | null>(null);
     if (storeRef.current === null) {
-        storeRef.current = createStore<AiContextType>(() => ({ ...value, eventHandler: new AiChatEventHandler() }));
+        storeRef.current = createStore<AiContextType>(() => ({
+            ...value,
+            selectedModel: value.selectedModel ?? null,
+            disabledTools: value.disabledTools ?? [],
+            eventHandler: new AiChatEventHandler(),
+        }));
     }
 
     return <AiContextStoreCtx.Provider value={storeRef.current}>

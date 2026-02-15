@@ -23,6 +23,7 @@
     "./hook-types": "./src/hook-types.ts",
     "./utils": "./src/utils/index.ts",
     "./hooks": "./src/hooks/index.ts",
+    "./server": "./src/server/index.ts",
     "./types/*": "./src/types/*.ts"
   },
   "main": "./dist/index.js",

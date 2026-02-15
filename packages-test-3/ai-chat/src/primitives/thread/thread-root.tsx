@@ -21,6 +21,7 @@ import { ToolCallMessagePartComponent } from "../../types/message-part-component
 import { Unsubscribe } from "../../types/unsuscribe";
 import { toToolsJSONSchema } from "../../stream/schema-utils";
 import { Tool } from "../../stream/tool-types";
+import { BODY_KEY } from "../../utils/request-keys";
 
 export type CustomUIDataTypes = {
     textDelta: string;
@@ -190,6 +191,8 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
     const system = useAiContext(s => s.system);
     const callSettings = useAiContext(s => s.callSettings);
     const config = useAiContext(s => s.config);
+    const selectedModel = useAiContext(s => s.selectedModel);
+    const disabledTools = useAiContext(s => s.disabledTools);
     const activeThreadId = useThreads(s => s.activeThreadId);
     const [title, setTitle] = useState('New thread');
     const [status, setStatus] = useState<Thread['status']>('regular');
@@ -228,6 +231,8 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
         system?: string;
         callSettings?: unknown;
         config?: unknown;
+        selectedModel?: string;
+        disabledTools?: string[];
     }>({ tools: {} });
     const addToolOutputRef = useRef<
         null | ((
@@ -259,6 +264,8 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
                         ...(context.system ? { system: context.system } : {}),
                         ...(context.callSettings ? { callSettings: context.callSettings } : {}),
                         ...(context.config ? { config: context.config } : {}),
+                        [BODY_KEY.SELECTED_MODEL]: context.selectedModel ?? "",
+                        [BODY_KEY.DISABLED_TOOLS]: context.disabledTools ?? [],
                         tools: toToolsJSONSchema(Object.values(toolsRef.current) as any) as any,
                     },
                 };
@@ -649,6 +656,8 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
             system,
             callSettings,
             config,
+            selectedModel: selectedModel ?? undefined,
+            disabledTools: disabledTools ?? [],
         };
     }, []);
 
@@ -661,10 +670,12 @@ export function ThreadPrimitiveRoot({ children, ...value }: { children: React.Re
                 system,
                 callSettings,
                 config,
+                selectedModel: selectedModel ?? undefined,
+                disabledTools: disabledTools ?? [],
             };
         });
         return unsubscribe;
-    }, [system, callSettings, config]);
+    }, [system, callSettings, config, selectedModel, disabledTools]);
 
     useEffect(() => {
         if (!storeRef.current) return;
