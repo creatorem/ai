@@ -5,8 +5,8 @@ import { useRuntime } from "@creatorem/ai-chat/runtime";
 import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 
 export namespace AttachmentPrimitiveRoot {
-  export type Element = RuntimeComponents['Box'];
-  export type Props = ComponentPropsWithoutRef<RuntimeComponents['Box']>
+  export type Element = RuntimeComponents["Box"];
+  export type Props = ComponentPropsWithoutRef<RuntimeComponents["Box"]>;
 }
 
 /**
@@ -27,7 +27,9 @@ export const AttachmentPrimitiveRoot = forwardRef<
   AttachmentPrimitiveRoot.Element,
   AttachmentPrimitiveRoot.Props
 >((props, ref) => {
-  const { components: {Box} } = useRuntime();
+  const {
+    components: { Box },
+  } = useRuntime();
 
   return <Box {...props} ref={ref} />;
 });

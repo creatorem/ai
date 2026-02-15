@@ -1,13 +1,17 @@
 "use client";
 
-import { ActionButtonElement, ActionButtonProps, createActionButton } from "../../utils/create-action-button";
+import {
+  ActionButtonElement,
+  ActionButtonProps,
+  createActionButton,
+} from "../../utils/create-action-button";
 import { useMessage } from "../message/message-by-index-provider";
 import { useCallback } from "react";
 import { useThread } from "../thread";
 
 const useMessageComposerCancel = () => {
   const { id } = useMessage();
-  const { stopEdit, editingComposers } = useThread()
+  const { stopEdit, editingComposers } = useThread();
   const disabled = !editingComposers.includes(id);
 
   const callback = useCallback(() => {

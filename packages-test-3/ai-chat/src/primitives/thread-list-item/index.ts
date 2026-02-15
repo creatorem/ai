@@ -4,5 +4,11 @@ export { ThreadListItemPrimitiveTrigger as Trigger } from "./thread-list-item-tr
 export { ThreadListItemPrimitiveArchive as Archive } from "./thread-list-item-archive";
 export { ThreadListItemPrimitiveUnarchive as Unarchive } from "./thread-list-item-unarchive";
 export { ThreadListItemPrimitiveDelete as Delete } from "./thread-list-item-delete";
-export { useThreadListItem, useThreadListItemStore } from "./thread-list-item-by-index-provider";
-export type { ThreadListItemState, ThreadListItemMethods } from "./thread-list-item-by-index-provider";
+export {
+  useThreadListItem,
+  useThreadListItemStore,
+} from "./thread-list-item-by-index-provider";
+export type {
+  ThreadListItemState,
+  ThreadListItemMethods,
+} from "./thread-list-item-by-index-provider";

@@ -8,8 +8,10 @@ import { useComposerStore } from "@creatorem/ai-chat/primitives/composer";
 import { fileToAttachment } from "@creatorem/ai-chat/utils";
 
 export namespace ComposerPrimitiveAttachmentDropzone {
-  export type Element = RuntimeComponents['Box'];
-  export type Props = React.ComponentPropsWithoutRef<RuntimeComponents['Box']> & {
+  export type Element = RuntimeComponents["Box"];
+  export type Props = React.ComponentPropsWithoutRef<
+    RuntimeComponents["Box"]
+  > & {
     disabled?: boolean | undefined;
   };
 }
@@ -20,7 +22,9 @@ export const ComposerPrimitiveAttachmentDropzone = forwardRef<
 >(({ disabled, children, ...rest }, ref) => {
   const [isDragging, setIsDragging] = useState(false);
   const composerStore = useComposerStore();
-  const { components: { Box } } = useRuntime();
+  const {
+    components: { Box },
+  } = useRuntime();
 
   const handleDragEnterCapture = useCallback(
     (e: React.DragEvent) => {
@@ -60,9 +64,7 @@ export const ComposerPrimitiveAttachmentDropzone = forwardRef<
       setIsDragging(false);
       for (const file of e.dataTransfer.files) {
         try {
-          await composerStore
-            .getState()
-            .addAttachment(fileToAttachment(file));
+          await composerStore.getState().addAttachment(fileToAttachment(file));
         } catch (error) {
           console.error("Failed to add attachment:", error);
         }

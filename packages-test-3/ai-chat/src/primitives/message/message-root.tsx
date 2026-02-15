@@ -7,8 +7,8 @@ import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 export { useMessage, useMessageStore } from "./message-by-index-provider";
 
 export namespace MessagePrimitiveRoot {
-    export type Element = RuntimeComponents['Box'];
-    export type Props = ComponentProps<RuntimeComponents['Box']>;
+  export type Element = RuntimeComponents["Box"];
+  export type Props = ComponentProps<RuntimeComponents["Box"]>;
 }
 
 /**
@@ -33,21 +33,20 @@ export namespace MessagePrimitiveRoot {
  * ```
  */
 export const MessagePrimitiveRoot = forwardRef<
-    MessagePrimitiveRoot.Element,
-    MessagePrimitiveRoot.Props
+  MessagePrimitiveRoot.Element,
+  MessagePrimitiveRoot.Props
 >((props, forwardRef) => {
-    const { hooks: {useMessageRootRef}, components: { Box, MessageSpacer } } = useRuntime();
-    const {ref, ...otherProps} = useMessageRootRef(forwardRef);
+  const {
+    hooks: { useMessageRootRef },
+    components: { Box, MessageSpacer },
+  } = useRuntime();
+  const { ref, ...otherProps } = useMessageRootRef(forwardRef);
 
-    return (
-        <MessageSpacer>
-            <Box 
-                {...props} 
-                ref={ref} 
-                {...otherProps}
-            />
-        </MessageSpacer>
-    );
+  return (
+    <MessageSpacer>
+      <Box {...props} ref={ref} {...otherProps} />
+    </MessageSpacer>
+  );
 });
 
 MessagePrimitiveRoot.displayName = "MessagePrimitive.Root";

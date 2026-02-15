@@ -9,9 +9,9 @@ import {
 import { useMessage, useMessageStore } from "../message";
 
 const useActionBarSpeak = () => {
-  const status = useMessage(s => s.status);
-  const role = useMessage(s => s.role);
-  const parts = useMessage(s => s.parts);
+  const status = useMessage((s) => s.status);
+  const role = useMessage((s) => s.role);
+  const parts = useMessage((s) => s.parts);
   const messageStore = useMessageStore();
 
   const callback = useCallback(async () => {

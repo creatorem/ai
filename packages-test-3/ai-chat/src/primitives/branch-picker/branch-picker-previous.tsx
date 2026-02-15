@@ -31,9 +31,11 @@ import { useMessage, useMessageStore } from "../message";
  * ```
  */
 const useBranchPickerPrevious = () => {
-  const isRunning = useThread(s => s.isRunning);
-  const switchBranchDuringRun = useThread(s => s.capabilities.switchBranchDuringRun);
-  const branchNumber = useMessage(s => s.branchNumber);
+  const isRunning = useThread((s) => s.isRunning);
+  const switchBranchDuringRun = useThread(
+    (s) => s.capabilities.switchBranchDuringRun,
+  );
+  const branchNumber = useMessage((s) => s.branchNumber);
   const messageStore = useMessageStore();
 
   const disabled = useMemo(() => {

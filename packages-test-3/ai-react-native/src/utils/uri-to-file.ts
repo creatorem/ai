@@ -11,4 +11,3 @@ export const uriToFile = async (
   file.uri = uri;
   return file;
 };
-

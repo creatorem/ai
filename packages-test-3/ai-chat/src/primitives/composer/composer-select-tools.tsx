@@ -3,55 +3,63 @@ import { UITool } from "@creatorem/ai-chat/types/tools-types";
 import { useCallback, useMemo } from "react";
 
 export namespace ComposerPrimitiveSelectTools {
-    export type ToolUIComponentProps = {
-        toolName: string;
-        display?: UITool<any,any>['display']
-        isEnabled: boolean;
-        toggle: () => void;
-    };
+  export type ToolUIComponentProps = {
+    toolName: string;
+    display?: UITool<any, any>["display"];
+    isEnabled: boolean;
+    toggle: () => void;
+  };
 
-    export type Props = {
-        toolUI: React.ComponentType<ToolUIComponentProps>;
-        empty?: React.ReactNode;
-        header?: React.ReactNode
-    };
+  export type Props = {
+    toolUI: React.ComponentType<ToolUIComponentProps>;
+    empty?: React.ReactNode;
+    header?: React.ReactNode;
+  };
 }
 
-export const ComposerPrimitiveSelectTools = ({ toolUI: ToolUI, empty, header }: ComposerPrimitiveSelectTools.Props) => {
-    const tools = useAiContext((s) => s.tools);
-    const upsertTool = useAiContext((s) => s.upsertTool);
+export const ComposerPrimitiveSelectTools = ({
+  toolUI: ToolUI,
+  empty,
+  header,
+}: ComposerPrimitiveSelectTools.Props) => {
+  const tools = useAiContext((s) => s.tools);
+  const upsertTool = useAiContext((s) => s.upsertTool);
 
-    const toolNames = useMemo(() => {
-        return Object.keys(tools ?? {});
-    }, [tools]);
+  const toolNames = useMemo(() => {
+    return Object.keys(tools ?? {});
+  }, [tools]);
 
-    const onToggle = useCallback((toolName: string) => {
-        const tool = tools[toolName];
-        if (!tool) return;
+  const onToggle = useCallback(
+    (toolName: string) => {
+      const tool = tools[toolName];
+      if (!tool) return;
 
-        upsertTool({
-            ...tool,
-            disabled: !tool.disabled,
-        })
-    }, [tools]);
+      upsertTool({
+        ...tool,
+        disabled: !tool.disabled,
+      });
+    },
+    [tools],
+  );
 
-    return (
+  return (
+    <>
+      {toolNames.length === 0 ? (
+        empty
+      ) : (
         <>
-            {toolNames.length === 0 ? empty : (
-                <>
-                    {header}
-                    {toolNames.map((toolName) => (
-                        <ToolUI
-                            key={toolName}
-                            toolName={toolName}
-                            display={tools[toolName]!.display}
-                            isEnabled={!tools[toolName]!.disabled}
-                            toggle={() => onToggle(toolName)}
-                        />
-                    ))}
-                </>
-            ) 
-            }
+          {header}
+          {toolNames.map((toolName) => (
+            <ToolUI
+              key={toolName}
+              toolName={toolName}
+              display={tools[toolName]!.display}
+              isEnabled={!tools[toolName]!.disabled}
+              toggle={() => onToggle(toolName)}
+            />
+          ))}
         </>
-    );
+      )}
+    </>
+  );
 };

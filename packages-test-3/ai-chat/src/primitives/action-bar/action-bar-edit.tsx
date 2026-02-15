@@ -7,7 +7,7 @@ import {
 } from "../../utils/create-action-button";
 import { useCallback } from "react";
 import { useThread } from "../thread/thread-root";
-import { useMessage } from "../message/message-by-index-provider"
+import { useMessage } from "../message/message-by-index-provider";
 
 /**
  * Hook that provides edit functionality for action bar buttons.
@@ -32,7 +32,7 @@ import { useMessage } from "../message/message-by-index-provider"
  */
 const useActionBarEdit = () => {
   const { id } = useMessage();
-  const { beginEdit, editingComposers } = useThread()
+  const { beginEdit, editingComposers } = useThread();
   const disabled = editingComposers.includes(id);
 
   const callback = useCallback(() => {

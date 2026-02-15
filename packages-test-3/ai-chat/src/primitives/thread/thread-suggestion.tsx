@@ -31,22 +31,28 @@ const useThreadSuggestion = ({
    */
   clearComposer?: boolean | undefined;
 }) => {
-  const disabled = useThread(s => s.isDisabled);
+  const disabled = useThread((s) => s.isDisabled);
   const threadStore = useThreadStore();
 
   const resolvedSend = send ?? false;
 
   const callback = useCallback(() => {
-    const { isRunning, composerStore, send: sendThread } = threadStore.getState();
-    const composerText = composerStore!.getState().text
+    const {
+      isRunning,
+      composerStore,
+      send: sendThread,
+    } = threadStore.getState();
+    const composerText = composerStore!.getState().text;
 
     if (resolvedSend && !isRunning) {
-      sendThread({ clearText: clearComposer, prompt })
+      sendThread({ clearText: clearComposer, prompt });
     } else {
       if (clearComposer) {
         composerStore!.getState().setText(prompt);
       } else {
-        composerStore!.getState().setText(composerText.trim() ? `${composerText} ${prompt}` : prompt);
+        composerStore!
+          .getState()
+          .setText(composerText.trim() ? `${composerText} ${prompt}` : prompt);
       }
     }
   }, [threadStore, resolvedSend, clearComposer, prompt]);

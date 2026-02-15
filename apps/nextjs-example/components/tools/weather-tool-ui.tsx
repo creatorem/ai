@@ -130,31 +130,29 @@ const WeatherToolCard: FC<ToolCallMessagePartProps> = ({
             <WeatherIcon condition={currentCondition} size={30} />
           </div>
           <div>
-            <div className="text-4xl font-semibold tracking-tight">
+            <div className="font-semibold text-4xl tracking-tight">
               {currentF !== undefined ? `${toCelsius(currentF)}°C` : "--"}
             </div>
             <div className="text-sm text-white/80">{location}</div>
           </div>
         </div>
         <div className="text-right text-sm text-white/80">
-          <div>
-            H:{highF !== undefined ? `${toCelsius(highF)}°` : "--"}
-          </div>
-          <div>
-            L:{lowF !== undefined ? `${toCelsius(lowF)}°` : "--"}
-          </div>
+          <div>H:{highF !== undefined ? `${toCelsius(highF)}°` : "--"}</div>
+          <div>L:{lowF !== undefined ? `${toCelsius(lowF)}°` : "--"}</div>
         </div>
       </div>
 
       {range && (
-        <div className="mt-1 text-xs text-white/70">
+        <div className="mt-1 text-white/70 text-xs">
           {range.startDate} - {range.endDate}
         </div>
       )}
 
       {!forecast && (
         <div className="mt-3 text-sm text-white/80">
-          {status.type === "running" ? "Fetching forecast..." : "No forecast yet."}
+          {status.type === "running"
+            ? "Fetching forecast..."
+            : "No forecast yet."}
         </div>
       )}
 
@@ -165,9 +163,9 @@ const WeatherToolCard: FC<ToolCallMessagePartProps> = ({
               key={slot.label}
               className="flex flex-col items-center gap-2 rounded-2xl bg-white/15 px-2 py-3"
             >
-              <div className="text-xs text-white/80">{slot.label}</div>
+              <div className="text-white/80 text-xs">{slot.label}</div>
               <WeatherIcon condition={slot.condition} size={26} />
-              <div className="text-sm font-medium">{slot.tempC}°C</div>
+              <div className="font-medium text-sm">{slot.tempC}°C</div>
             </div>
           ))}
         </div>

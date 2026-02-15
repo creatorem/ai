@@ -1,1 +1,1 @@
-export type {RuntimeComponents} from './component-types'
+export type { RuntimeComponents } from "./component-types";

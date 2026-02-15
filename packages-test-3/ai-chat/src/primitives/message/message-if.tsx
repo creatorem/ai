@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, type FC, type PropsWithChildren } from "react";
-import { useMessage } from './message-root';
+import { useMessage } from "./message-root";
 import type { RequireAtLeastOne } from "../../utils/require-at-least-one";
 
 type MessageIfFilters = {

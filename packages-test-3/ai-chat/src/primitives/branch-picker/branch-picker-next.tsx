@@ -10,10 +10,12 @@ import { useThread } from "@creatorem/ai-chat/primitives/thread";
 import { useMessage, useMessageStore } from "../message";
 
 const useBranchPickerNext = () => {
-  const isRunning = useThread(s => s.isRunning);
-  const switchBranchDuringRun = useThread(s => s.capabilities.switchBranchDuringRun);
-  const branchNumber = useMessage(s => s.branchNumber);
-  const branchCount = useMessage(s => s.branchCount);
+  const isRunning = useThread((s) => s.isRunning);
+  const switchBranchDuringRun = useThread(
+    (s) => s.capabilities.switchBranchDuringRun,
+  );
+  const branchNumber = useMessage((s) => s.branchNumber);
+  const branchCount = useMessage((s) => s.branchCount);
   const messageStore = useMessageStore();
 
   const disabled = useMemo(() => {

@@ -163,7 +163,10 @@ export const useSmoothStream = <T extends SmoothableTextState>(
         1,
         Math.floor((dynamicCps * deltaMs) / 1000),
       );
-      const rawNextLength = Math.min(target.length, current.length + rawCharsToAdd);
+      const rawNextLength = Math.min(
+        target.length,
+        current.length + rawCharsToAdd,
+      );
 
       const nextLength = chunkByWord
         ? findSafeBoundary(target, rawNextLength, boundaryLookBehind)

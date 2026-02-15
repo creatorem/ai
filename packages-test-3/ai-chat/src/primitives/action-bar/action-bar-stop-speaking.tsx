@@ -8,7 +8,7 @@ import { useRuntime } from "@creatorem/ai-chat/runtime";
 import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 
 const useActionBarStopSpeaking = () => {
-  const speech = useMessage(s => s.speech);
+  const speech = useMessage((s) => s.speech);
   const messageStore = useMessageStore();
   const isSpeaking = useMemo(() => speech != null, [speech]);
 
@@ -22,7 +22,7 @@ const useActionBarStopSpeaking = () => {
 };
 
 export namespace ActionBarPrimitiveStopSpeaking {
-  export type Element = RuntimeComponents['Button'];
+  export type Element = RuntimeComponents["Button"];
   export type Props = ActionButtonProps<typeof useActionBarStopSpeaking>;
 }
 
@@ -32,10 +32,12 @@ export const ActionBarPrimitiveStopSpeaking = forwardRef<
 >((props, ref) => {
   const callback = useActionBarStopSpeaking();
 
-  const { components: {Button} } = useRuntime();
+  const {
+    components: { Button },
+  } = useRuntime();
 
   return (
-    // @ts-ignore
+    // @ts-expect-error
     <Button
       type="button"
       disabled={!callback}

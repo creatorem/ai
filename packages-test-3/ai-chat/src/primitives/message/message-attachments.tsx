@@ -1,7 +1,10 @@
 "use client";
 
 import { ComponentType, type FC, memo } from "react";
-import type { Attachment, CompleteAttachment } from "../../types/attachment-types";
+import type {
+  Attachment,
+  CompleteAttachment,
+} from "../../types/attachment-types";
 import { useMessage } from "./message-by-index-provider";
 import {
   AttachmentByIndexProvider,
@@ -11,7 +14,7 @@ import { useRuntime } from "@creatorem/ai-chat/runtime";
 import { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 
 export namespace MessagePrimitiveAttachments {
-  export type Props = React.ComponentProps<RuntimeComponents['Box']> & {
+  export type Props = React.ComponentProps<RuntimeComponents["Box"]> & {
     components:
       | {
           Image?: ComponentType | undefined;
@@ -20,7 +23,7 @@ export namespace MessagePrimitiveAttachments {
           Attachment?: ComponentType | undefined;
         }
       | undefined;
-      componentProps?: Record<string, unknown>;
+    componentProps?: Record<string, unknown>;
   };
 }
 
@@ -66,7 +69,10 @@ export const MessagePrimitiveAttachmentByIndex: FC<MessagePrimitiveAttachmentByI
     ({ index, attachment, components, componentProps }) => {
       return (
         <AttachmentByIndexProvider index={index} attachment={attachment}>
-          <AttachmentComponent components={components} componentProps={componentProps} />
+          <AttachmentComponent
+            components={components}
+            componentProps={componentProps}
+          />
         </AttachmentByIndexProvider>
       );
     },
@@ -85,9 +91,11 @@ MessagePrimitiveAttachmentByIndex.displayName =
 export const MessagePrimitiveAttachments: FC<
   MessagePrimitiveAttachments.Props
 > = ({ components, componentProps, ...props }) => {
-  const role = useMessage(s => s.role);
-  const attachments = useMessage(s => s.attachments);
-  const {components: {Box}} = useRuntime()
+  const role = useMessage((s) => s.role);
+  const attachments = useMessage((s) => s.attachments);
+  const {
+    components: { Box },
+  } = useRuntime();
   if (role !== "user") return null;
 
   return attachments.length > 0 ? (

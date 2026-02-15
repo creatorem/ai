@@ -24,8 +24,12 @@ function collectElementTags(nodes: RootContent[], tags: Set<string>): void {
   }
 }
 
-export function Markdown({ content, colors, renderers: customRenderers }: Props) {
-  const components = useRuntime().components
+export function Markdown({
+  content,
+  colors,
+  renderers: customRenderers,
+}: Props) {
+  const components = useRuntime().components;
 
   const renderers = useMemo<RenderersMap>(() => {
     const defaults = createRenderers(colors, components);

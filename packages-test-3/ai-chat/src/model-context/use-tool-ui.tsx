@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import {  useAiContext } from "../ai-provider";
+import { useAiContext } from "../ai-provider";
 import { UITool } from "../types/tools-types";
 
 export const useToolUI = <TArgs, TResult>(

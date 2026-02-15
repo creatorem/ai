@@ -20,18 +20,23 @@ export type ToolExecuteFunction<TArgs, TResult> = (
 ) => TResult | Promise<TResult>;
 
 export type BackendUITool<TArgs, TResult> = {
-    type?: 'backend'
-    toolName: string;
-    disabled?:boolean;
-    display?: ToolDisplayProps;
-    execute?: ToolExecuteFunction<TArgs, TResult>;
-    render: ToolCallMessagePartComponent<TArgs, TResult>;
+  type?: "backend";
+  toolName: string;
+  disabled?: boolean;
+  display?: ToolDisplayProps;
+  execute?: ToolExecuteFunction<TArgs, TResult>;
+  render: ToolCallMessagePartComponent<TArgs, TResult>;
 };
 
-export type FrontendUITool<TArgs, TResult> = Omit<BackendUITool<TArgs, TResult>, 'type'> & {
-    type: 'frontend'
-    description: string;
-    parameters: StandardSchemaV1<TArgs> | JSONSchema7;
+export type FrontendUITool<TArgs, TResult> = Omit<
+  BackendUITool<TArgs, TResult>,
+  "type"
+> & {
+  type: "frontend";
+  description: string;
+  parameters: StandardSchemaV1<TArgs> | JSONSchema7;
 };
 
-export type UITool<TArgs, TResult> = BackendUITool<TArgs, TResult> | FrontendUITool<TArgs, TResult>;
+export type UITool<TArgs, TResult> =
+  | BackendUITool<TArgs, TResult>
+  | FrontendUITool<TArgs, TResult>;

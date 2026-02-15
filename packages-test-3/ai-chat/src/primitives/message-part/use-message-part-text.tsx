@@ -3,7 +3,10 @@
 import { useMemo } from "react";
 import { usePart } from "./part-by-index-provider";
 import { MessagePartState } from "../../types/message-part-runtime";
-import { ReasoningMessagePart, TextMessagePart } from "../../types/message-part-types";
+import {
+  ReasoningMessagePart,
+  TextMessagePart,
+} from "../../types/message-part-types";
 
 export const useMessagePartText = () => {
   const part = usePart();

@@ -3,7 +3,10 @@
 import { forwardRef, useMemo } from "react";
 import { ActionButtonProps } from "../../utils/create-action-button";
 import { useCallback } from "react";
-import { useMessage, useMessageStore } from "../message/message-by-index-provider";
+import {
+  useMessage,
+  useMessageStore,
+} from "../message/message-by-index-provider";
 import { useRuntime } from "@creatorem/ai-chat/runtime";
 import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 import { composeEventHandlers } from "@creatorem/ai-chat/utils";
@@ -37,11 +40,11 @@ const useActionBarPrimitiveCopy = ({
 }: {
   copiedDuration?: number | undefined;
 } = {}) => {
-  const messageRole = useMessage(s => s.role);
-  const messageStatus = useMessage(s => s.status);
-  const messageParts = useMessage(s => s.parts);
+  const messageRole = useMessage((s) => s.role);
+  const messageStatus = useMessage((s) => s.status);
+  const messageParts = useMessage((s) => s.parts);
   const messageStore = useMessageStore();
-  const { copyToClipboard } = useRuntime().fn
+  const { copyToClipboard } = useRuntime().fn;
   // const messageId = useMessage(s => s.id);
   // const { editingComposers } = useThread()
 
@@ -61,8 +64,11 @@ const useActionBarPrimitiveCopy = ({
 
     copyToClipboard(valueToCopy, () => {
       msg.setIsCopied(true);
-      setTimeout(() => messageStore.getState().setIsCopied(false), copiedDuration);
-    })
+      setTimeout(
+        () => messageStore.getState().setIsCopied(false),
+        copiedDuration,
+      );
+    });
   }, [messageStore, copiedDuration]);
 
   if (!hasCopyableContent) return null;
@@ -70,7 +76,7 @@ const useActionBarPrimitiveCopy = ({
 };
 
 export namespace ActionBarPrimitiveCopy {
-  export type Element = RuntimeComponents['Button'];
+  export type Element = RuntimeComponents["Button"];
   /**
    * Props for the ActionBarPrimitive.Copy component.
    * Inherits all button element props and action button functionality.
@@ -96,10 +102,12 @@ export const ActionBarPrimitiveCopy = forwardRef<
   ActionBarPrimitiveCopy.Element,
   ActionBarPrimitiveCopy.Props
 >(({ copiedDuration, onClick, disabled, ...props }, forwardedRef) => {
-  const isCopied = useMessage(s => s.isCopied);
+  const isCopied = useMessage((s) => s.isCopied);
   const callback = useActionBarPrimitiveCopy({ copiedDuration });
 
-  const { components: { Button } } = useRuntime();
+  const {
+    components: { Button },
+  } = useRuntime();
 
   return (
     <Button

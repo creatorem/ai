@@ -69,7 +69,7 @@ export type ToolCallMessagePartComponent<
   TResult = any,
 > = ComponentType<ToolCallMessagePartProps<TArgs, TResult>>;
 
-// export type MessagePartComponent = 
+// export type MessagePartComponent =
 //   | TextMessagePartComponent
 //   | ReasoningMessagePartComponent
 //   | SourceMessagePartComponent

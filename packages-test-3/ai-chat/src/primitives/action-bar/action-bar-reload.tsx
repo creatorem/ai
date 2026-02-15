@@ -31,21 +31,15 @@ import { useMessage, useMessageStore } from "../message";
  * ```
  */
 const useActionBarReload = () => {
-  const isRunning = useThread(s => s.isRunning);
-  const isDisabled = useThread(s => s.isDisabled);
-  const messageRole = useMessage(s => s.role);
+  const isRunning = useThread((s) => s.isRunning);
+  const isDisabled = useThread((s) => s.isDisabled);
+  const messageRole = useMessage((s) => s.role);
   const messageStore = useMessageStore();
 
   const disabled = useMemo(
-    () =>
-      isRunning ||
-      isDisabled ||
-      messageRole !== "assistant",
-  [
-    isRunning,
-    isDisabled,
-    messageRole,
-  ]);
+    () => isRunning || isDisabled || messageRole !== "assistant",
+    [isRunning, isDisabled, messageRole],
+  );
 
   const callback = useCallback(() => {
     messageStore.getState().reload();

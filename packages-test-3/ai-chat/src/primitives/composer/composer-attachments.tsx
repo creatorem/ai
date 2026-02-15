@@ -12,13 +12,13 @@ import {
 export namespace ComposerPrimitiveAttachments {
   export type Props = {
     components:
-    | {
-      Image?: ComponentType | undefined;
-      Document?: ComponentType | undefined;
-      File?: ComponentType | undefined;
-      Attachment?: ComponentType | undefined;
-    }
-    | undefined;
+      | {
+          Image?: ComponentType | undefined;
+          Document?: ComponentType | undefined;
+          File?: ComponentType | undefined;
+          Attachment?: ComponentType | undefined;
+        }
+      | undefined;
   };
 }
 
@@ -82,11 +82,14 @@ ComposerPrimitiveAttachmentByIndex.displayName =
 export const ComposerPrimitiveAttachments: FC<
   ComposerPrimitiveAttachments.Props
 > = ({ components }) => {
-  const attachments = useComposer(s => s.attachments);
-  const removeAttachment = useComposer(s => s.removeAttachment);
+  const attachments = useComposer((s) => s.attachments);
+  const removeAttachment = useComposer((s) => s.removeAttachment);
 
   return (
-    <AttachmentsProvider attachments={attachments} removeAttachment={removeAttachment}>
+    <AttachmentsProvider
+      attachments={attachments}
+      removeAttachment={removeAttachment}
+    >
       <ComposerPrimitiveAttachmentsInner components={components} />
     </AttachmentsProvider>
   );
@@ -95,7 +98,7 @@ export const ComposerPrimitiveAttachments: FC<
 const ComposerPrimitiveAttachmentsInner: FC<
   ComposerPrimitiveAttachments.Props
 > = ({ components }) => {
-  const attachments = useComposer(s => s.attachments);
+  const attachments = useComposer((s) => s.attachments);
 
   return (
     <>

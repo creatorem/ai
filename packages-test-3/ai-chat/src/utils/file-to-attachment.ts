@@ -85,8 +85,10 @@ export const fileToAttachment = (
   const contentType =
     options.contentType ?? file.type ?? "application/octet-stream";
   const type = options.type ?? inferAttachmentType(contentType, name);
-  const status: PendingAttachmentStatus =
-    options.status ?? { type: "requires-action", reason: "composer-send" };
+  const status: PendingAttachmentStatus = options.status ?? {
+    type: "requires-action",
+    reason: "composer-send",
+  };
 
   const content =
     options.content ??

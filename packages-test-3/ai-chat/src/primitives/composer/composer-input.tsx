@@ -21,8 +21,10 @@ import { useComposedRefs } from "@creatorem/ai-chat/utils";
 import { fileToAttachment } from "../../utils/file-to-attachment";
 
 export namespace ComposerPrimitiveInput {
-  export type Element = RuntimeComponents['Input'];
-  export type Props = React.ComponentPropsWithoutRef<RuntimeComponents['Input']> & {
+  export type Element = RuntimeComponents["Input"];
+  export type Props = React.ComponentPropsWithoutRef<
+    RuntimeComponents["Input"]
+  > & {
     /**
      * Whether to submit the message when Enter is pressed (without Shift).
      * @default true
@@ -93,25 +95,27 @@ export const ComposerPrimitiveInput = forwardRef<
     },
     forwardedRef,
   ) => {
-    const eventHandler = useAiContext(s => s.eventHandler);
-    const text = useComposer(s => s.text);
-    const composerType = useComposer(s => s.type);
+    const eventHandler = useAiContext((s) => s.eventHandler);
+    const text = useComposer((s) => s.text);
+    const composerType = useComposer((s) => s.type);
     const composerStore = useComposerStore();
-    const isThreadDisabled = useThread(s => s.isDisabled);
-    const isThreadRunning = useThread(s => s.isRunning);
-    const threadCapabilities = useThread(s => s.capabilities);
-    const { components: { Input } } = useRuntime();
+    const isThreadDisabled = useThread((s) => s.isDisabled);
+    const isThreadRunning = useThread((s) => s.isRunning);
+    const threadCapabilities = useThread((s) => s.capabilities);
+    const {
+      components: { Input },
+    } = useRuntime();
 
     const value = useMemo(() => {
       return text;
     }, [text]);
 
-
     const isDisabled = useMemo(
       () =>
         // isThreadDisabled || composer.dictation?.inputDisabled,
         disabledProp || isThreadDisabled,
-      [disabledProp, isThreadDisabled]);
+      [disabledProp, isThreadDisabled],
+    );
 
     const textareaRef = useRef<ComposerPrimitiveInput.Element>(null);
     const ref = useComposedRefs(forwardedRef, textareaRef);
@@ -120,7 +124,13 @@ export const ComposerPrimitiveInput = forwardRef<
       if (!cancelOnEscape) return;
 
       // Only handle ESC if it originated from within this input
-      if (textareaRef.current && 'contains' in textareaRef.current && typeof textareaRef.current.contains === 'function' && !textareaRef.current.contains(e.target as Node)) return;
+      if (
+        textareaRef.current &&
+        "contains" in textareaRef.current &&
+        typeof textareaRef.current.contains === "function" &&
+        !textareaRef.current.contains(e.target as Node)
+      )
+        return;
 
       const { canCancel, cancel } = composerStore.getState();
       if (canCancel) {
@@ -136,8 +146,12 @@ export const ComposerPrimitiveInput = forwardRef<
       if (e.nativeEvent.isComposing) return;
 
       if (e.key === "Enter" && e.shiftKey === false) {
-
-        if (!isThreadRunning && textareaRef.current && 'closest' in textareaRef.current && typeof textareaRef.current.closest === 'function') {
+        if (
+          !isThreadRunning &&
+          textareaRef.current &&
+          "closest" in textareaRef.current &&
+          typeof textareaRef.current.closest === "function"
+        ) {
           e.preventDefault();
 
           textareaRef.current.closest("form")?.requestSubmit();
@@ -154,9 +168,7 @@ export const ComposerPrimitiveInput = forwardRef<
           e.preventDefault();
           await Promise.all(
             files.map((file) =>
-              composerStore
-                .getState()
-                .addAttachment(fileToAttachment(file)),
+              composerStore.getState().addAttachment(fileToAttachment(file)),
             ),
           );
         } catch (error) {
@@ -170,38 +182,39 @@ export const ComposerPrimitiveInput = forwardRef<
       const textarea = textareaRef.current;
       if (!textarea || !autoFocusEnabled) return;
 
-      if ('focus' in textarea && typeof textarea.focus === 'function' && 'setSelectionRange' in textarea && typeof textarea.setSelectionRange === 'function' && 'value' in textarea && typeof textarea.value === 'string') {
+      if (
+        "focus" in textarea &&
+        typeof textarea.focus === "function" &&
+        "setSelectionRange" in textarea &&
+        typeof textarea.setSelectionRange === "function" &&
+        "value" in textarea &&
+        typeof textarea.value === "string"
+      ) {
         textarea.focus({ preventScroll: true });
-        textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+        textarea.setSelectionRange(
+          textarea.value.length,
+          textarea.value.length,
+        );
       }
     }, [autoFocusEnabled]);
 
     useEffect(() => focus(), [focus]);
 
     useOnScrollToBottom(() => {
-      if (
-        composerType === "thread" &&
-        unstable_focusOnScrollToBottom
-      ) {
+      if (composerType === "thread" && unstable_focusOnScrollToBottom) {
         focus();
       }
     });
 
     useEffect(() => {
-      if (
-        composerType !== "thread" ||
-        !unstable_focusOnRunStart
-      )
+      if (composerType !== "thread" || !unstable_focusOnRunStart)
         return undefined;
 
       return eventHandler.on("thread.runStart", focus);
     }, [unstable_focusOnRunStart, eventHandler, focus, composerType]);
 
     useEffect(() => {
-      if (
-        composerType !== "thread" ||
-        !unstable_focusOnThreadSwitched
-      )
+      if (composerType !== "thread" || !unstable_focusOnThreadSwitched)
         return undefined;
 
       return eventHandler.on("threadListItem.switchedTo", focus);

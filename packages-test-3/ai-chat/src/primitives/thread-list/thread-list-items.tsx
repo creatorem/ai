@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { ComponentType, FC, memo, useMemo } from "react";
 import { useThreadList } from "./thread-list-provider";
@@ -63,4 +63,3 @@ export const ThreadListPrimitiveItems: FC<ThreadListPrimitiveItems.Props> = ({
 };
 
 ThreadListPrimitiveItems.displayName = "ThreadListPrimitive.Items";
-

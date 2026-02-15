@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from "react";
 import { AiProvider as Provider } from "@creatorem/ai-chat/ai-provider";
@@ -9,15 +9,23 @@ import { asyncStorageThreadAdapter } from "./adapters/async-storage-adapter";
 
 export * from "@creatorem/ai-chat/ai-provider";
 
-export function AiProvider({components,hooks, adapters: adaptersProp, ...props}: React.ComponentPropsWithoutRef<typeof Provider> & {components?: Partial<RuntimeComponents>, hooks?: Partial<RuntimeHooks>}) {
-    const adapters = {
-        ...adaptersProp,
-        thread: adaptersProp?.thread ?? asyncStorageThreadAdapter,
-    };
-    
-    return (
-        <AiChatNativeProvider components={components} hooks={hooks}>
-            <Provider {...props} adapters={adapters} />
-        </AiChatNativeProvider>
-    )
-};
+export function AiProvider({
+  components,
+  hooks,
+  adapters: adaptersProp,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof Provider> & {
+  components?: Partial<RuntimeComponents>;
+  hooks?: Partial<RuntimeHooks>;
+}) {
+  const adapters = {
+    ...adaptersProp,
+    thread: adaptersProp?.thread ?? asyncStorageThreadAdapter,
+  };
+
+  return (
+    <AiChatNativeProvider components={components} hooks={hooks}>
+      <Provider {...props} adapters={adapters} />
+    </AiChatNativeProvider>
+  );
+}

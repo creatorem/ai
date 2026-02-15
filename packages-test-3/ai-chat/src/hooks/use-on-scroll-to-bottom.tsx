@@ -7,10 +7,10 @@ import { useCallbackRef } from "./use-callback-ref";
 export const useOnScrollToBottom = (
   callback: (config: { behavior: ScrollBehavior }) => void,
 ) => {
-    const callbackRef = useCallbackRef(callback);
+  const callbackRef = useCallbackRef(callback);
   const viewportStore = useThreadViewportStore();
 
   useEffect(() => {
     return viewportStore.getState().onScrollToBottom(callbackRef);
-  }, [viewportStore,callbackRef]);
+  }, [viewportStore, callbackRef]);
 };

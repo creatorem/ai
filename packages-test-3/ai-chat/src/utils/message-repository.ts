@@ -61,7 +61,7 @@ export class MessageRepository<TMessage extends { id: string }> {
       if (parentOrRoot.next === child) {
         const fallbackId = parentOrRoot.children.at(-1);
         const fallback = fallbackId
-          ? this.messages.get(fallbackId) ?? null
+          ? (this.messages.get(fallbackId) ?? null)
           : null;
         parentOrRoot.next = fallback;
       }
@@ -85,10 +85,7 @@ export class MessageRepository<TMessage extends { id: string }> {
     }
   }
 
-  private updateLevels(
-    message: RepositoryMessage<TMessage>,
-    newLevel: number,
-  ) {
+  private updateLevels(message: RepositoryMessage<TMessage>, newLevel: number) {
     message.level = newLevel;
     for (const childId of message.children) {
       const childMessage = this.messages.get(childId);
@@ -143,9 +140,7 @@ export class MessageRepository<TMessage extends { id: string }> {
   getBranches(messageId: string): string[] {
     const message = this.messages.get(messageId);
     if (!message) {
-      throw new Error(
-        "MessageRepository(getBranches): Message not found.",
-      );
+      throw new Error("MessageRepository(getBranches): Message not found.");
     }
 
     const { children } = message.prev ?? this.root;
@@ -155,9 +150,7 @@ export class MessageRepository<TMessage extends { id: string }> {
   switchToBranch(messageId: string): void {
     const message = this.messages.get(messageId);
     if (!message) {
-      throw new Error(
-        "MessageRepository(switchToBranch): Branch not found.",
-      );
+      throw new Error("MessageRepository(switchToBranch): Branch not found.");
     }
 
     const prevOrRoot = message.prev ?? this.root;
@@ -180,9 +173,7 @@ export class MessageRepository<TMessage extends { id: string }> {
 
     const message = this.messages.get(messageId);
     if (!message) {
-      throw new Error(
-        "MessageRepository(resetHead): Message not found.",
-      );
+      throw new Error("MessageRepository(resetHead): Message not found.");
     }
 
     if (message.children.length > 0) {

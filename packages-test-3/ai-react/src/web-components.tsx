@@ -16,12 +16,16 @@ export const webComponents: RuntimeComponents = {
   //     {children}
   //   </div>
   // ),
-  Input: ({ onChange: onChangeProp, ...props }: Omit<React.ComponentPropsWithoutRef<
-    typeof TextareaAutosize
-  >, 'onChange'> & {
+  Input: ({
+    onChange: onChangeProp,
+    ...props
+  }: Omit<
+    React.ComponentPropsWithoutRef<typeof TextareaAutosize>,
+    "onChange"
+  > & {
     onChange?: (
       value: string,
-      event: React.ChangeEvent<HTMLTextAreaElement>
+      event: React.ChangeEvent<HTMLTextAreaElement>,
     ) => void;
   }) => (
     <TextareaAutosize
@@ -31,24 +35,34 @@ export const webComponents: RuntimeComponents = {
   ),
 
   // Content component
-  Markdown: ({ content, className }: { content: string; className?: string }) => (
+  Markdown: ({
+    content,
+    className,
+  }: {
+    content: string;
+    className?: string;
+  }) => (
     <div className={className}>
       <ReactMarkdown>{content}</ReactMarkdown>
     </div>
   ),
   CodeBlock: ({ value, className }: { value: string; className?: string }) => (
     <div className={className}>
-      <pre><code>{value}</code></pre>
+      <pre>
+        <code>{value}</code>
+      </pre>
     </div>
   ),
   Pre: "pre" as any,
 
   // Media components
   Image: Primitive.img,
-  Avatar: ({ src, className }: { src?: string; className?: string }) => <img src={src} alt="avatar" className={className} />,
+  Avatar: ({ src, className }: { src?: string; className?: string }) => (
+    <img src={src} alt="avatar" className={className} />
+  ),
 
   ComposerPrimitiveAddAttachment,
-  
+
   // Layout
   Separator: "hr" as any,
 

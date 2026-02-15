@@ -34,7 +34,7 @@ const useComposerAddAttachmentFile = ({
 
         if (result.canceled || !result.assets?.length) return;
 
-                let addedCount = 0;
+        let addedCount = 0;
 
         for (const asset of result.assets) {
           const file = await uriToFile(
@@ -42,7 +42,9 @@ const useComposerAddAttachmentFile = ({
             asset.name,
             asset.mimeType || "application/octet-stream",
           );
-          await addAttachment(fileToNativeAttachment(file as File & { uri?: string }));
+          await addAttachment(
+            fileToNativeAttachment(file as File & { uri?: string }),
+          );
           addedCount += 1;
         }
 

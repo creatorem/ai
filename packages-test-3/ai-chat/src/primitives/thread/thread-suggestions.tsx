@@ -1,7 +1,10 @@
 "use client";
 
 import { type ComponentType, type FC, memo, useMemo } from "react";
-import { SuggestionByIndexProvider, useSuggestions } from "../suggestion/suggestion-by-index-provider";
+import {
+  SuggestionByIndexProvider,
+  useSuggestions,
+} from "../suggestion/suggestion-by-index-provider";
 
 export namespace ThreadPrimitiveSuggestions {
   export type Props = {
@@ -82,7 +85,7 @@ ThreadPrimitiveSuggestionByIndex.displayName =
 export const ThreadPrimitiveSuggestionsImpl: FC<
   ThreadPrimitiveSuggestions.Props
 > = ({ components }) => {
-  const suggestionsLength = useSuggestions(s => s.suggestions.length);
+  const suggestionsLength = useSuggestions((s) => s.suggestions.length);
 
   const suggestionElements = useMemo(() => {
     if (suggestionsLength === 0) return null;

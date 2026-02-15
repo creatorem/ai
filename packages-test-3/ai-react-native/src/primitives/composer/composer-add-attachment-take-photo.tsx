@@ -65,11 +65,13 @@ const useComposerAddAttachmentTakePhoto = ({
 
 export namespace ComposerPrimitiveAddAttachmentTakePhoto {
   export type Element = ActionButtonElement;
-  export type Props = ActionButtonProps<typeof useComposerAddAttachmentTakePhoto>;
+  export type Props = ActionButtonProps<
+    typeof useComposerAddAttachmentTakePhoto
+  >;
 }
 
 export const ComposerPrimitiveAddAttachmentTakePhoto = createActionButton(
   "ComposerPrimitive.AddAttachmentTakePhoto",
   useComposerAddAttachmentTakePhoto,
-  ["onAddAttachment"]
+  ["onAddAttachment"],
 );

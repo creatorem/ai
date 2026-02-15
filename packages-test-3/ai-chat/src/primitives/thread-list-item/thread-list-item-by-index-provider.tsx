@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createStore, useStore, type StoreApi } from "zustand";
@@ -21,24 +21,37 @@ export type ThreadListItemState = {
   methods: ThreadListItemMethods;
 };
 
-const ThreadListItemStoreCtx = React.createContext<StoreApi<ThreadListItemState> | null>(null);
+const ThreadListItemStoreCtx =
+  React.createContext<StoreApi<ThreadListItemState> | null>(null);
 
 export function useThreadListItem(): ThreadListItemState;
-export function useThreadListItem<T>(selector: (state: ThreadListItemState) => T): T;
-export function useThreadListItem<T>(selector?: (state: ThreadListItemState) => T) {
+export function useThreadListItem<T>(
+  selector: (state: ThreadListItemState) => T,
+): T;
+export function useThreadListItem<T>(
+  selector?: (state: ThreadListItemState) => T,
+) {
   const store = React.useContext(ThreadListItemStoreCtx);
-  if (!store) throw new Error("useThreadListItem must be used within a ThreadListItemByIndexProvider.");
+  if (!store)
+    throw new Error(
+      "useThreadListItem must be used within a ThreadListItemByIndexProvider.",
+    );
   return useStore(store, selector as any);
 }
 
 export function useThreadListItemStore(): StoreApi<ThreadListItemState> {
   const store = React.useContext(ThreadListItemStoreCtx);
-  if (!store) throw new Error("useThreadListItemStore must be used within a ThreadListItemByIndexProvider.");
+  if (!store)
+    throw new Error(
+      "useThreadListItemStore must be used within a ThreadListItemByIndexProvider.",
+    );
   return store;
 }
 
-const removeFromList = (list: string[], id: string) => list.filter((value) => value !== id);
-const addUnique = (list: string[], id: string) => (list.includes(id) ? list : [...list, id]);
+const removeFromList = (list: string[], id: string) =>
+  list.filter((value) => value !== id);
+const addUnique = (list: string[], id: string) =>
+  list.includes(id) ? list : [...list, id];
 
 export const ThreadListItemByIndexProvider: React.FC<
   React.PropsWithChildren<{ index: number; archived?: boolean }>
@@ -50,10 +63,13 @@ export const ThreadListItemByIndexProvider: React.FC<
 
   const setActiveThreadId = useThreads((threads) => threads.setActiveThreadId);
   const setThreadIds = useThreads((threads) => threads.setThreadIds);
-  const setArchivedThreadIds = useThreads((threads) => threads.setArchivedThreadIds);
+  const setArchivedThreadIds = useThreads(
+    (threads) => threads.setArchivedThreadIds,
+  );
   const activeThreadId = useThreads((threads) => threads.activeThreadId);
 
-  const adapter = useAiContext((ctx) => ctx.adapters?.thread) ?? emptyStorageThreadAdapter;
+  const adapter =
+    useAiContext((ctx) => ctx.adapters?.thread) ?? emptyStorageThreadAdapter;
   const eventHandler = useAiContext((ctx) => ctx.eventHandler);
 
   const [title, setTitle] = useState("New thread");

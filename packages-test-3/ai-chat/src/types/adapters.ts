@@ -6,9 +6,12 @@
 // };
 
 import { Thread, Threads } from "./entities";
-import type { Attachment, PendingAttachment, CompleteAttachment } from "./attachment-types";
+import type {
+  Attachment,
+  PendingAttachment,
+  CompleteAttachment,
+} from "./attachment-types";
 import type { Unsubscribe } from "./unsuscribe";
-
 
 // export type ThreadListResponse = {
 //   threads: ThreadMetadata[];
@@ -20,21 +23,24 @@ import type { Unsubscribe } from "./unsuscribe";
 // };
 
 export type ThreadAdapter = {
-    list(): Promise<Pick<Threads, 'threadIds' | 'archivedThreadIds'>>;
+  list(): Promise<Pick<Threads, "threadIds" | "archivedThreadIds">>;
 
-    // rename(remoteId: string, newTitle: string): Promise<void>;
-    // archive(remoteId: string): Promise<void>;
-    // unarchive(remoteId: string): Promise<void>;
-    // delete(remoteId: string): Promise<void>;
-    // initialize(threadId: string): Promise<ThreadInitializeResponse>;
-    generateTitle?(
-      messages: any[],
-    ): Promise<string>;
-    fetch(threadId: string): Promise<Pick<Thread, 'title' | 'status' | 'messages'>>;
-    save(threadId: string, thread: Pick<Thread, 'title' | 'status' | 'messages'>): Promise<void>;
-    delete(threadId: string): Promise<void>;
-    // unstable_Provider?: ComponentType<PropsWithChildren>;
-  };
+  // rename(remoteId: string, newTitle: string): Promise<void>;
+  // archive(remoteId: string): Promise<void>;
+  // unarchive(remoteId: string): Promise<void>;
+  // delete(remoteId: string): Promise<void>;
+  // initialize(threadId: string): Promise<ThreadInitializeResponse>;
+  generateTitle?(messages: any[]): Promise<string>;
+  fetch(
+    threadId: string,
+  ): Promise<Pick<Thread, "title" | "status" | "messages">>;
+  save(
+    threadId: string,
+    thread: Pick<Thread, "title" | "status" | "messages">,
+  ): Promise<void>;
+  delete(threadId: string): Promise<void>;
+  // unstable_Provider?: ComponentType<PropsWithChildren>;
+};
 
 export type AttachmentAdapter = {
   accept: string;

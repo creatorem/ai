@@ -6,11 +6,14 @@ import { useRuntime } from "@creatorem/ai-chat/runtime";
 import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 
 export namespace MessagePartPrimitiveImage {
-  export type Element = ComponentRef<RuntimeComponents['Image']>;
+  export type Element = ComponentRef<RuntimeComponents["Image"]>;
   /**
    * Props for the MessagePartPrimitive.Image component.
    */
-  export type Props = Omit<ComponentPropsWithoutRef<RuntimeComponents['Image']>, 'src'>;
+  export type Props = Omit<
+    ComponentPropsWithoutRef<RuntimeComponents["Image"]>,
+    "src"
+  >;
 }
 
 /**
@@ -33,8 +36,10 @@ export const MessagePartPrimitiveImage = forwardRef<
   MessagePartPrimitiveImage.Props
 >((props, forwardedRef) => {
   const { image } = useMessagePartImage();
-  const { components: { Image } } = useRuntime();
-  
+  const {
+    components: { Image },
+  } = useRuntime();
+
   return <Image src={image} {...props} ref={forwardedRef} />;
 });
 

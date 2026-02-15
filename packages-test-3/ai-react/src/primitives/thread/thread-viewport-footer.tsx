@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  forwardRef,
-  ComponentPropsWithoutRef,
-  useCallback,
-} from "react";
+import { forwardRef, ComponentPropsWithoutRef, useCallback } from "react";
 import { useThreadViewport } from "../../../../ai-chat/src/primitives/thread/thread-viewport-context";
 // import { useSizeHandle } from "../../hooks/use-size-handle";
 import { RuntimeComponents } from "@creatorem/ai-chat/component-types";
@@ -13,8 +9,8 @@ import { useComposedRefs } from "@creatorem/ai-chat/utils";
 import { useSizeHandle } from "../../hooks/use-size-handle";
 
 export namespace ThreadPrimitiveViewportFooter {
-  export type Element = RuntimeComponents['Box'];
-  export type Props = ComponentPropsWithoutRef<RuntimeComponents['Box']>;
+  export type Element = RuntimeComponents["Box"];
+  export type Props = ComponentPropsWithoutRef<RuntimeComponents["Box"]>;
 }
 
 /**
@@ -42,9 +38,11 @@ export const ThreadPrimitiveViewportFooter = forwardRef<
   ThreadPrimitiveViewportFooter.Element,
   ThreadPrimitiveViewportFooter.Props
 >((props, forwardedRef) => {
-  const {components: {Box}} = useRuntime();
+  const {
+    components: { Box },
+  } = useRuntime();
   const setInsetHeight = useThreadViewport((s) => s.setInsetHeight);
-  
+
   // todo this is web specific, we should use the runtime to get the height
   const getHeight = useCallback((el: HTMLElement) => {
     const marginTop = parseFloat(getComputedStyle(el).marginTop) || 0;

@@ -92,4 +92,3 @@ export const fileToNativeAttachment = (
     status: { type: "requires-action", reason: "composer-send" },
   };
 };
-

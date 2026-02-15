@@ -1,64 +1,64 @@
 {
-    "name": "@creatorem/ai-react",
-    "version": "0.0.1",
-    "license": "MIT",
-    "type": "module",
-    "main": "./dist/index.js",
-    "types": "./dist/index.d.ts",
-    "files": [
-        "dist",
-        "src"
-    ],
-    "scripts": {
-        "clean": "git clean -xdf .turbo node_modules",
-        "format": "prettier --check \"**/*.{ts,tsx}\"",
-        "lint": "eslint .",
-        "typecheck": "tsc --noEmit",
-        "build": "tsc"
-    },
-    "exports": {
-        ".": "./src/index.ts",
-        "./ai-provider": "./src/ai-provider.tsx",
-        "./primitives/action-bar": "./src/primitives/action-bar.ts",
-        "./primitives/attachment": "./src/primitives/attachment.ts",
-        "./primitives/branch-picker": "./src/primitives/branch-picker.ts",
-        "./primitives/composer": "./src/primitives/composer/index.ts",
-        "./primitives/error": "./src/primitives/error.ts",
-        "./primitives/message": "./src/primitives/message.ts",
-        "./primitives/message-part": "./src/primitives/message-part.ts",
-        "./primitives/suggestion": "./src/primitives/suggestion.ts",
-        "./primitives/thread": "./src/primitives/thread/index.ts",
-        "./primitives/thread-list": "./src/primitives/thread-list.ts",
-        "./primitives/thread-list-item": "./src/primitives/thread-list-item.ts",
-        "./primitives/thread-list-item-more": "./src/primitives/thread-list-item-more.ts",
-        "./primitives/reasoning": "./src/primitives/reasoning/index.ts",
-        "./web-components": "./src/web-components.tsx",
-        "./markdown": "./src/markdown/index.ts",
-        "./shimmer.css": "./src/shimmer.css"
-    },
-    "peerDependencies": {
-        "@creatorem/ai-chat": "workspace:*",
-        "@types/react": "*",
-        "react": "^18 || ^19",
-        "react-dom": "^18 || ^19"
-    },
-    "devDependencies": {
-        "@tooling/tsconfig": "workspace:*",
-        "@types/react": "^19.1.0",
-        "@types/react-dom": "^19.0.0"
-    },
-    "dependencies": {
-        "@ai-sdk/react": "^3.0.52",
-        "ai": "^6.0.50",
-        "@radix-ui/primitive": "^1.1.3",
-        "@radix-ui/react-primitive": "^2.1.4",
-        "@types/hast": "^3.0.4",
-        "classnames": "^2.5.1",
-        "hast": "^1.0.0",
-        "nanoid": "^5.1.6",
-        "react-markdown": "^10.1.0",
-        "react-textarea-autosize": "^8.5.9",
-        "zod": "^4.3.6",
-        "zustand": "^5.0.11"
-    }
+  "name": "@creatorem/ai-react",
+  "version": "0.0.1",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "clean": "git clean -xdf .turbo node_modules",
+    "format": "prettier --check \"**/*.{ts,tsx}\"",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./ai-provider": "./src/ai-provider.tsx",
+    "./primitives/action-bar": "./src/primitives/action-bar.ts",
+    "./primitives/attachment": "./src/primitives/attachment.ts",
+    "./primitives/branch-picker": "./src/primitives/branch-picker.ts",
+    "./primitives/composer": "./src/primitives/composer/index.ts",
+    "./primitives/error": "./src/primitives/error.ts",
+    "./primitives/message": "./src/primitives/message.ts",
+    "./primitives/message-part": "./src/primitives/message-part.ts",
+    "./primitives/suggestion": "./src/primitives/suggestion.ts",
+    "./primitives/thread": "./src/primitives/thread/index.ts",
+    "./primitives/thread-list": "./src/primitives/thread-list.ts",
+    "./primitives/thread-list-item": "./src/primitives/thread-list-item.ts",
+    "./primitives/thread-list-item-more": "./src/primitives/thread-list-item-more.ts",
+    "./primitives/reasoning": "./src/primitives/reasoning/index.ts",
+    "./web-components": "./src/web-components.tsx",
+    "./markdown": "./src/markdown/index.ts",
+    "./shimmer.css": "./src/shimmer.css"
+  },
+  "peerDependencies": {
+    "@creatorem/ai-chat": "workspace:*",
+    "@types/react": "*",
+    "react": "^18 || ^19",
+    "react-dom": "^18 || ^19"
+  },
+  "devDependencies": {
+    "@tooling/tsconfig": "workspace:*",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.0.0"
+  },
+  "dependencies": {
+    "@ai-sdk/react": "^3.0.52",
+    "ai": "^6.0.50",
+    "@radix-ui/primitive": "^1.1.3",
+    "@radix-ui/react-primitive": "^2.1.4",
+    "@types/hast": "^3.0.4",
+    "classnames": "^2.5.1",
+    "hast": "^1.0.0",
+    "nanoid": "^5.1.6",
+    "react-markdown": "^10.1.0",
+    "react-textarea-autosize": "^8.5.9",
+    "zod": "^4.3.6",
+    "zustand": "^5.0.11"
+  }
 }

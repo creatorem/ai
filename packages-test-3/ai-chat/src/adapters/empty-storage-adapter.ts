@@ -7,7 +7,7 @@ export const emptyStorageThreadAdapter: ThreadAdapter = {
   },
 
   async fetch(
-    _threadId: string
+    _threadId: string,
   ): Promise<Pick<Thread, "title" | "status" | "messages">> {
     return {
       title: "New Thread",
@@ -18,7 +18,7 @@ export const emptyStorageThreadAdapter: ThreadAdapter = {
 
   async save(
     _threadId: string,
-    _thread: Pick<Thread, "title" | "status" | "messages">
+    _thread: Pick<Thread, "title" | "status" | "messages">,
   ): Promise<void> {
     // No-op.
   },
@@ -30,7 +30,7 @@ export const emptyStorageThreadAdapter: ThreadAdapter = {
 
 export function saveThread(
   _threadId: string,
-  _thread: Pick<Thread, "title" | "status" | "messages">
+  _thread: Pick<Thread, "title" | "status" | "messages">,
 ): void {
   // No-op.
 }

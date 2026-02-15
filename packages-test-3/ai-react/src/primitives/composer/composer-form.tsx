@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  type ComponentRef,
-  forwardRef,
-  ComponentPropsWithoutRef,
-} from "react";
+import { type ComponentRef, forwardRef, ComponentPropsWithoutRef } from "react";
 import { composeEventHandlers } from "@creatorem/ai-chat/utils";
 import { Primitive } from "@radix-ui/react-primitive";
 import { useComposerSend } from "@creatorem/ai-chat/primitives/composer";
@@ -39,7 +35,7 @@ export const ComposerPrimitiveForm = forwardRef<
 >(({ onSubmit, ...rest }, forwardedRef) => {
   const send = useComposerSend();
 
-  const handleSubmit: ComposerPrimitiveRoot.Props['onSubmit'] = (e) => {
+  const handleSubmit: ComposerPrimitiveRoot.Props["onSubmit"] = (e) => {
     e.preventDefault();
 
     if (!send) return;

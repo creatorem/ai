@@ -1,19 +1,15 @@
 "use client";
 
-import {
-  type ComponentRef,
-  forwardRef,
-  ComponentPropsWithoutRef,
-} from "react";
+import { type ComponentRef, forwardRef, ComponentPropsWithoutRef } from "react";
 import { useMessagePartText } from "./use-message-part-text";
 import { useRuntime } from "@creatorem/ai-chat/runtime";
 import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 import { useSmoothStream } from "../../utils/smooth-stream";
 
 export namespace MessagePartPrimitiveText {
-  export type Element = ComponentRef<RuntimeComponents['Text'] >;
+  export type Element = ComponentRef<RuntimeComponents["Text"]>;
   export type Props = Omit<
-    ComponentPropsWithoutRef<RuntimeComponents['Text'] >,
+    ComponentPropsWithoutRef<RuntimeComponents["Text"]>,
     "children" | "asChild"
   > & {
     /**
@@ -46,8 +42,10 @@ export const MessagePartPrimitiveText = forwardRef<
   MessagePartPrimitiveText.Props
 >(({ smooth = true, ...rest }, forwardedRef) => {
   // const { text, status } = useSmoothStream(useMessagePartText(), smooth);
-  const { text, status } = useMessagePartText()
-  const { components: { Text } } = useRuntime();
+  const { text, status } = useMessagePartText();
+  const {
+    components: { Text },
+  } = useRuntime();
 
   return (
     <Text data-status={status.type} {...rest} ref={forwardedRef}>

@@ -12,7 +12,7 @@ import {
   type ComponentType,
 } from "react";
 import { View } from "react-native";
-import {  useMessagePartText } from "@creatorem/ai-chat/primitives/message-part";
+import { useMessagePartText } from "@creatorem/ai-chat/primitives/message-part";
 import { useSmoothStream } from "@creatorem/ai-chat/utils";
 import { Markdown } from "../renderer/Markdown";
 import type { CodeHeaderProps, RenderersMap } from "../renderer/types";
@@ -68,9 +68,7 @@ const MarkdownTextInner: FC<MarkdownTextPrimitiveProps> = ({
     [textColor, textSecondaryColor],
   );
 
-  return (
-    <Markdown content={text} colors={colors} renderers={renderers} />
-  );
+  return <Markdown content={text} colors={colors} renderers={renderers} />;
 };
 
 const MarkdownTextPrimitiveImpl: ForwardRefExoticComponent<MarkdownTextPrimitiveProps> &
@@ -88,14 +86,10 @@ const MarkdownTextPrimitiveImpl: ForwardRefExoticComponent<MarkdownTextPrimitive
     forwardedRef,
   ) => {
     return (
-      <Container
-        {...containerProps}
-        className={className}
-        ref={forwardedRef}
-      >
+      <Container {...containerProps} className={className} ref={forwardedRef}>
         <MarkdownTextInner {...rest} />
       </Container>
-    ) 
+    );
   },
 );
 

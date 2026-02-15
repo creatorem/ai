@@ -63,7 +63,7 @@ export type ToolCallMessagePart<
   readonly artifact?: unknown;
   readonly interrupt?: { type: "human"; payload: unknown };
   readonly parentId?: string;
-  readonly messages?: readonly Thread['messages'][0][];
+  readonly messages?: readonly Thread["messages"][0][];
 };
 
 export type ThreadUserMessagePart =

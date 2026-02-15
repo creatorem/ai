@@ -17,7 +17,7 @@ const useActionBarFeedbackPositive = () => {
 };
 
 export namespace ActionBarPrimitiveFeedbackPositive {
-  export type Element = RuntimeComponents['Button'];
+  export type Element = RuntimeComponents["Button"];
   export type Props = ActionButtonProps<typeof useActionBarFeedbackPositive>;
 }
 
@@ -25,14 +25,17 @@ export const ActionBarPrimitiveFeedbackPositive = forwardRef<
   ActionBarPrimitiveFeedbackPositive.Element,
   ActionBarPrimitiveFeedbackPositive.Props
 >(({ onClick, disabled, ...props }, forwardedRef) => {
-  const metadata = useMessage(s => s.metadata);
+  const metadata = useMessage((s) => s.metadata);
   const isSubmitted = useMemo(
     () => metadata.submittedFeedback?.type === "positive",
-    [metadata]);
+    [metadata],
+  );
 
   const callback = useActionBarFeedbackPositive();
 
-  const { components: { Button } } = useRuntime();
+  const {
+    components: { Button },
+  } = useRuntime();
 
   return (
     <Button
@@ -41,7 +44,7 @@ export const ActionBarPrimitiveFeedbackPositive = forwardRef<
       {...props}
       ref={forwardedRef}
       disabled={disabled || !callback}
-      // @ts-ignore
+      // @ts-expect-error
       onClick={(e: React.MouseEvent) => {
         onClick?.(e);
         callback?.();

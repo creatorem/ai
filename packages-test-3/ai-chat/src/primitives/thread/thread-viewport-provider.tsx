@@ -3,8 +3,15 @@
 import type { FC, PropsWithChildren } from "react";
 import { useEffect, useState } from "react";
 import { writableStore } from "../../utils/readonly-store";
-import { ThreadViewportContext, ThreadViewportContextValue, useThreadViewportStore } from "./thread-viewport-context";
-import { makeThreadViewportStore, ThreadViewportStoreOptions } from "./thread-viewport-runtime";
+import {
+  ThreadViewportContext,
+  ThreadViewportContextValue,
+  useThreadViewportStore,
+} from "./thread-viewport-context";
+import {
+  makeThreadViewportStore,
+  ThreadViewportStoreOptions,
+} from "./thread-viewport-runtime";
 
 export type ThreadViewportProviderProps = PropsWithChildren<{
   options?: ThreadViewportStoreOptions;

@@ -21,10 +21,10 @@ export const useActionBarFloatStatus = ({
   autohide,
   autohideFloat,
 }: UseActionBarFloatStatusProps) => {
-  const isRunning = useThread(s => s.isRunning);
-  const isLast = useMessage(s => s.isLast);
-  const isHovering = useMessage(s => s.isHovering);
-  const branchCount = useMessage(s => s.branchCount);
+  const isRunning = useThread((s) => s.isRunning);
+  const isLast = useMessage((s) => s.isLast);
+  const isHovering = useMessage((s) => s.isHovering);
+  const branchCount = useMessage((s) => s.branchCount);
 
   return useMemo(() => {
     if (hideWhenRunning && isRunning) return HideAndFloatStatus.Hidden;
@@ -46,5 +46,13 @@ export const useActionBarFloatStatus = ({
       return HideAndFloatStatus.Floating;
 
     return HideAndFloatStatus.Normal;
-  }, [isRunning, isLast, isHovering, branchCount, hideWhenRunning, autohide, autohideFloat]);
+  }, [
+    isRunning,
+    isLast,
+    isHovering,
+    branchCount,
+    hideWhenRunning,
+    autohide,
+    autohideFloat,
+  ]);
 };

@@ -1,11 +1,11 @@
-import React, { createContext, useContext, type ReactNode } from 'react';
-import { RuntimeComponents } from './component-types';
-import { RuntimeHooks, AutoScrollConfig } from './hook-types';
+import React, { createContext, useContext, type ReactNode } from "react";
+import { RuntimeComponents } from "./component-types";
+import { RuntimeHooks, AutoScrollConfig } from "./hook-types";
 export type { AutoScrollConfig };
 
 export type RuntimeFunctions = {
-  copyToClipboard: (value:string, callback: () => void) => void
-}
+  copyToClipboard: (value: string, callback: () => void) => void;
+};
 
 export interface RuntimeContextValue {
   components: RuntimeComponents;
@@ -19,29 +19,33 @@ const defaultComponents: RuntimeComponents = {
   Text: React.Fragment,
   Button: ({ children, ...props }) => <button {...props}>{children}</button>,
   // ScrollArea: ({ children, ...props }) => <div {...props} style={{ overflow: 'auto', ...props.style }}>{children}</div>,
-  Input: ({onChange: onChangeProp, ...props}) => <textarea {...props} onChange={(e) => onChangeProp?.(e.target.value, e)} />,
-  
+  Input: ({ onChange: onChangeProp, ...props }) => (
+    <textarea {...props} onChange={(e) => onChangeProp?.(e.target.value, e)} />
+  ),
+
   // Content Components
   Markdown: ({ content }) => <pre>{content}</pre>,
   CodeBlock: ({ value }) => <pre>{value}</pre>,
   Pre: ({ children }) => <pre>{children}</pre>,
-  
+
   // Media Components
-  Image: (props) => <img {...props} alt={props.alt || ''} />,
+  Image: (props) => <img {...props} alt={props.alt || ""} />,
   Avatar: (props) => <img {...props} alt="Avatar" />,
-  
+
   // Attachments
-  ComposerPrimitiveAddAttachment: ({ children, ...props }) => <button {...props}>{children}</button>,
+  ComposerPrimitiveAddAttachment: ({ children, ...props }) => (
+    <button {...props}>{children}</button>
+  ),
 
   // Layout
   Separator: (props) => <hr {...props} />,
-   
+
   // Logic/Wrappers
   MessageSpacer: ({ children }) => <>{children}</>,
- };
+};
 
 const defaultHooks: RuntimeHooks = {
-  useMessageRootRef: (ref) => ({ref}),
+  useMessageRootRef: (ref) => ({ ref }),
 };
 
 const defaultFunctions: RuntimeFunctions = {
@@ -81,7 +85,7 @@ export const RuntimeProvider = ({
 export const useRuntime = () => {
   const context = useContext(RuntimeContext);
   if (!context) {
-    throw new Error('useRuntime must be used within a RuntimeProvider');
+    throw new Error("useRuntime must be used within a RuntimeProvider");
   }
   return context;
 };

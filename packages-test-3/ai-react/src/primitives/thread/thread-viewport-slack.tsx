@@ -58,11 +58,11 @@ export const ThreadPrimitiveViewportSlack: FC<ThreadViewportSlackProps> = ({
   fillClampThreshold = "10em",
   fillClampOffset = "6em",
 }) => {
-  const messageIsLast = useMessage(s => s.isLast);
-  const messageRole = useMessage(s => s.role);
-  const messageIndex = useMessage(s => s.index);
-  const prevMessageRole = useThread(s =>
-    messageIndex >= 1 ? s.messages.at(messageIndex - 1)?.role : undefined
+  const messageIsLast = useMessage((s) => s.isLast);
+  const messageRole = useMessage((s) => s.role);
+  const messageIndex = useMessage((s) => s.index);
+  const prevMessageRole = useThread((s) =>
+    messageIndex >= 1 ? s.messages.at(messageIndex - 1)?.role : undefined,
   );
 
   const shouldApplySlack = useMemo(
@@ -72,11 +72,14 @@ export const ThreadPrimitiveViewportSlack: FC<ThreadViewportSlackProps> = ({
       messageRole === "assistant" &&
       messageIndex >= 1 &&
       prevMessageRole === "user",
-    [messageIsLast, messageRole, messageIndex, prevMessageRole]);
+    [messageIsLast, messageRole, messageIndex, prevMessageRole],
+  );
 
   const threadViewportStore = useThreadViewportStore({ optional: true });
   const isNested = useContext(SlackNestingContext);
-  const { components: {Box} } = useRuntime();
+  const {
+    components: { Box },
+  } = useRuntime();
 
   const ref = useCallback(
     (el: HTMLElement | null) => {

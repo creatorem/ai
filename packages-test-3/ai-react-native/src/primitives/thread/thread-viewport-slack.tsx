@@ -85,11 +85,12 @@ export const ThreadPrimitiveViewportSlack: FC<ThreadViewportSlackProps> = ({
   const threadViewportStore = useThreadViewportStore({ optional: true });
   const isNested = useContext(SlackNestingContext);
   // const { shouldApplySlack, threshold, offset } = useSlackConfig(
-  const { shouldApplySlack } = useSlackConfig(
-    // fillClampThreshold,
-    // fillClampOffset,
-  );
-  const [minHeight, setMinHeight] = useState(0); 
+  const { shouldApplySlack } =
+    useSlackConfig(
+      // fillClampThreshold,
+      // fillClampOffset,
+    );
+  const [minHeight, setMinHeight] = useState(0);
 
   useEffect(() => {
     if (!threadViewportStore || isNested) {
@@ -113,7 +114,7 @@ export const ThreadPrimitiveViewportSlack: FC<ThreadViewportSlackProps> = ({
 
     updateMinHeight();
     return threadViewportStore.subscribe(updateMinHeight);
-  // }, [threadViewportStore, isNested, shouldApplySlack, threshold, offset]);
+    // }, [threadViewportStore, isNested, shouldApplySlack, threshold, offset]);
   }, [threadViewportStore, isNested, shouldApplySlack]);
 
   //   const parts = useMessage((s) => s.parts);
@@ -124,9 +125,7 @@ export const ThreadPrimitiveViewportSlack: FC<ThreadViewportSlackProps> = ({
   return (
     <SlackNestingContext.Provider value={true}>
       {/* <View style={{ minHeight, backgroundColor: 'red', borderTopColor: 'blue', borderTopWidth: 1 }}> */}
-      <View style={{ minHeight }}>
-        {children}
-      </View>
+      <View style={{ minHeight }}>{children}</View>
     </SlackNestingContext.Provider>
   );
 };

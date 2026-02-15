@@ -6,7 +6,7 @@ import { useRuntime } from "@creatorem/ai-chat/runtime";
 import { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 
 const useBranchPickerCount = () => {
-  return useMessage(s => s.branchCount);
+  return useMessage((s) => s.branchCount);
 };
 
 export namespace BranchPickerPrimitiveCount {
@@ -14,7 +14,7 @@ export namespace BranchPickerPrimitiveCount {
    * Props for the BranchPickerPrimitive.Count component.
    * This component takes no props.
    */
-  export type Props = React.ComponentPropsWithRef<RuntimeComponents['Text']>
+  export type Props = React.ComponentPropsWithRef<RuntimeComponents["Text"]>;
 }
 
 /**
@@ -33,7 +33,9 @@ export namespace BranchPickerPrimitiveCount {
 export const BranchPickerPrimitiveCount: FC<
   BranchPickerPrimitiveCount.Props
 > = (props) => {
-    const { components: {Text} } = useRuntime();
+  const {
+    components: { Text },
+  } = useRuntime();
   const branchCount = useBranchPickerCount();
   return <Text {...props}>{branchCount}</Text>;
 };

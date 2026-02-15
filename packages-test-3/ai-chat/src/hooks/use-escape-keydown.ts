@@ -1,9 +1,6 @@
-
 import { useEffect } from "react";
 
-export const useEscapeKeydown = (
-  onEscape: (event: KeyboardEvent) => void,
-) => {
+export const useEscapeKeydown = (onEscape: (event: KeyboardEvent) => void) => {
   useEffect(() => {
     if (typeof window === "undefined" || !window.addEventListener) return;
 

@@ -59,7 +59,7 @@ export const asyncStorageThreadAdapter: ThreadAdapter = {
   },
 
   async fetch(
-    threadId: string
+    threadId: string,
   ): Promise<Pick<Thread, "title" | "status" | "messages">> {
     const data = await getStoredData();
     const thread = data.threads[threadId];
@@ -81,7 +81,7 @@ export const asyncStorageThreadAdapter: ThreadAdapter = {
 
   async save(
     threadId: string,
-    thread: Pick<Thread, "title" | "status" | "messages">
+    thread: Pick<Thread, "title" | "status" | "messages">,
   ): Promise<void> {
     await saveThread(threadId, thread);
   },
@@ -93,7 +93,7 @@ export const asyncStorageThreadAdapter: ThreadAdapter = {
 
 export async function saveThread(
   threadId: string,
-  thread: Pick<StoredThread, "title" | "status" | "messages">
+  thread: Pick<StoredThread, "title" | "status" | "messages">,
 ): Promise<void> {
   const data = await getStoredData();
   const existing = data.threads[threadId];
@@ -144,7 +144,7 @@ export async function unarchiveThread(threadId: string): Promise<void> {
 
 export async function renameThread(
   threadId: string,
-  newTitle: string
+  newTitle: string,
 ): Promise<void> {
   const data = await getStoredData();
   const thread = data.threads[threadId];

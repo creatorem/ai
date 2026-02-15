@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   ActionButtonElement,
@@ -18,7 +18,9 @@ export const ThreadListPrimitiveNew = forwardRef<
   ThreadListPrimitiveNew.Element,
   ThreadListPrimitiveNew.Props
 >(({ onClick, disabled, ...props }, forwardedRef) => {
-  const { components: { Button } } = useRuntime();
+  const {
+    components: { Button },
+  } = useRuntime();
   const activeThreadId = useThreadList((s) => s.activeThreadId);
   const switchToNewThread = useThreadList((s) => s.switchToNewThread);
 
@@ -37,4 +39,3 @@ export const ThreadListPrimitiveNew = forwardRef<
 });
 
 ThreadListPrimitiveNew.displayName = "ThreadListPrimitive.New";
-

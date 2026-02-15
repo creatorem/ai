@@ -60,7 +60,7 @@ export const localStorageThreadAdapter: ThreadAdapter = {
   },
 
   async fetch(
-    threadId: string
+    threadId: string,
   ): Promise<Pick<Thread, "title" | "status" | "messages">> {
     const data = getStoredData();
     const thread = data.threads[threadId];
@@ -82,7 +82,7 @@ export const localStorageThreadAdapter: ThreadAdapter = {
 
   async save(
     threadId: string,
-    thread: Pick<Thread, "title" | "status" | "messages">
+    thread: Pick<Thread, "title" | "status" | "messages">,
   ): Promise<void> {
     saveThread(threadId, thread);
   },
@@ -95,7 +95,7 @@ export const localStorageThreadAdapter: ThreadAdapter = {
 // Helper functions for saving threads (to be used externally)
 export function saveThread(
   threadId: string,
-  thread: Pick<StoredThread, "title" | "status" | "messages">
+  thread: Pick<StoredThread, "title" | "status" | "messages">,
 ): void {
   const data = getStoredData();
   const existing = data.threads[threadId];

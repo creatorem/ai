@@ -6,9 +6,12 @@ import {
   ComponentRef,
   forwardRef,
   useCallback,
-  useRef
+  useRef,
 } from "react";
-import { type ThreadPrimitiveViewport, useThreadViewport } from "@creatorem/ai-chat/primitives/thread";
+import {
+  type ThreadPrimitiveViewport,
+  useThreadViewport,
+} from "@creatorem/ai-chat/primitives/thread";
 import { useSizeHandle } from "../../hooks/use-size-handle";
 import { Primitive } from "@radix-ui/react-primitive";
 import { useAiEvent } from "@creatorem/ai-chat/ai-provider";
@@ -19,7 +22,7 @@ import { useManagedRef, useOnScrollToBottom } from "@creatorem/ai-chat/hooks";
 import type { AutoScrollConfig } from "@creatorem/ai-chat/runtime";
 
 const useThreadViewportAutoScroll = <TElement extends HTMLElement>(
-  config?: AutoScrollConfig
+  config?: AutoScrollConfig,
 ) => {
   const {
     autoScroll: autoScrollProp,
@@ -30,7 +33,8 @@ const useThreadViewportAutoScroll = <TElement extends HTMLElement>(
   const divRef = useRef<TElement>(null);
 
   const threadViewportStore = useThreadViewportStore();
-  const autoScroll = autoScrollProp ?? threadViewportStore.getState().turnAnchor !== "top";
+  const autoScroll =
+    autoScrollProp ?? threadViewportStore.getState().turnAnchor !== "top";
 
   const lastScrollTop = useRef<number>(0);
   const scrollingToBottomBehaviorRef = useRef<ScrollBehavior | null>(null);
@@ -116,14 +120,16 @@ const useThreadViewportAutoScroll = <TElement extends HTMLElement>(
   });
 
   const autoScrollRef = useComposedRefs<TElement>(resizeRef, scrollRef, divRef);
-  return autoScrollRef
+  return autoScrollRef;
 };
-
 
 const useViewportSizeRef = () => {
   const threadViewportStore = useThreadViewportStore();
   const getHeight = useCallback((el: HTMLElement) => el.clientHeight, []);
-  return useSizeHandle(threadViewportStore.getState().setViewportHeight, getHeight);
+  return useSizeHandle(
+    threadViewportStore.getState().setViewportHeight,
+    getHeight,
+  );
 };
 
 export const ThreadPrimitiveViewportScrollable = forwardRef<
@@ -152,13 +158,22 @@ export const ThreadPrimitiveViewportScrollable = forwardRef<
     const ref = useComposedRefs(forwardedRef, autoScrollRef, viewportSizeRef);
 
     return (
-        <Primitive.div {...rest} ref={ref} style={{...style, overflowY: "auto", height: "100%", display: "flex", flexDirection: "column" }}>
-          {children}
-        </Primitive.div>
+      <Primitive.div
+        {...rest}
+        ref={ref}
+        style={{
+          ...style,
+          overflowY: "auto",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {children}
+      </Primitive.div>
     );
   },
 );
 
 ThreadPrimitiveViewportScrollable.displayName =
   "ThreadPrimitive.ViewportScrollable";
-

@@ -1,5 +1,11 @@
-import { MessagePartStatus, ToolCallMessagePartStatus } from "./assistant-types";
-import { ThreadAssistantMessagePart, ThreadUserMessagePart } from "./message-part-types";
+import {
+  MessagePartStatus,
+  ToolCallMessagePartStatus,
+} from "./assistant-types";
+import {
+  ThreadAssistantMessagePart,
+  ThreadUserMessagePart,
+} from "./message-part-types";
 
 export type MessagePartState = (
   | ThreadUserMessagePart

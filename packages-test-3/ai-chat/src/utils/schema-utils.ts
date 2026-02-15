@@ -85,13 +85,17 @@ export function toToolsJSONSchema(
 
   return Object.fromEntries(
     Object.entries(tools)
-      .map(([name, tool]) => tool.type === 'frontend' && tool.parameters ? [
-        name,
-        {
-          ...(tool.description && { description: tool.description }),
-          parameters: toJSONSchema(tool.parameters!),
-        },
-      ] : null)
-      .filter((r) =>  r !== null)
+      .map(([name, tool]) =>
+        tool.type === "frontend" && tool.parameters
+          ? [
+              name,
+              {
+                ...(tool.description && { description: tool.description }),
+                parameters: toJSONSchema(tool.parameters!),
+              },
+            ]
+          : null,
+      )
+      .filter((r) => r !== null),
   );
 }

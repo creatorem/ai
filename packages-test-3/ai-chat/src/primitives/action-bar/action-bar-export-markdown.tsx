@@ -2,7 +2,10 @@
 
 import { forwardRef, useCallback, useMemo } from "react";
 import { ActionButtonProps } from "../../utils/create-action-button";
-import { useMessage, useMessageStore } from "../message/message-by-index-provider";
+import {
+  useMessage,
+  useMessageStore,
+} from "../message/message-by-index-provider";
 import { useRuntime } from "@creatorem/ai-chat/runtime";
 import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 
@@ -13,9 +16,9 @@ const useActionBarExportMarkdown = ({
   filename?: string | undefined;
   onExport?: ((content: string) => void | Promise<void>) | undefined;
 } = {}) => {
-  const status = useMessage(s => s.status);
-  const parts = useMessage(s => s.parts);
-  const role = useMessage(s => s.role);
+  const status = useMessage((s) => s.status);
+  const parts = useMessage((s) => s.parts);
+  const role = useMessage((s) => s.role);
   const messageStore = useMessageStore();
 
   const hasExportableContent = useMemo(() => {
@@ -48,7 +51,7 @@ const useActionBarExportMarkdown = ({
 };
 
 export namespace ActionBarPrimitiveExportMarkdown {
-  export type Element = RuntimeComponents['Button'];
+  export type Element = RuntimeComponents["Button"];
   export type Props = ActionButtonProps<typeof useActionBarExportMarkdown>;
 }
 
@@ -58,19 +61,21 @@ export const ActionBarPrimitiveExportMarkdown = forwardRef<
 >(({ filename, onExport, onClick, disabled, ...props }, forwardedRef) => {
   const callback = useActionBarExportMarkdown({ filename, onExport });
 
-  const { components: {Button} } = useRuntime();
+  const {
+    components: { Button },
+  } = useRuntime();
 
   return (
-    // @ts-ignore
+    // @ts-expect-error
     <Button
       type="button"
       {...props}
       ref={forwardedRef}
       disabled={disabled || !callback}
-      onClick={((e) => {
+      onClick={(e) => {
         onClick?.(e);
         callback?.();
-      })}
+      }}
     />
   );
 });

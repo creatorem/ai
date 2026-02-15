@@ -145,10 +145,10 @@ const MarkdownTextPrimitiveImpl: ForwardRefExoticComponent<MarkdownTextPrimitive
       >
         <MarkdownTextInner {...rest}></MarkdownTextInner>
       </Container>
-    )
+    );
   },
 );
 
 MarkdownTextPrimitiveImpl.displayName = "MarkdownTextPrimitive";
 
-export const MarkdownTextPrimitive = MarkdownTextPrimitiveImpl
+export const MarkdownTextPrimitive = MarkdownTextPrimitiveImpl;

@@ -19,7 +19,7 @@ const useActionBarFeedbackNegative = () => {
 };
 
 export namespace ActionBarPrimitiveFeedbackNegative {
-  export type Element = RuntimeComponents['Button'];
+  export type Element = RuntimeComponents["Button"];
   export type Props = ActionButtonProps<typeof useActionBarFeedbackNegative>;
 }
 
@@ -27,14 +27,17 @@ export const ActionBarPrimitiveFeedbackNegative = forwardRef<
   ActionBarPrimitiveFeedbackNegative.Element,
   ActionBarPrimitiveFeedbackNegative.Props
 >(({ onClick, disabled, ...props }, forwardedRef) => {
-  const metadata = useMessage(s => s.metadata);
+  const metadata = useMessage((s) => s.metadata);
   const isSubmitted = useMemo(
     () => metadata.submittedFeedback?.type === "negative",
-    [metadata]);
+    [metadata],
+  );
 
   const callback = useActionBarFeedbackNegative();
 
-  const { components: {Button} } = useRuntime();
+  const {
+    components: { Button },
+  } = useRuntime();
 
   return (
     <Button

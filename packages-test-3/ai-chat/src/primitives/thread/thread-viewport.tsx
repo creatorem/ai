@@ -4,9 +4,9 @@ import { AutoScrollConfig } from "@creatorem/ai-chat/hook-types";
 import { ThreadPrimitiveViewportProvider } from "../../primitives/thread/thread-viewport-provider";
 
 export namespace ThreadPrimitiveViewport {
-  export type Props =  {
+  export type Props = {
     children: React.ReactNode;
-  } & AutoScrollConfig
+  } & AutoScrollConfig;
 }
 
 /**
@@ -23,10 +23,13 @@ export namespace ThreadPrimitiveViewport {
  * </ThreadPrimitive.Viewport>
  * ```
  */
-export const ThreadPrimitiveViewport = (({ turnAnchor, children}:ThreadPrimitiveViewport.Props) => {
+export const ThreadPrimitiveViewport = ({
+  turnAnchor,
+  children,
+}: ThreadPrimitiveViewport.Props) => {
   return (
     <ThreadPrimitiveViewportProvider options={{ turnAnchor }}>
-        {children}
+      {children}
     </ThreadPrimitiveViewportProvider>
   );
-});
+};

@@ -6,8 +6,8 @@ import { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 import { useRuntime } from "@creatorem/ai-chat/runtime";
 
 export namespace SuggestionPrimitiveDescription {
-  export type Element = RuntimeComponents['Text'];
-  export type Props = ComponentPropsWithoutRef<RuntimeComponents['Text']>;
+  export type Element = RuntimeComponents["Text"];
+  export type Props = ComponentPropsWithoutRef<RuntimeComponents["Text"]>;
 }
 
 /**
@@ -22,8 +22,10 @@ export const SuggestionPrimitiveDescription = forwardRef<
   SuggestionPrimitiveDescription.Element,
   SuggestionPrimitiveDescription.Props
 >((props, ref) => {
-  const {components: {Text}} = useRuntime();
-  const label = useSuggestion(s => s.label);
+  const {
+    components: { Text },
+  } = useRuntime();
+  const label = useSuggestion((s) => s.label);
 
   return (
     <Text {...props} ref={ref}>

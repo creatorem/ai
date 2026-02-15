@@ -10,12 +10,22 @@ export type RendererColors = {
 
 const monoFont = Platform.OS === "ios" ? "Menlo" : "monospace";
 
-export function createRenderers(colors: RendererColors, components: ReturnType<typeof useRuntime>['components']): RenderersMap {
+export function createRenderers(
+  colors: RendererColors,
+  components: ReturnType<typeof useRuntime>["components"],
+): RenderersMap {
   const { textColor, textSecondaryColor } = colors;
   const { Text, Box } = components;
   return {
     p: ({ children }: RendererProps) => (
-      <Text style={{ color: textColor, fontSize: 16, lineHeight: 24, marginVertical: 4 }}>
+      <Text
+        style={{
+          color: textColor,
+          fontSize: 16,
+          lineHeight: 24,
+          marginVertical: 4,
+        }}
+      >
         {children}
       </Text>
     ),
@@ -208,7 +218,7 @@ export function createRenderers(colors: RendererColors, components: ReturnType<t
           padding: 12,
           borderBottomLeftRadius: 8,
           borderBottomRightRadius: 8,
-          // @ts-ignore
+          // @ts-expect-error
           fontFamily: monoFont,
           fontSize: 14,
         }}
@@ -240,7 +250,15 @@ export function createRenderers(colors: RendererColors, components: ReturnType<t
     br: () => <Text>{"\n"}</Text>,
 
     table: ({ children }: RendererProps) => (
-      <Box style={{ marginVertical: 8, borderWidth: 1, borderColor: textColor, borderRadius: 4, opacity: 0.8 }}>
+      <Box
+        style={{
+          marginVertical: 8,
+          borderWidth: 1,
+          borderColor: textColor,
+          borderRadius: 4,
+          opacity: 0.8,
+        }}
+      >
         {children}
       </Box>
     ),

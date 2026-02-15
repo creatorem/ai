@@ -9,8 +9,8 @@ import {
 } from "./use-action-bar-float-status";
 
 export namespace ActionBarPrimitiveRoot {
-  export type Element = RuntimeComponents['Box'];
-  export type Props = ComponentPropsWithoutRef<RuntimeComponents['Box']> & {
+  export type Element = RuntimeComponents["Box"];
+  export type Props = ComponentPropsWithoutRef<RuntimeComponents["Box"]> & {
     /**
      * Whether to hide the action bar when the thread is running.
      * @default false
@@ -65,7 +65,9 @@ export const ActionBarPrimitiveRoot = forwardRef<
     autohideFloat,
   });
 
-  const { components: {Box} } = useRuntime();
+  const {
+    components: { Box },
+  } = useRuntime();
 
   if (hideAndfloatStatus === HideAndFloatStatus.Hidden) return null;
 

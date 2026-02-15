@@ -6,8 +6,8 @@ import { useRuntime } from "@creatorem/ai-chat/runtime";
 import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 
 export namespace BranchPickerPrimitiveRoot {
-  export type Element = RuntimeComponents['Box'];
-  export type Props = ComponentPropsWithoutRef<RuntimeComponents['Box']> & {
+  export type Element = RuntimeComponents["Box"];
+  export type Props = ComponentPropsWithoutRef<RuntimeComponents["Box"]> & {
     hideWhenSingleBranch?: boolean;
   };
 }
@@ -33,7 +33,9 @@ export const BranchPickerPrimitiveRoot = forwardRef<
   BranchPickerPrimitiveRoot.Element,
   BranchPickerPrimitiveRoot.Props
 >(({ hideWhenSingleBranch, ...rest }, ref) => {
-  const { components: {Box} } = useRuntime();
+  const {
+    components: { Box },
+  } = useRuntime();
 
   return (
     <MessagePrimitive.If hasBranches={hideWhenSingleBranch ? true : undefined}>

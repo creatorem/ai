@@ -10,10 +10,7 @@ import { ReadonlyStore } from "./readonly-store";
 export function createContextStoreHook<
   T extends Record<string, any>,
   K extends keyof T & string,
->(
-  contextHook: (...args: any[]) => T | null,
-  contextKey: K,
-) {
+>(contextHook: (...args: any[]) => T | null, contextKey: K) {
   type StoreType = T[K];
   type StateType = StoreType extends { getState: () => infer S } ? S : never;
 
@@ -44,9 +41,9 @@ export function createContextStoreHook<
     param?:
       | ((state: StateType) => TSelected)
       | {
-        optional?: boolean;
-        selector?: (state: StateType) => TSelected;
-      },
+          optional?: boolean;
+          selector?: (state: StateType) => TSelected;
+        },
   ): TSelected | StateType | null {
     let optional = false;
     let selector: ((state: StateType) => TSelected) | undefined;
@@ -72,6 +69,6 @@ export function createContextStoreHook<
   } as {
     [P in K]: typeof useStoreHook;
   } & {
-      [P in `${K}Store`]: typeof useStoreStoreHook;
-    };
+    [P in `${K}Store`]: typeof useStoreStoreHook;
+  };
 }

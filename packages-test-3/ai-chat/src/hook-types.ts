@@ -31,5 +31,7 @@ export interface AutoScrollConfig {
 }
 
 export interface RuntimeHooks {
-  useMessageRootRef: <T extends React.Ref<unknown>>(ref: T) => {ref: T} & React.ComponentPropsWithRef<RuntimeComponents['Box']>;
+  useMessageRootRef: <T extends React.Ref<unknown>>(
+    ref: T,
+  ) => { ref: T } & React.ComponentPropsWithRef<RuntimeComponents["Box"]>;
 }
