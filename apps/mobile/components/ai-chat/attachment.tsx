@@ -50,7 +50,7 @@ const AttachmentUI: FC<{ noRemoveButton?: boolean }> = ({ noRemoveButton }) => {
     <AttachmentPrimitive.Root className="relative">
       <View
         className={cn(
-          "aspect-square flex-1 overflow-hidden rounded-xl border border-input",
+          "aspect-square flex-1 overflow-hidden rounded-2xl border border-input",
         )}
       >
         <AttachmentThumb />
@@ -86,15 +86,21 @@ export const UserMessageAttachments: FC = () => {
 export const ComposerAttachments: FC = () => {
   const attachments = ComposerPrimitive.useComposer((s) => s.attachments);
   return attachments.length > 0 ? (
-    <ScrollView
-      horizontal
-      contentContainerStyle={{ gap: 8, paddingHorizontal: 6, paddingBottom: 4 }}
-      className="h-32 w-full p-2"
-    >
-      <ComposerPrimitive.Attachments
-        components={{ Attachment: AttachmentUI }}
-      />
-    </ScrollView>
+    <View className="h-28 w-full">
+      <ScrollView
+        horizontal
+        contentContainerStyle={{
+          gap: 8,
+          paddingHorizontal: 6,
+          paddingBottom: 4,
+        }}
+        className="h-full w-full p-2"
+      >
+        <ComposerPrimitive.Attachments
+          components={{ Attachment: AttachmentUI }}
+        />
+      </ScrollView>
+    </View>
   ) : null;
 };
 

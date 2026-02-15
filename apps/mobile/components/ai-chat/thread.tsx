@@ -172,19 +172,35 @@ const ThreadSuggestions: FC = () => {
   );
 };
 
+const AttachmentComposer: React.FC = () => {
+  const attachments = ComposerPrimitive.useComposer((s) => s.attachments);
+  return (
+    <>
+      <View className="absolute top-0 left-0 z-1 w-full pl-14">
+        <ComposerAttachments />
+      </View>
+
+      <ComposerPrimitive.Input
+        headerContent={<ComposerAttachments />}
+        placeholder="Send a message..."
+        className={cn(
+          "my-auto flex max-h-50 min-h-12 w-full flex-1 flex-row items-center rounded-3xl bg-secondary px-3 py-2 text-base outline-none transition-shadow placeholder:text-muted-foreground",
+          attachments.length > 0 ? "pt-28" : "",
+        )}
+        autoFocus
+        aria-label="Message input"
+      />
+    </>
+  );
+};
+
 const Composer: React.FC = () => {
   return (
     <ComposerPrimitive.Root>
-      <View className="flex-row items-end gap-2">
-        <ComposerAction />
-        <View className="flex flex-1 items-start rounded-3xl bg-secondary">
-          <ComposerAttachments />
-          <ComposerPrimitive.Input
-            placeholder="Send a message..."
-            className="my-auto flex max-h-40 min-h-12 w-full flex-1 flex-row items-center rounded-3xl bg-secondary px-3 py-2 text-base outline-none transition-shadow placeholder:text-muted-foreground"
-            autoFocus
-            aria-label="Message input"
-          />
+      <View className="flex">
+        <View className="flex-row items-end gap-2">
+          <ComposerAction />
+          <AttachmentComposer />
         </View>
         <ComposerSubmit />
       </View>
@@ -223,7 +239,7 @@ const ComposerAction: FC = () => {
 
 const ComposerSubmit: FC = () => {
   return (
-    <View className="absolute right-0 bottom-0 my-auto flex flex-row items-center justify-between pr-2 pb-2">
+    <View className="absolute right-0 bottom-0 z-30 my-auto flex flex-row items-center justify-between pr-2 pb-2">
       <ThreadPrimitive.If running={false}>
         <ComposerPrimitive.Send
           type="submit"

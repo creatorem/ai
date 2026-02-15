@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback } from "react";
 import {
   TextInput,
   type NativeSyntheticEvent,
   type TextInputContentSizeChangeEventData,
+  View,
   type TextInputProps,
 } from "react-native";
 import { cn } from "~/utils/cn";
@@ -24,12 +25,7 @@ export type AutoResizeTextareaProps = Omit<
   "onChange" | "multiline"
 > & {
   onChange?: (value: string, e?: unknown) => void;
-  //   minRows?: number;
-  //   maxRows?: number;
-  //   rowHeight?: number;
-  //   onHeightChange?: (height: number) => void;
-  //   cacheMeasurements?: boolean;
-  //   height?: number;
+  headerContent?: React.ReactNode;
 };
 
 export const AutoResizeTextarea = React.forwardRef<
@@ -37,7 +33,14 @@ export const AutoResizeTextarea = React.forwardRef<
   AutoResizeTextareaProps
 >(
   (
-    { onChange, onChangeText, onContentSizeChange, className, ...restProps },
+    {
+      onChange,
+      onChangeText,
+      onContentSizeChange,
+      headerContent,
+      className,
+      ...restProps
+    },
     ref,
   ) => {
     const [displayExpand, setDisplayExpand] = React.useState<boolean>(false);
@@ -59,24 +62,6 @@ export const AutoResizeTextarea = React.forwardRef<
       [onChange, onChangeText],
     );
 
-    // const fadeAnim = useRef(new Animated.Value(0)).current;
-
-    // useEffect(() => {
-    //     if(displayExpand) {
-    //         Animated.timing(fadeAnim, {
-    //           toValue: 1,
-    //           duration: 300,
-    //           useNativeDriver: true,
-    //         }).start();
-    //     } else {
-    //         Animated.timing(fadeAnim, {
-    //           toValue: 0,
-    //           duration: 300,
-    //           useNativeDriver: true,
-    //         }).start();
-    //     }
-    // }, [displayExpand]);
-
     return (
       <ActionSheet>
         <TextInput
@@ -91,10 +76,10 @@ export const AutoResizeTextarea = React.forwardRef<
           <Animated.View
             entering={FadeIn.duration(200)}
             exiting={FadeOut.duration(200)}
-            className="absolute top-2 right-2"
+            className="absolute top-2 right-2 z-20"
           >
             <ActionSheetTrigger asChild>
-              <Button size="sm-icon" variant="ghost">
+              <Button size="sm-icon" variant="ghost" className="bg-secondary">
                 <Icon name="Expand" size={20} color={textMutedForeground} />
               </Button>
             </ActionSheetTrigger>
@@ -112,11 +97,13 @@ export const AutoResizeTextarea = React.forwardRef<
             <Button
               size="sm-icon"
               variant="ghost"
-              className="absolute top-4 right-4 z-10"
+              className="absolute top-4 right-4 z-20"
             >
               <Icon name="Shrink" size={20} />
             </Button>
           </ActionSheetClose>
+
+          {headerContent}
 
           <TextInput
             {...restProps}
@@ -124,7 +111,7 @@ export const AutoResizeTextarea = React.forwardRef<
             multiline
             className={cn("h-full p-4 pt-12 text-base text-foreground")}
             onChangeText={handleChangeText}
-          ></TextInput>
+          />
         </ActionSheetContent>
       </ActionSheet>
     );
