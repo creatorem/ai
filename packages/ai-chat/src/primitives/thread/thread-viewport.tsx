@@ -1,7 +1,7 @@
 "use client";
 
 import { AutoScrollConfig } from "@creatorem/ai-chat/hook-types";
-import { ThreadPrimitiveViewportProvider } from "../../primitives/thread/thread-viewport-provider";
+import { ThreadPrimitiveViewportProvider } from "./thread-viewport-provider";
 
 export namespace ThreadPrimitiveViewport {
   export type Props = {

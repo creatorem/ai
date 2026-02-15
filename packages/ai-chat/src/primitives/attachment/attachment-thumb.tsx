@@ -1,7 +1,7 @@
 "use client";
 
 import { ComponentPropsWithoutRef, forwardRef, useMemo } from "react";
-import { useAttachment } from "../attachment/attachment-by-index-provider";
+import { useAttachment } from "./attachment-by-index-provider";
 import { useRuntime } from "@creatorem/ai-chat/runtime";
 import type { RuntimeComponents } from "@creatorem/ai-chat/component-types";
 
